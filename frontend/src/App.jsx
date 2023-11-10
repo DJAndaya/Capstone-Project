@@ -19,6 +19,7 @@ export default function App() {
       children: [
         {
           index: true,
+          path: "/results/:search",
           element: <Home />
         },
         {
