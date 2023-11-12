@@ -14,4 +14,5 @@ const isAuthSlice = createSlice({
 
 export const { setIsAuth } = isAuthSlice.actions;
 export const selectIsAuth = (state) => state.isAuth.value; 
+
 export default isAuthSlice.reducer;
