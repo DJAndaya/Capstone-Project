@@ -1,5 +1,8 @@
 import React, { useState } from "react"
 import axios from "axios"
+// redux imports
+import { setIsAuth } from "../redux/isAuthSlice";
+import { useDispatch } from "react-redux"
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +12,8 @@ const Register = () => {
     lastName: "",
     address: "",
   })
+  const dispatch = useDispatch()
+
 
   const registerUser = async (formData) => {
     try {
@@ -31,8 +36,9 @@ const Register = () => {
       );
 
       const user = userResponse.data;
-      setUser(user);
-
+      // setUser(user);
+      dispatch(setIsAuth(user))
+      
       } catch (error) {
         console.log(error);
       }

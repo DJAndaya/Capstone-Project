@@ -16,6 +16,7 @@ model users {
   password     String
   address      String
   email        String
+  admin        Boolean
   sellingItems items[]   @relation("seller")
   wishlist     items[]   @relation("wishlist")
   orderHistory items[]   @relation("orderhistory")

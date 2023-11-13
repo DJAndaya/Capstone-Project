@@ -1,12 +1,15 @@
 import React, { useState } from "react"
 import axios from "axios"
+// redux imports
+import { useDispatch } from "react-redux"
+import { setIsAuth } from "../redux/isAuthSlice"
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   })
-  const [user, setUser] = useState(null)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const possiblyLogin = async () => {
@@ -23,7 +26,7 @@ const Login = () => {
         )
 
         const user = userResponse.data
-        setUser(user)
+        dispatch(setIsAuth(user))
       }
     }
     
@@ -53,7 +56,7 @@ const Login = () => {
       );
 
       const user = userResponse.data;
-      setUser(user);
+      dispatch(setIsAuth(user))
 
     } catch (error) {
       console.log(error);
