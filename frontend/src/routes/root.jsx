@@ -19,7 +19,7 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(1),
     width: "auto",
   },
-  flexGrow: 1 
+  flexGrow: 1,
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -71,10 +71,7 @@ export default function Root() {
         <AppBar>
           <Toolbar>
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="/"
-              >
+              <Link style={{ textDecoration: "none", color: "white" }} to="/">
                 Home
               </Link>
             </Box>
@@ -104,6 +101,14 @@ export default function Root() {
                 to="user/cart"
               >
                 Cart
+              </Link>
+            </Box>
+            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="admin"
+              >
+                Admin
               </Link>
             </Box>
             {/* Login/register/logout */}

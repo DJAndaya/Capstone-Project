@@ -1,39 +1,41 @@
-import { useState } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './index.css'
+import { useState } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
 
-import Root from './routes/root'
-import ErrorPage from './routes/ErrorPage'
+import Root from "./routes/root";
+import ErrorPage from "./routes/ErrorPage";
 
-import Home from './components/Home'
-import Cart from './components/Cart'
-import Orders from './components/Orders'
+import Home from "./components/Home";
+import Cart from "./components/Cart";
+import Orders from "./components/Orders";
+import Admin from "./components/Admin";
 
 export default function App() {
-
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: "/",
       element: <Root />,
       errorElement: <ErrorPage />,
       children: [
         {
           index: true,
           path: "/results/:search",
-          element: <Home />
+          element: <Home />,
         },
         {
           path: "/user/orders",
-          element: <Orders />
+          element: <Orders />,
         },
         {
           path: "/user/cart",
-          element: <Cart />
-        }
-      ]
-    }
-  ])
-  return (
-    <RouterProvider router={router} />
-  )
+          element: <Cart />,
+        },
+        {
+          path: "/admin",
+          element: <Admin />,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router} />;
 }

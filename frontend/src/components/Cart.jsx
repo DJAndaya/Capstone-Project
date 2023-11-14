@@ -1,5 +1,3 @@
 export default function Cart() {
-    return (
-        <h1>Hi</h1>
-    )
+  return <h1>Hi, this is the Cart</h1>;
 }

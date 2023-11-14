@@ -1,5 +1,5 @@
 export default function Orders() {
     return (
-        <h1>Hi</h1>
+        <h1>These are the orders</h1>
     )
 }
