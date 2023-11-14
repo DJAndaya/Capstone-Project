@@ -29,6 +29,14 @@ export default function App() {
         {
           path: "/user/cart",
           element: <Cart />
+        },
+        {
+          path: "/login",
+          element: <Login />
+        },
+        {
+          path: "/register",
+          element: <Register />
         }
       ]
     }

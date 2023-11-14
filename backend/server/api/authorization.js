@@ -81,3 +81,12 @@ app.length("/auth/loggedin", async (req, res, next) => {
 })
 
 app.listen(3000)
+
+// send user data
+app.get("/", async (req, res, next) => {
+  const token = req.headers.authorization
+
+  const user = jwt.verify(token, process.JWT_SECRET_KEY)
+
+  res.send(user)
+})
