@@ -9,6 +9,8 @@ import Home from "./components/Home";
 import Cart from "./components/Cart";
 import Orders from "./components/Orders";
 import Admin from "./components/Admin";
+import AllProducts from "./components/Admin/allProducts";
+import AllUsers from "./components/Admin/AllUsers";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -33,6 +35,14 @@ export default function App() {
         {
           path: "/admin",
           element: <Admin />,
+        },
+        {
+          path: "/admin/allproducts",
+          element: <AllProducts />,
+        },
+        {
+          path: "/admin/allusers",
+          element: <AllUsers />,
         },
       ],
     },
