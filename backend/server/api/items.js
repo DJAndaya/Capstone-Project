@@ -1,14 +1,10 @@
-const express = require("express");
+const app = require("express").Router()
 const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const prisma = new PrismaClient();
-
-const app = express;
-
-app.use(express.json());
-app.use(cors());
 
 // get all items data
 app.get("/", async (req, res, next) => {
@@ -18,3 +14,7 @@ app.get("/", async (req, res, next) => {
     next(error)
   }
 })
+
+// put item into user's shopping cart
+
+module.exports = app

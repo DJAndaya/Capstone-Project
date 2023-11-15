@@ -1,41 +1,43 @@
-import React, { useState } from "react"
-import axios from "axios"
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+import { setIsAuth } from "../redux/isAuthSlice";
+import { useDispatch } from "react-redux";
+
+import { NavLink } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  })
-  const [user, setUser] = useState(null)
+  });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const possiblyLogin = async () => {
-      const token = window.localStorage.getItem("token")
+      const token = window.localStorage.getItem("token");
 
       if (token) {
-        const userResponse = await axios.get(
-          "http://localhost:3000/auth/me",
-          {
-            headers: {
-              authorization: token,
-            }
-          }
-        )
+        const userResponse = await axios.get("http://localhost:3000/auth/me", {
+          headers: {
+            authorization: token,
+          },
+        });
 
-        const user = userResponse.data
-        setUser(user)
+        const user = userResponse.data;
+        dispatch(setIsAuth(user));
       }
-    }
-    
-    possiblyLogin()
-  }, [])
+    };
+
+    possiblyLogin();
+  }, []);
 
   const loginUser = async (formData) => {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/auth/login",
         {
-          formData
+          formData,
         }
       );
 
@@ -53,8 +55,7 @@ const Login = () => {
       );
 
       const user = userResponse.data;
-      setUser(user);
-
+      dispatch(setIsAuth(user));
     } catch (error) {
       console.log(error);
     }
@@ -67,12 +68,12 @@ const Login = () => {
   };
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target
+    const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: value
-    })
-  }
+      [name]: value,
+    });
+  };
 
   return (
     <>
@@ -82,20 +83,30 @@ const Login = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleInputChange}
+          name="email"
         />
         <input
           placeholder="Password"
           value={formData.password}
           onChange={handleInputChange}
+          name="password"
         />
         <button type="submit">Login</button>
       </form>
       <div>
         <div>Don't have an account?</div>
-        <button>Register here</button>
+        <NavLink
+          to={"/register"}
+          className={({ isActive, isPending }) =>
+            isActive ? "active" : isPending ? "pending" : "text-white mr-4"
+          }
+        >
+          <button>Register here</button>
+        </NavLink>
+        <br />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

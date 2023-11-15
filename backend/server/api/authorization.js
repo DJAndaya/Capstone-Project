@@ -1,21 +1,17 @@
-const express = require("express");
+const app = require("express").Router()
 const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const prisma = new PrismaClient();
 
-const app = express;
-
-app.use(express.json());
-app.use(cors());
-
 // registering users
-app.post("/auth/register", async (req, res, next) => {
+app.post("/register", async (req, res, next) => {
   const { email, password, firstName, lastName, address } = req.body;
-
+  console.log(email)
   try {
-    const emailAlreadyUsed = await prisma.email.findUnique({
+    const emailAlreadyUsed = await prisma.users.findUnique({
       where: {
         email,
       },
@@ -39,12 +35,13 @@ app.post("/auth/register", async (req, res, next) => {
     const token = jwt.sign(newUser, process.env.JWT_SECRET_KEY);
     res.send(token);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: "unable to make account" });
   }
 });
 
 // login users
-app.post("/auth/login", async (req, res, next) => {
+app.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
@@ -71,8 +68,8 @@ app.post("/auth/login", async (req, res, next) => {
   }
 });
 
-// check if the user has already logged in
-app.length("/auth/loggedin", async (req, res, next) => {
+// send user data 
+app.get("/loggedin", async (req, res, next) => {
   const token = req.headers.authorization
 
   const user = jwt.verify(token, process.env.JWT_SECRET_KEY)
@@ -80,13 +77,4 @@ app.length("/auth/loggedin", async (req, res, next) => {
   res.send(user)
 })
 
-app.listen(3000)
-
-// send user data
-app.get("/", async (req, res, next) => {
-  const token = req.headers.authorization
-
-  const user = jwt.verify(token, process.JWT_SECRET_KEY)
-
-  res.send(user)
-})
+module.exports = app
