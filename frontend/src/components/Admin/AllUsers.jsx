@@ -1,4 +1,10 @@
+import TemporaryDrawer from "./Drawer";
+
 export default function AllUsers() {
-    return <h1>ALL USERS</h1>;
-  }
-  
+  return (
+    <div>
+      <TemporaryDrawer />
+      <h1>ALL USERS</h1>
+    </div>
+  );
+}

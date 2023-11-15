@@ -6,7 +6,7 @@ export default function Admin() {
     <div>
       <TemporaryDrawer />
 
-      <h1>This is supposed to be the admin page</h1>
+      <h1>ADMIN PAGE</h1>
     </div>
   );
 }
