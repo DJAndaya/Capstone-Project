@@ -1,8 +1,11 @@
-import React, { useState } from "react"
-import axios from "axios"
-// redux imports
+
+import React, { useState } from "react";
+import axios from "axios";
+
 import { setIsAuth } from "../redux/isAuthSlice";
-import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux";
+
+import { NavLink } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,14 +14,15 @@ const Register = () => {
     firstName: "",
     lastName: "",
     address: "",
-  })
-  const dispatch = useDispatch()
+  });
 
+  const dispatch = useDispatch();
 
   const registerUser = async (formData) => {
+    console.log(formData);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/register",
+        "http://localhost:3000/auth/register",
           formData
       );
 
@@ -27,7 +31,7 @@ const Register = () => {
       window.localStorage.setItem("token", token);
 
       const userResponse = await axios.get(
-        "http://localhost:3000/api/auth/me",
+        "http://localhost:3000/auth/loggedin",
         {
           headers: {
             authorization: token,
@@ -36,13 +40,11 @@ const Register = () => {
       );
 
       const user = userResponse.data;
-      // setUser(user);
-      dispatch(setIsAuth(user))
-      
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      dispatch(setIsAuth(true));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -51,12 +53,12 @@ const Register = () => {
   };
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target
+    const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: value
-    })
-  }
+      [name]: value,
+    });
+  };
 
   return (
     <>
@@ -66,26 +68,31 @@ const Register = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleInputChange}
+          name="email"
         />
         <input
           placeholder="Password"
           value={formData.password}
           onChange={handleInputChange}
+          name="password"
         />
         <input
           placeholder="First Name"
           value={formData.firstName}
           onChange={handleInputChange}
+          name="firstName"
         />
         <input
           placeholder="Last Name"
           value={formData.lastName}
           onChange={handleInputChange}
+          name="lastName"
         />
         <input
           placeholder="Address"
           value={formData.address}
           onChange={handleInputChange}
+          name="address"
         />
         <button type="submit">Register</button>
       </form>
@@ -93,4 +100,4 @@ const Register = () => {
   );
 };
 
-export default Register
+export default Register;

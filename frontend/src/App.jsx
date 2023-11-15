@@ -8,6 +8,8 @@ import ErrorPage from './routes/ErrorPage'
 import Home from './components/Home'
 import Cart from './components/Cart'
 import Orders from './components/Orders'
+import Login from './components/Login'
+import Register from './components/Register'
 
 export default function App() {
 
@@ -19,7 +21,7 @@ export default function App() {
       children: [
         {
           index: true,
-          path: "/results/:search",
+          path: "/results",
           element: <Home />
         },
         {
@@ -29,6 +31,14 @@ export default function App() {
         {
           path: "/user/cart",
           element: <Cart />
+        },
+        {
+          path: "/login",
+          element: <Login />
+        },
+        {
+          path: "/register",
+          element: <Register />
         }
       ]
     }
