@@ -1,8 +1,11 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const { Pool } = require("pg");
 
 const app = express();
+
+app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
@@ -33,8 +36,15 @@ app.get("/admin/allproducts", async (req, res) => {
   }
 });
 
-app.get("/admin/allusers", (req, res) => {
-  res.send("All users will be listed here.");
+app.get("/admin/allusers", async (req, res) => {
+  // res.send("All users will be listed here.");
+  try {
+    const { rows } = await pool.query("SELECT * FROM users");
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching items from database:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.listen(PORT, () => {
