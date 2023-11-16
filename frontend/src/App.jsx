@@ -10,6 +10,7 @@ import Cart from './components/Cart'
 import Orders from './components/Orders'
 import Login from './components/Login'
 import Register from './components/Register'
+import Account from './components/Account'
 
 export default function App() {
 
@@ -21,7 +22,10 @@ export default function App() {
       children: [
         {
           index: true,
-          path: "/results",
+          element: <Home />
+        },
+        {
+          path: "/results/:search",
           element: <Home />
         },
         {
@@ -39,6 +43,10 @@ export default function App() {
         {
           path: "/register",
           element: <Register />
+        },
+        {
+          path: "/account",
+          element: <Account />
         }
       ]
     }

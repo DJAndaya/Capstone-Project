@@ -1,5 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { useState } from "react";
+import { useSelector } from 'react-redux'
 
 import { Box, AppBar, Toolbar, InputBase } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +20,7 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(1),
     width: "auto",
   },
-  flexGrow: 1 
+  flexGrow: 1,
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -52,6 +53,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Root() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const userSignedIn = useSelector((state) => state.isAuth.value);
 
   const handleSearch = () => {
     if (searchQuery.trim() != "") {
@@ -71,10 +73,7 @@ export default function Root() {
         <AppBar>
           <Toolbar>
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="/"
-              >
+              <Link style={{ textDecoration: "none", color: "white" }} to="/">
                 Home
               </Link>
             </Box>
@@ -106,6 +105,21 @@ export default function Root() {
                 Cart
               </Link>
             </Box>
+            {userSignedIn ? (
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="account"
+              >
+                Account
+              </Link>
+            ) : (
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="login"
+              >
+                Login
+              </Link>
+            )}
             {/* Login/register/logout */}
           </Toolbar>
         </AppBar>
