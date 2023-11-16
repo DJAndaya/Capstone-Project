@@ -1,5 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { useState } from "react";
+import { useSelector } from 'react-redux'
 
 import { Box, AppBar, Toolbar, InputBase } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -52,6 +53,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Root() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const userSignedIn = useSelector((state) => state.isAuth.value);
 
   const handleSearch = () => {
     if (searchQuery.trim() != "") {
@@ -103,6 +105,21 @@ export default function Root() {
                 Cart
               </Link>
             </Box>
+            {userSignedIn ? (
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="account"
+              >
+                Account
+              </Link>
+            ) : (
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="login"
+              >
+                Login
+              </Link>
+            )}
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
               <Link
                 style={{ textDecoration: "none", color: "white" }}

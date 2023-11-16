@@ -13,6 +13,7 @@ import AllProducts from "./components/Admin/allProducts";
 import AllUsers from "./components/Admin/AllUsers";
 import Login from './components/Login'
 import Register from './components/Register'
+import Account from './components/Account'
 
 export default function App() {
   const router = createBrowserRouter([
@@ -56,6 +57,10 @@ export default function App() {
         {
           path: "/register",
           element: <Register />
+        },
+        {
+          path: "/account",
+          element: <Account />
         }
       ]
     }

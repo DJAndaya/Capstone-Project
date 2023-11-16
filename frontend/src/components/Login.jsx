@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import { setIsAuth } from "../redux/isAuthSlice";
 import { useDispatch } from "react-redux";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +12,7 @@ const Login = () => {
     password: "",
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const possiblyLogin = async () => {
@@ -36,10 +36,8 @@ const Login = () => {
   const loginUser = async (formData) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        {
-          formData,
-        }
+        "http://localhost:3000/auth/login",
+        formData
       );
 
       const token = response.data;
@@ -47,7 +45,7 @@ const Login = () => {
       window.localStorage.setItem("token", token);
 
       const userResponse = await axios.get(
-        "http://localhost:3000/api/auth/me",
+        "http://localhost:3000/auth/loggedin",
         {
           headers: {
             authorization: token,
@@ -57,6 +55,7 @@ const Login = () => {
 
       const user = userResponse.data;
       dispatch(setIsAuth(user));
+      navigate("/")
     } catch (error) {
       console.log(error);
     }

@@ -17,7 +17,7 @@ const Home = () => {
         const alphabeticalOrderData = response.data.sort((a, b) => {
           return a.name > b.name ? 1 : -1;
         });
-        console.log(alphabeticalOrderData);
+        // console.log(alphabeticalOrderData);
         setItems(alphabeticalOrderData);
       } catch (error) {
         console.log(error);
