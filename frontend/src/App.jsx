@@ -24,7 +24,8 @@ export default function App() {
         {
           index: true,
           element: <Home />,
-    }
+        },
+        {
           path: "/results/:search",
           element: <Home />
         },
