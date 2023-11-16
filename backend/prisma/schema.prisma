@@ -12,10 +12,11 @@ datasource db {
 
 model users {
   id           Int       @id @default(autoincrement())
-  name         String    @unique
+  email        String    @unique
   password     String
   address      String
-  email        String
+  firstName    String
+  lastName     String
   admin        Boolean
   sellingItems items[]   @relation("seller")
   wishlist     items[]   @relation("wishlist")
