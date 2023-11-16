@@ -1,28 +1,30 @@
-import { useState } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './index.css'
+import { useState } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
 
-import Root from './routes/root'
-import ErrorPage from './routes/ErrorPage'
+import Root from "./routes/root";
+import ErrorPage from "./routes/ErrorPage";
 
-import Home from './components/Home'
-import Cart from './components/Cart'
-import Orders from './components/Orders'
+import Home from "./components/Home";
+import Cart from "./components/Cart";
+import Orders from "./components/Orders";
+import Admin from "./components/Admin";
+import AllProducts from "./components/Admin/allProducts";
+import AllUsers from "./components/Admin/AllUsers";
 import Login from './components/Login'
 import Register from './components/Register'
 import Account from './components/Account'
 
 export default function App() {
-
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: "/",
       element: <Root />,
       errorElement: <ErrorPage />,
       children: [
         {
           index: true,
-          element: <Home />
+          element: <Home />,
         },
         {
           path: "/results/:search",
@@ -30,11 +32,23 @@ export default function App() {
         },
         {
           path: "/user/orders",
-          element: <Orders />
+          element: <Orders />,
         },
         {
           path: "/user/cart",
-          element: <Cart />
+          element: <Cart />,
+        },
+        {
+          path: "/admin",
+          element: <Admin />,
+        },
+        {
+          path: "/admin/allproducts",
+          element: <AllProducts />,
+        },
+        {
+          path: "/admin/allusers",
+          element: <AllUsers />,
         },
         {
           path: "/login",

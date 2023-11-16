@@ -120,6 +120,14 @@ export default function Root() {
                 Login
               </Link>
             )}
+            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="admin"
+              >
+                Admin
+              </Link>
+            </Box>
             {/* Login/register/logout */}
           </Toolbar>
         </AppBar>
