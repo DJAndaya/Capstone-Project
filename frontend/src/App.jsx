@@ -11,8 +11,9 @@ import Orders from "./components/Orders";
 import Admin from "./components/Admin";
 import AllProducts from "./components/Admin/allProducts";
 import AllUsers from "./components/Admin/AllUsers";
-import Login from './components/Login'
-import Register from './components/Register'
+
+import Login from "./components/Login";
+import Register from "./components/Register";
 import Account from './components/Account'
 
 export default function App() {
@@ -28,7 +29,7 @@ export default function App() {
         },
         {
           path: "/results/:search",
-          element: <Home />
+          element: <Home />,
         },
         {
           path: "/user/orders",
@@ -37,6 +38,10 @@ export default function App() {
         {
           path: "/user/cart",
           element: <Cart />,
+        },
+        {
+          path: "/user/sell",
+          element: <Sell />,
         },
         {
           path: "/admin",
@@ -52,19 +57,15 @@ export default function App() {
         },
         {
           path: "/login",
-          element: <Login />
+          element: <Login />,
         },
         {
           path: "/register",
-          element: <Register />
+          element: <Register />,
         },
-        {
-          path: "/account",
-          element: <Account />
-        }
-      ]
-    }
-  ])
+      ],
+    },
+  ]);
   return (
     <RouterProvider router={router} />
   )
