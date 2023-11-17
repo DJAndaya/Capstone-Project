@@ -14,6 +14,7 @@ import AllUsers from "./components/Admin/AllUsers";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Sell from "./components/Sell"
 import Account from './components/Account'
 
 export default function App() {
