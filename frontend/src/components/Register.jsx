@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -23,7 +22,7 @@ const Register = () => {
     try {
       const response = await axios.post(
         "http://localhost:3000/auth/register",
-          formData
+        formData
       );
 
       const token = response.data;
@@ -40,7 +39,8 @@ const Register = () => {
       );
 
       const user = userResponse.data;
-      dispatch(setIsAuth(true));
+      console.log(userResponse);
+      dispatch(setIsAuth(user));
     } catch (error) {
       console.log(error);
     }

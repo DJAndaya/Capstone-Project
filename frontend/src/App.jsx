@@ -11,8 +11,9 @@ import Orders from "./components/Orders";
 import Admin from "./components/Admin";
 import AllProducts from "./components/Admin/allProducts";
 import AllUsers from "./components/Admin/AllUsers";
-import Login from './components/Login'
-import Register from './components/Register'
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Sell from "./components/Sell"
 
 export default function App() {
   const router = createBrowserRouter([
@@ -24,9 +25,10 @@ export default function App() {
         {
           index: true,
           element: <Home />,
-    }
+        },
+        {
           path: "/results/:search",
-          element: <Home />
+          element: <Home />,
         },
         {
           path: "/user/orders",
@@ -35,6 +37,10 @@ export default function App() {
         {
           path: "/user/cart",
           element: <Cart />,
+        },
+        {
+          path: "/user/sell",
+          element: <Sell />,
         },
         {
           path: "/admin",
@@ -50,16 +56,14 @@ export default function App() {
         },
         {
           path: "/login",
-          element: <Login />
+          element: <Login />,
         },
         {
           path: "/register",
-          element: <Register />
-        }
-      ]
-    }
-  ])
-  return (
-    <RouterProvider router={router} />
-  )
+          element: <Register />,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router} />;
 }

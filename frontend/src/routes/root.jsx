@@ -55,6 +55,7 @@ export default function Root() {
 
   const handleSearch = () => {
     if (searchQuery.trim() != "") {
+      setSearchQuery("")
       navigate(`/results/${searchQuery}`);
     }
   };
@@ -101,6 +102,14 @@ export default function Root() {
                 to="user/cart"
               >
                 Cart
+              </Link>
+            </Box>
+            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="user/sell"
+              >
+                Sell
               </Link>
             </Box>
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
