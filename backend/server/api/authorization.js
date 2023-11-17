@@ -55,15 +55,16 @@ app.post("/login", async (req, res, next) => {
       return res.status(409).send({ message: "user does not exist" });
     }
 
-    const isCorrectPassword = bcrypt.compareSync(password, users.password);
+    const isCorrectPassword = bcrypt.compareSync(password, emailAlreadyUsed.password);
 
     if (isCorrectPassword) {
-      const token = jwt.sign(users, process.env.JWT_SECRET_KEY);
+      const token = jwt.sign(emailAlreadyUsed, process.env.JWT_SECRET_KEY);
       res.send(token);
     } else {
       res.status(401).send({ message: "Incorrect password" });
     }
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: "unable to login" });
   }
 });

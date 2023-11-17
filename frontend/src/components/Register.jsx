@@ -4,7 +4,7 @@ import axios from "axios";
 import { setIsAuth } from "../redux/isAuthSlice";
 import { useDispatch } from "react-redux";
 
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,9 +16,10 @@ const Register = () => {
   });
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const registerUser = async (formData) => {
-    console.log(formData);
+    // console.log(formData);
     try {
       const response = await axios.post(
         "http://localhost:3000/auth/register",
@@ -39,8 +40,8 @@ const Register = () => {
       );
 
       const user = userResponse.data;
-      console.log(userResponse);
       dispatch(setIsAuth(user));
+      navigate("/");
     } catch (error) {
       console.log(error);
     }

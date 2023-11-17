@@ -11,9 +11,10 @@ import Orders from "./components/Orders";
 import Admin from "./components/Admin";
 import AllProducts from "./components/Admin/allProducts";
 import AllUsers from "./components/Admin/AllUsers";
+
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Sell from "./components/Sell"
+import Account from './components/Account'
 
 export default function App() {
   const router = createBrowserRouter([
@@ -65,5 +66,7 @@ export default function App() {
       ],
     },
   ]);
-  return <RouterProvider router={router} />;
+  return (
+    <RouterProvider router={router} />
+  )
 }
