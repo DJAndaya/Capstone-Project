@@ -1,42 +1,60 @@
-// const db = require("./server/db");
-// const { Items } = require("./server/db/models");
-
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
 const faker = require("faker");
 
-// console.log(faker.commerce.price());
-
 const seed = async () => {
   try {
-    // await db.sync({ force: true });
+    const users = [];
 
-    let products = [];
+    for (let i = 0; i < 25; i++) {
+      const email = faker.internet.email();
+      const password = faker.internet.password();
+      const address = faker.address.streetAddress();
+      const firstName = faker.name.firstName();
+      const lastName = faker.name.lastName();
 
-    for (let i = 0; i < 100; i++) {
-      const productName = faker.commerce.productName();
-
-      let newProduct = {
+      const newUser = {
         data: {
-          name: productName,
-          price: faker.commerce.price(),
-          amount: Math.floor(Math.random() * 101),
-          description: faker.commerce.productDescription(),
-          category: faker.commerce.product(),
+          email,
+          password,
+          address,
+          firstName,
+          lastName,
         },
       };
 
-      products.push(newProduct);
+      const createdUser = await prisma.users.create(newUser);
+      users.push(createdUser);
     }
 
-    for (const product of products) {
-      await prisma.items.create(product);
-      // console.log("hi");
-    }
+    for (const user of users) {
+      let products = [];
 
-    // console.log(products);
+      for (let i = 0; i < 5; i++) {
+        const productName = faker.commerce.productName();
+
+        let newProduct = {
+          data: {
+            name: productName,
+            price: faker.commerce.price(),
+            amount: Math.floor(Math.random() * 101),
+            description: faker.commerce.productDescription(),
+            category: faker.commerce.product(),
+            seller: {
+              connect: { id: user.id }
+            }
+          },
+        };
+
+        products.push(newProduct);
+      }
+
+      for (const product of products) {
+        await prisma.items.create(product);
+      }
+    }
   } catch (err) {
     console.log(err);
   }
