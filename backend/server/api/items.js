@@ -76,20 +76,30 @@ app.patch("/addToShoppingCart", async (req, res, next) => {
 });
 
 // get user's shopping cart
-app.get(`/shoppingCart/`, async (req, res, next) => {
+app.get("/shoppingCart", async (req, res, next) => {
   try {
-    
     let { userId } = req.query;
-    userId = parseInt(userId)
+    userId = parseInt(userId);
     const userWithShoppingCart = await prisma.users.findUnique({
       where: { id: userId },
       include: { shoppingCart: true },
     });
-    res.send(userWithShoppingCart.shoppingCart)
+    res.send(userWithShoppingCart.shoppingCart);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error occured displaying shopping cart" });
   }
+});
+
+// checkout user
+app.patch("/checkout", async (req, res, next) => {
+  let { userId } = req.query;
+    userId = parseInt(userId);
+    const checkOutUser = await prisma.users.findUnique({
+      where: { id: userId },
+      include: { shoppingCart: true },
+    });
+
 });
 
 module.exports = app;

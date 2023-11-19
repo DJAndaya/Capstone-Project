@@ -61,7 +61,7 @@ const ItemCards = ({ item }) => {
             </Button>
           </CardActions>
           <Typography variant="h6" component="div">
-            ${item.price}.00
+            ${item.price}
           </Typography>
         </CardContent>
       </Card>
