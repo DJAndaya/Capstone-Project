@@ -43,8 +43,8 @@ const seed = async () => {
             description: faker.commerce.productDescription(),
             category: faker.commerce.product(),
             seller: {
-              connect: { id: user.id }
-            }
+              connect: { id: user.id },
+            },
           },
         };
 

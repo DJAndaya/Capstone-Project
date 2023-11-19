@@ -32,6 +32,10 @@ export default function AllProducts() {
     fetchProducts();
   }, []);
 
+  /********************************************************/
+  /********* P * A * G * I * N * A * T * I * O * N ********/
+  /********************************************************/
+
   const calculateTotalPages = (totalItems) => {
     setTotalPages(Math.ceil(totalItems / itemsPerPage));
   };
@@ -53,6 +57,58 @@ export default function AllProducts() {
     const endIndex = startIndex + itemsPerPage;
     return products.slice(startIndex, endIndex);
   };
+  /********************************************************/
+
+  /********************************************************/
+  /******* A * D * M * I * N *** S * T * U * F * F ********/
+  /********************************************************/
+
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    price: "",
+    description: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewProduct((prevProduct) => ({
+      ...prevProduct,
+      [name]: value,
+    }));
+  };
+
+  const handleAddProduct = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/admin/addproduct", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProduct),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add product");
+      }
+
+      // Assuming the server responds with the added product
+      const addedProduct = await response.json();
+
+      // Update the local state to include the new product
+      setProducts((prevProducts) => [...prevProducts, addedProduct]);
+
+      // Reset the new product form
+      setNewProduct({
+        name: "",
+        price: "",
+        description: "",
+      });
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
+  };
+
+  /********************************************************/
 
   return (
     <div>
@@ -62,6 +118,39 @@ export default function AllProducts() {
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
 
+      <h2>Add New Product (dummy)</h2>
+      <form>
+        <label>
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={newProduct.name}
+            onChange={handleInputChange}
+          />
+        </label>
+        <label>
+          Price:
+          <input
+            type="text"
+            name="price"
+            value={newProduct.price}
+            onChange={handleInputChange}
+          />
+        </label>
+        <label>
+          Description:
+          <input
+            type="text"
+            name="description"
+            value={newProduct.description}
+            onChange={handleInputChange}
+          />
+        </label>
+        <button type="button" onClick={handleAddProduct}>
+          Add Product
+        </button>
+      </form>
       <ul>
         {renderProductsForCurrentPage().map((product) => (
           <li key={product.id}>
@@ -82,7 +171,6 @@ export default function AllProducts() {
         >
           Previous Page
         </button>
-
         <span>
           Go to Page:{" "}
           <input
@@ -101,6 +189,7 @@ export default function AllProducts() {
           </button>
         </span>
       </div>
+     
     </div>
   );
 }
