@@ -17,7 +17,7 @@ model users {
   address      String
   firstName    String
   lastName     String
-  admin        Boolean
+  admin        Boolean   @default(false)
   sellingItems items[]   @relation("seller")
   wishlist     items[]   @relation("wishlist")
   orderHistory items[]   @relation("orderhistory")

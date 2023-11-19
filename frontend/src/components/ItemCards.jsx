@@ -7,9 +7,41 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
+// redux
+import { useSelector } from "react-redux";
+// router
+import { useNavigate } from "react-router-dom";
 
 const ItemCards = ({ item }) => {
-  const addItemToShoppingCard = (async) => {};
+  const seeReviews = () => {};
+  const userId = useSelector((state) => state.isAuth?.value?.id);
+  const navigate = useNavigate()
+
+  const addItemToShoppingCard = async () => {
+    // const [item, setItem] = useState({})
+    const itemId = item.id;
+    // console.log(userId);
+    // console.log(itemId);
+    const patchData = {itemId, userId}
+    if (!userId) {
+      navigate("/login")
+    } else {
+      try {
+        const response = await axios.patch(
+          "http://localhost:3000/items/addShoppingCart",
+          patchData
+        );
+
+        const token = response.data;
+        window.localStorage.setItem("token", token);
+        if (response) {
+          console.log("it worked");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   return (
     <div>
       <Card sx={{ minWidth: 275 }}>
@@ -22,8 +54,10 @@ const ItemCards = ({ item }) => {
           </Typography>
           <Typography component="div">{item.description}</Typography>
           <CardActions>
-            <Button variant="contained">See Reviews</Button>
-            <Button variant="contained">Add to cart</Button>
+            {/* <Button variant="contained">See Reviews</Button> */}
+            <Button variant="contained" onClick={addItemToShoppingCard}>
+              Add to cart
+            </Button>
           </CardActions>
           <Typography variant="h6" component="div">
             ${item.price}.00
