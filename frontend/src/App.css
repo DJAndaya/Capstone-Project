@@ -1,0 +1,20 @@
+.product-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  margin: auto;
+}
+
+.product-form label {
+  margin-bottom: 8px;
+}
+
+.product-form input {
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+.product-form button {
+  padding: 8px;
+  cursor: pointer;
+}

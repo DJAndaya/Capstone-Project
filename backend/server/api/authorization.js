@@ -104,7 +104,7 @@ app.post("/login", async (req, res, next) => {
     if (!emailConfirmed) {
       return res.status(409).send({ message: "user does not exist" });
     }
-
+    
     const isCorrectPassword = bcrypt.compareSync(
       password,
       emailConfirmed.password

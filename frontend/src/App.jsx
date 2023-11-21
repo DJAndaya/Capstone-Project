@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import axios from 'axios'
@@ -10,7 +11,7 @@ import Home from "./components/Home";
 import Cart from "./components/Cart";
 import Orders from "./components/Orders";
 import Admin from "./components/Admin";
-import AllProducts from "./components/Admin/allProducts";
+import AllProducts from "./components/Admin/AllProducts";
 import AllUsers from "./components/Admin/AllUsers";
 
 import Login from "./components/Login";
@@ -100,6 +101,6 @@ export default function App() {
 
     possiblyLogin();
   }, []);
-
+  
   return <RouterProvider router={router} />;
 }

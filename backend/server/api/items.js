@@ -8,18 +8,19 @@ const prisma = new PrismaClient();
 
 // get all items data
 app.get("/", async (req, res, next) => {
-  try{
-    res.send(await prisma.items.findMany())
-  } catch(error) {
-    console.log(error)
+
+  try {
+    res.send(await prisma.items.findMany());
+  } catch (error) {
+    console.log(error);
   }
-})
+});
 
 app.post("/sell", async (req, res, next) => {
   try {
-    const { name, price, amount, description, category } = req.body.formData
-    const { id } = req.body
-    
+    const { name, price, amount, description, category } = req.body.formData;
+    const { id } = req.body;
+
     const newItem = await prisma.items.create({
       data: {
         name,
@@ -28,50 +29,161 @@ app.post("/sell", async (req, res, next) => {
         description,
         category,
         seller: {
-          connect: { id: id }
-        }
-      }
-    })
+          connect: { id: id },
+        },
+      },
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
 
-//
 app.get("/id", async (req, res, next) => {
   const itemId = req.body;
   try {
-    res.send(await prisma.items.findUnique({
-      where: {
-        id: itemId
-      }
-    }));
+    res.send(
+      await prisma.items.findUnique({
+        where: {
+          id: itemId,
+        },
+      })
+    );
   } catch (error) {
-    retrurn.status(500).json({ error: "error finding item"})
+    retrurn.status(500).json({ error: "error finding item" });
   }
 });
 
 // add user's shopping cart
-app.patch("/addShoppingCart", async (req, res, next) => {
+app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
   try {
-    console.log(req.body)
-    const { itemId, userId } = req.body;  
-
-    const updatedUserShoppingCart = await prisma.users.update({
+    // console.log(req.body)
+    const { item, userId } = req.body;
+    // console.log(userId);
+    const user = await prisma.users.findUnique({
       where: { id: userId },
-      data: {
-        shoppingCart: {
-          connect: itemId,
-        },
-      },
+      include: { shoppingCart: true },
     });
 
+    const isItemInCart = user.shoppingCart.some(
+      (cartItem) => cartItem.id === item.id
+    );
+    let updatedUserShoppingCart = "";
+    // console.log(isItemInCart);
+    if (isItemInCart) {
+      updatedUserShoppingCart = await prisma.users.update({
+        where: { id: userId },
+        data: {
+          shoppingCart: {
+            disconnect: item,
+          },
+        },
+        // include: {shoppingCart: true}
+      });
+      // console.log("item being removed")
+    } else {
+      updatedUserShoppingCart = await prisma.users.update({
+        where: { id: userId },
+        data: {
+          shoppingCart: {
+            connect: item,
+          },
+        },
+        // include: {shoppingCart: true}
+      });
+      // console.log("item added")
+    }
+    // console.log(updatedUserShoppingCart);
     const token = jwt.sign(updatedUserShoppingCart, process.env.JWT_SECRET_KEY);
     res.send(token);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error occured adding item" });
   }
+});
+
+// clear user's shopping cart
+app.patch("/clearShoppingCart", async (req, res, next) => {
+  try {
+    // console.log(req.body)
+    let { userId } = req.query;
+    userId = parseInt(userId);
+    console.log(userId)
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+      include: { shoppingCart: true },
+    });
+
+    const itemsInShoppingCart = user.shoppingCart.map(item => ({ id: item.id }));
+    // console.log(userId);
+      updatedUserShoppingCart = await prisma.users.update({
+        where: { id: userId },
+        data: {
+          shoppingCart: {
+            disconnect: itemsInShoppingCart
+          },
+        },
+      });
+      // console.log("item being removed")
+    // console.log(updatedUserShoppingCart);
+    const token = jwt.sign(updatedUserShoppingCart, process.env.JWT_SECRET_KEY);
+    res.send(token);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error occured adding item" });
+  }
+})
+
+// get user's shopping cart
+app.get("/shoppingCart", async (req, res, next) => {
+  try {
+    let { userId } = req.query;
+    userId = parseInt(userId);
+
+    // console.log(userId)
+    const userWithShoppingCart = await prisma.users.findUnique({
+      where: { id: userId },
+      include: { shoppingCart: true },
+    });
+    res.send(userWithShoppingCart.shoppingCart);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error occured displaying shopping cart" });
+  }
+});
+
+// checkout user
+app.patch("/checkOut", async (req, res, next) => {
+  let { userId } = req.query;
+  userId = parseInt(userId);
+  // console.log(req.body)
+  const itemIdAndAmount = req.body;
+  console.log("checkout request went through");
+
+  for (const { itemId, amount } of itemIdAndAmount) {
+    console.log(itemId);
+    await prisma.items.update({
+      where: { id: itemId },
+      data: {
+        amount: {
+          decrement: amount,
+        },
+      },
+    });
+  }
+
+  const updatedUser = await prisma.users.update({
+    where: { id: userId },
+    data: {
+      shoppingCart: {
+        disconnect: itemIdAndAmount.map((item) => ({ id: item.itemId })),
+      },
+      orderHistory: {
+        connect: itemIdAndAmount.map((item) => ({ id: item.itemId })),
+      },
+    },
+  });
+  const token = jwt.sign(updatedUser, process.env.JWT_SECRET_KEY);
+  res.send(token);
 });
 
 module.exports = app;
