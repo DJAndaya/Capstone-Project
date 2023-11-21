@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 // get all items data
 app.get("/", async (req, res, next) => {
+
   try {
     res.send(await prisma.items.findMany());
   } catch (error) {
@@ -186,3 +187,4 @@ app.patch("/checkOut", async (req, res, next) => {
 });
 
 module.exports = app;
+

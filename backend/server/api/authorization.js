@@ -1,4 +1,4 @@
-const app = require("express").Router()
+const app = require("express").Router();
 const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 // registering users
 app.post("/register", async (req, res, next) => {
   const { email, password, firstName, lastName, address } = req.body;
-  console.log(email)
+  console.log(email);
   try {
     const emailAlreadyUsed = await prisma.users.findUnique({
       where: {
@@ -35,7 +35,7 @@ app.post("/register", async (req, res, next) => {
     const token = jwt.sign(newUser, process.env.JWT_SECRET_KEY);
     res.send(token);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ error: "unable to make account" });
   }
 });
@@ -55,7 +55,11 @@ app.post("/login", async (req, res, next) => {
       return res.status(409).send({ message: "user does not exist" });
     }
 
-    const isCorrectPassword = bcrypt.compareSync(password, emailAlreadyUsed.password);
+
+    const isCorrectPassword = bcrypt.compareSync(
+      password,
+      emailAlreadyUsed.password
+    );
 
     if (isCorrectPassword) {
       const token = jwt.sign(emailAlreadyUsed, process.env.JWT_SECRET_KEY);
@@ -64,18 +68,18 @@ app.post("/login", async (req, res, next) => {
       res.status(401).send({ message: "Incorrect password" });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ error: "unable to login" });
   }
 });
 
-// send user data 
+// send user data
 app.get("/loggedin", async (req, res, next) => {
-  const token = req.headers.authorization
+  const token = req.headers.authorization;
 
-  const user = jwt.verify(token, process.env.JWT_SECRET_KEY)
+  const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-  res.send(user)
-})
+  res.send(user);
+});
 
-module.exports = app
+module.exports = app;
