@@ -106,21 +106,6 @@ export default function Root() {
                 Cart
               </Link>
             </Box>
-            {userSignedIn ? (
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="account"
-              >
-                Account
-              </Link>
-            ) : (
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="login"
-              >
-                Login
-              </Link>
-            )}
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
               <Link
                 style={{ textDecoration: "none", color: "white" }}
@@ -137,6 +122,21 @@ export default function Root() {
                 Admin
               </Link>
             </Box>
+            {userSignedIn ? (
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="logout"
+              >
+                Logout
+              </Link>
+            ) : (
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="login"
+              >
+                Login
+              </Link>
+            )}
             {/* Login/register/logout */}
           </Toolbar>
         </AppBar>
