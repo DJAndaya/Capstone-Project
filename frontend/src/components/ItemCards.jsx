@@ -22,18 +22,19 @@ const ItemCards = ({ item }) => {
     const itemId = item.id;
     // console.log(userId);
     // console.log(itemId);
-    const patchData = {itemId, userId}
+    const patchData = {item, userId}
     if (!userId) {
       navigate("/login")
     } else {
       try {
         const response = await axios.patch(
-          "http://localhost:3000/items/addShoppingCart",
+          "http://localhost:3000/items/addToShoppingCart",
           patchData
         );
 
         const token = response.data;
         window.localStorage.setItem("token", token);
+        // console.log(response.data)
         if (response) {
           console.log("it worked");
         }
@@ -60,7 +61,7 @@ const ItemCards = ({ item }) => {
             </Button>
           </CardActions>
           <Typography variant="h6" component="div">
-            ${item.price}.00
+            ${item.price}
           </Typography>
         </CardContent>
       </Card>

@@ -66,6 +66,10 @@ export default function App() {
           path: "/register",
           element: <Register />,
         },
+        {
+          path: "/account",
+          element: <Account />
+        }
       ],
     },
   ]);
