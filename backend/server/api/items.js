@@ -187,4 +187,3 @@ app.patch("/checkOut", async (req, res, next) => {
 });
 
 module.exports = app;
-
