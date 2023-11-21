@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import { setIsAuth } from "../redux/isAuthSlice";
@@ -13,25 +13,6 @@ const Login = () => {
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const possiblyLogin = async () => {
-      const token = window.localStorage.getItem("token");
-
-      if (token) {
-        const userResponse = await axios.get("http://localhost:3000/auth/me", {
-          headers: {
-            authorization: token,
-          },
-        });
-
-        const user = userResponse.data;
-        dispatch(setIsAuth(user));
-      }
-    };
-
-    possiblyLogin();
-  }, []);
 
   const loginUser = async (formData) => {
     try {

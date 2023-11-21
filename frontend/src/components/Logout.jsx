@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 
-const Account = () => {
+const Logout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const logOut = () => {
@@ -22,4 +22,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default Logout;
