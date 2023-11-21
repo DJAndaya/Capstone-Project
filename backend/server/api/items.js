@@ -8,18 +8,19 @@ const prisma = new PrismaClient();
 
 // get all items data
 app.get("/", async (req, res, next) => {
-  try{
-    res.send(await prisma.items.findMany())
-  } catch(error) {
-    console.log(error)
+
+  try {
+    res.send(await prisma.items.findMany());
+  } catch (error) {
+    console.log(error);
   }
-})
+});
 
 app.post("/sell", async (req, res, next) => {
   try {
-    const { name, price, amount, description, category } = req.body.formData
-    const { id } = req.body
-    
+    const { name, price, amount, description, category } = req.body.formData;
+    const { id } = req.body;
+
     const newItem = await prisma.items.create({
       data: {
         name,
@@ -28,12 +29,12 @@ app.post("/sell", async (req, res, next) => {
         description,
         category,
         seller: {
-          connect: { id: id }
-        }
-      }
-    })
+          connect: { id: id },
+        },
+      },
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
 
@@ -41,21 +42,23 @@ app.post("/sell", async (req, res, next) => {
 app.get("/id", async (req, res, next) => {
   const itemId = req.body;
   try {
-    res.send(await prisma.items.findUnique({
-      where: {
-        id: itemId
-      }
-    }));
+    res.send(
+      await prisma.items.findUnique({
+        where: {
+          id: itemId,
+        },
+      })
+    );
   } catch (error) {
-    retrurn.status(500).json({ error: "error finding item"})
+    retrurn.status(500).json({ error: "error finding item" });
   }
 });
 
 // add user's shopping cart
 app.patch("/addShoppingCart", async (req, res, next) => {
   try {
-    console.log(req.body)
-    const { itemId, userId } = req.body;  
+    console.log(req.body);
+    const { itemId, userId } = req.body;
 
     const updatedUserShoppingCart = await prisma.users.update({
       where: { id: userId },
@@ -75,3 +78,4 @@ app.patch("/addShoppingCart", async (req, res, next) => {
 });
 
 module.exports = app;
+
