@@ -84,22 +84,22 @@ export default function App() {
   ]);
 
   useEffect(() => {
-    const possiblyLogin = async () => {
-      const token = window.localStorage.getItem("token");
+    // const possiblyLogin = async () => {
+    //   const token = window.localStorage.getItem("token");
+    //   console.log(token)
+    //   if (token) {
+    //     const userResponse = await axios.get("http://localhost:3000/auth/loggedin", {
+    //       headers: {
+    //         authorization: token,
+    //       },
+    //     });
 
-      if (token) {
-        const userResponse = await axios.get("http://localhost:3000/auth/loggedin", {
-          headers: {
-            authorization: token,
-          },
-        });
+    //     const user = userResponse.data;
+    //     dispatch(setIsAuth(user));
+    //   }
+    // };
 
-        const user = userResponse.data;
-        dispatch(setIsAuth(user));
-      }
-    };
-
-    possiblyLogin();
+    // possiblyLogin();
   }, []);
   
   return <RouterProvider router={router} />;

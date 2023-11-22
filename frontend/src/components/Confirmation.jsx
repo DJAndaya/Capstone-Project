@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsAuth, selectIsAuth } from '../redux/isAuthSlice'
+import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
 export default function Confirmation() {
   const navigate = useNavigate();
@@ -11,16 +11,17 @@ export default function Confirmation() {
   const [confirmation, setConfirmation] = useState("Confirming...");
 
   useEffect(() => {
-    const token = window.location.pathname.split("/").pop();
-
+    const confirmationToken = window.location.pathname.split("/").pop();
+    console.log(confirmationToken);
     const confirmEmail = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/confirm/${token}`
+          `http://localhost:3000/auth/confirm/${confirmationToken}`
         );
 
-        if (response.ok) {
+        if ((response.status === 200)) {
           const token = response.data;
+          console.log(token);
           window.localStorage.setItem("token", token);
           setConfirmation("Email confirmed successfully.");
 
@@ -32,15 +33,14 @@ export default function Confirmation() {
               },
             }
           );
-    
+
           const user = userResponse.data;
           dispatch(setIsAuth(user));
-          navigate("/")
+          navigate("/");
         } else {
           setConfirmation("Failed to confirm email.");
         }
       } catch (error) {
-        console.error("Error confirming email:", error);
         setConfirmation("Internal Server Error.");
       }
     };

@@ -19,7 +19,7 @@ model users {
   lastName          String
   admin             Boolean   @default(false)
   isConfirmed       Boolean   @default(false)
-  confirmationToken String?
+  confirmationToken String?   @unique
   sellingItems      items[]   @relation("seller")
   wishlist          items[]   @relation("wishlist")
   orderHistory      items[]   @relation("orderhistory")

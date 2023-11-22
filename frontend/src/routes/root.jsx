@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { useState } from "react";
-import { useSelector } from 'react-redux'
+import { useSelector } from "react-redux";
 
 import { Box, AppBar, Toolbar, InputBase } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +57,7 @@ export default function Root() {
 
   const handleSearch = () => {
     if (searchQuery.trim() != "") {
-      setSearchQuery("")
+      setSearchQuery("");
       navigate(`/results/${searchQuery}`);
     }
   };
@@ -123,19 +123,33 @@ export default function Root() {
               </Link>
             </Box>
             {userSignedIn ? (
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="logout"
-              >
-                Logout
-              </Link>
+              <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+                <Link
+                  style={{ textDecoration: "none", color: "white" }}
+                  to="logout"
+                >
+                  Logout
+                </Link>
+              </Box>
             ) : (
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="login"
-              >
-                Login
-              </Link>
+              <div>
+                <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+                  <Link
+                    style={{ textDecoration: "none", color: "white" }}
+                    to="login"
+                  >
+                    Login
+                  </Link>
+                </Box>
+                <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+                  <Link
+                    style={{ textDecoration: "none", color: "white" }}
+                    to="register"
+                  >
+                    Register
+                  </Link>
+                </Box>
+              </div>
             )}
             {/* Login/register/logout */}
           </Toolbar>

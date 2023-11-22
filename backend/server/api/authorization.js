@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const { decode } = require("punycode");
 
 const prisma = new PrismaClient();
 
@@ -12,7 +13,7 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.MAIL_SENDER_EMAIL,
-    pass: process.env.MAIL_SENDER_PASSWORD
+    pass: process.env.MAIL_SENDER_PASSWORD,
   },
 });
 
@@ -63,14 +64,19 @@ app.post("/register", async (req, res, next) => {
 });
 
 app.get("/confirm/:token", async (req, res, next) => {
-  const token = req.params.token;
+  const confirmationToken = req.params.token;
+  console.log(confirmationToken);
   try {
     const user = await prisma.users.findUnique({
-      where: { confirmationToken: token },
+      where: { confirmationToken: confirmationToken },
     });
 
     if (!user) {
       return res.status(404).send("Invalid confirmation token.");
+    }
+
+    if (user.isConfirmed) {
+      return res.status(200).send("User is already confirmed.");
     }
 
     await prisma.users.update({
@@ -80,8 +86,15 @@ app.get("/confirm/:token", async (req, res, next) => {
         confirmationToken: null,
       },
     });
-    
-    const token = jwt.sign(user, process.env.JWT_SECRET_KEY);
+
+    const payload = {
+      id: user.id,
+      email: user.email,
+    };
+    console.log(payload);
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
+    console.log(token);
     res.status(200).send(token);
   } catch (error) {
     console.error(error);
@@ -97,14 +110,14 @@ app.post("/login", async (req, res, next) => {
     const emailConfirmed = await prisma.users.findUnique({
       where: {
         email,
-        isConfirmed: true
+        isConfirmed: true,
       },
     });
 
     if (!emailConfirmed) {
       return res.status(409).send({ message: "user does not exist" });
     }
-    
+
     const isCorrectPassword = bcrypt.compareSync(
       password,
       emailConfirmed.password
@@ -125,10 +138,17 @@ app.post("/login", async (req, res, next) => {
 // send user data
 app.get("/loggedin", async (req, res, next) => {
   const token = req.headers.authorization;
+  if (token) {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    if (decodedToken) {
+      const user = {
+        id: decodedToken.id,
+        email: decodedToken.email,
+      };
 
-  const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-  res.send(user);
+      res.send(user);
+    }
+  }
 });
 
 module.exports = app;
