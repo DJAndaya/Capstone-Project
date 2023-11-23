@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 // material UI
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-// redux
-import { useSelector } from "react-redux";
-// router
-import { useNavigate } from "react-router-dom";
 
 import AddToCartButton from "./AddToCartButton";
 import ReviewButton from "./ReviewButton";
 
 const ItemCards = ({ item }) => {
+
   const seeReviews = () => {};
 
   return (

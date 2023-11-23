@@ -25,9 +25,25 @@ const seed = async () => {
         },
       };
 
+      const testUser = {
+        data: {
+          email: faker.internet.email(),
+          password: "password",
+          address: "address",
+          firstName: "firstName",
+          lastName: "lastName",
+          // admin: true,
+          isConfirmed: true,
+        },
+      };
+
+      const createdTestUser = await prisma.users.create(testUser)
+      users.push(createdTestUser)
       const createdUser = await prisma.users.create(newUser);
       users.push(createdUser);
+      
     }
+
 
     for (const user of users) {
       let products = [];

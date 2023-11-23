@@ -14,42 +14,26 @@ import Divider from "@mui/material/Divider";
 import CartItems from "./CartItems";
 
 const Cart = () => {
-  // const [shoppingCart, setShoppingCart] = useState([]);
   const [formData, setFormData] = useState(null);
-  const [amount, setAmount] = useState(1);
-  const [shoppingCart, setShoppingCart] = useOutletContext()
+  const [shoppingCart, setShoppingCart] = useOutletContext();
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(userId);
   useEffect(() => {
-    const getShoppingCartItems = async () => {
-      // console.log(userId)
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/items/shoppingCart/`,
-          {
-            params: { userId: userId },
-          }
-        );
-        const alphabeticalOrderData = response.data.sort((a, b) => {
-          return a.name > b.name ? 1 : -1;
-        });
-        const initialFormData = alphabeticalOrderData.map((item) => ({
-          itemId: item.id,
-          amount: 0,
-        }));
-        setShoppingCart(alphabeticalOrderData);
-        setFormData(initialFormData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getShoppingCartItems();
-
+    const initialFormData = shoppingCart.map((item) => ({
+      itemId: item.id,
+      amount: 0,
+    }));
+    setFormData(initialFormData);
   }, []);
 
   const checkOut = async () => {
+    if (!userId) {
+      navigate("/login");
+      return;
+    }
+
     try {
       const response = await axios.patch(
         "http://localhost:3000/items/checkOut",
@@ -61,7 +45,7 @@ const Cart = () => {
 
       const token = response.data;
       window.localStorage.setItem("token", token);
-      setShoppingCart([])
+      setShoppingCart([]);
       navigate("/");
       console.log("checkout");
     } catch (error) {
@@ -79,11 +63,11 @@ const Cart = () => {
           params: { userId: userId },
         }
       );
-      setShoppingCart([])
+      setShoppingCart([]);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
   if (shoppingCart.length === 0) {
     return <h1>Cart is empty or loading</h1>;
   } else {
@@ -128,62 +112,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-/*
-
-  1. at the beginning, setFormData to be [{id: itemId, amount: 0} x amount of tiems]
-  2. create a function called updateFormData, it will something like:
-    const updateFormData = (id, newAmount) => {
-      setFormData((prevFormData) => {
-        prevFormData.map((item) => {
-          if (item.id === id) {
-            {...item, amount: newAmount}
-          }
-        })
-      })
-    }
-  3. replace the checkout function with what is now the useEffect that changes when formData changes
-
-copy and pasted data below for storage:
-
- const checkOut = async () => {
-    let updatedFormData = [];
-    for (let item of shoppingCart) {
-      updatedFormData = [
-        ...updatedFormData,
-        {
-          itemId: item.id,
-          amount: amount,
-        },
-      ];
-    }
-    setFormData(updatedFormData);
-  };
-  // console.log(formData)
-  useEffect(() => {
-    if (formData) {
-      console.log(formData);
-      const patchRequest = async () => {
-        try {
-          const response = await axios.patch(
-            "http://localhost:3000/items/checkOut",
-            formData,
-            {
-              params: { userId: userId },
-            }
-          );
-
-          const token = response.data;
-          window.localStorage.setItem("token", token);
-          navigate("/");
-          console.log("checkout");
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      patchRequest();
-    }
-  }, [formData]);
-
-
-*/
