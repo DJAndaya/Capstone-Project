@@ -90,6 +90,7 @@ app.get("/confirm/:token", async (req, res, next) => {
     const payload = {
       id: user.id,
       email: user.email,
+      admin: user.admin
     };
     console.log(payload);
 
@@ -144,6 +145,7 @@ app.get("/loggedin", async (req, res, next) => {
       const user = {
         id: decodedToken.id,
         email: decodedToken.email,
+        admin: decodedToken.admin
       };
 
       res.send(user);

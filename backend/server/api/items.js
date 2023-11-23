@@ -7,14 +7,47 @@ const jwt = require("jsonwebtoken");
 const prisma = new PrismaClient();
 
 // get all items data
-app.get("/a", async (req, res, next) => {
-
+app.get("/", async (req, res, next) => {
   try {
     res.send(await prisma.items.findMany());
   } catch (error) {
     console.log(error);
   }
 });
+
+app.get("/getItemsSelling", async (req, res, next) => {
+  const { userId } = req.query
+  try {
+    const response = await prisma.users.findUnique({
+      where: {
+        id: Number(userId),
+      },
+      include: {
+        sellingItems: true,
+      }
+    })
+    res.send(response)
+  } catch (error) {
+    console.log(error)
+  }
+});
+
+app.delete("/deleteItemSelling/:itemId", async (req, res, next) => {
+  const { itemId } = req.params
+  const { userId } = req.query
+
+  try {
+    const removedItem = await prisma.items.delete({
+      where: {
+        id: Number(itemId),
+        seller: { some: { id: Number(userId) } },
+      }
+    })
+    res.send(removedItem)
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 app.post("/sell", async (req, res, next) => {
   try {
@@ -33,6 +66,7 @@ app.post("/sell", async (req, res, next) => {
         },
       },
     });
+    res.send(newItem)
   } catch (error) {
     console.log(error);
   }
@@ -107,23 +141,25 @@ app.patch("/clearShoppingCart", async (req, res, next) => {
     // console.log(req.body)
     let { userId } = req.query;
     userId = parseInt(userId);
-    console.log(userId)
+    console.log(userId);
     const user = await prisma.users.findUnique({
       where: { id: userId },
       include: { shoppingCart: true },
     });
 
-    const itemsInShoppingCart = user.shoppingCart.map(item => ({ id: item.id }));
+    const itemsInShoppingCart = user.shoppingCart.map((item) => ({
+      id: item.id,
+    }));
     // console.log(userId);
-      updatedUserShoppingCart = await prisma.users.update({
-        where: { id: userId },
-        data: {
-          shoppingCart: {
-            disconnect: itemsInShoppingCart
-          },
+    updatedUserShoppingCart = await prisma.users.update({
+      where: { id: userId },
+      data: {
+        shoppingCart: {
+          disconnect: itemsInShoppingCart,
         },
-      });
-      // console.log("item being removed")
+      },
+    });
+    // console.log("item being removed")
     // console.log(updatedUserShoppingCart);
     const token = jwt.sign(updatedUserShoppingCart, process.env.JWT_SECRET_KEY);
     res.send(token);
@@ -131,7 +167,7 @@ app.patch("/clearShoppingCart", async (req, res, next) => {
     console.log(error);
     res.status(500).json({ error: "Error occured adding item" });
   }
-})
+});
 
 // get user's shopping cart
 app.get("/shoppingCart", async (req, res, next) => {
