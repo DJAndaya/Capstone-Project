@@ -54,6 +54,7 @@ export default function Root() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const userSignedIn = useSelector((state) => state.isAuth.value);
+  const [shoppingCart, setShoppingCart] = useState([])
 
   const handleSearch = () => {
     if (searchQuery.trim() != "") {
@@ -141,7 +142,7 @@ export default function Root() {
           </Toolbar>
         </AppBar>
       </Box>
-      <Outlet />
+      <Outlet context={[shoppingCart, setShoppingCart]}/>
     </div>
   );
 }
