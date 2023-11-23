@@ -15,51 +15,12 @@ import {
 } from "@mui/material";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 import { useDispatch, useSelector } from "react-redux";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { yellow } from '@mui/material/colors'
+import AddToCartButton from "./AddToCartButton";
 
-export default function Sell() {
-  const [formData, setFormData] = useState({
-    name: "",
-    price: "",
-    amount: "",
-    description: "",
-    category: "",
-  });
-
-  const isAuth = useSelector(selectIsAuth);
-
-  const addItemToSell = async (formData) => {
-    try {
-      const response = await axios.post("http://localhost:3000/items/sell", {
-        formData,
-        id: isAuth.id,
-      });
-
-      const itemAddedToItemSelling = [...itemsSelling, response.data];
-      setItemsSelling(itemAddedToItemSelling);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const onSubmit = (event) => {
-    event.preventDefault();
-
-    addItemToSell(formData);
-  };
-
+export default function ItemsSelling() {
   const [itemsSelling, setItemsSelling] = useState([]);
-
+  const isAuth = useSelector(selectIsAuth);
+  console.log(itemsSelling);
   useEffect(() => {
     const getItemsSelling = async () => {
       try {
@@ -86,11 +47,11 @@ export default function Sell() {
         `http://localhost:3000/items/deleteItemSelling/${itemId}`,
         {
           params: {
-            userId: isAuth.id,
+            userId: isAuth.id
           },
         }
       );
-
+      
       if (response.status === 200) {
         const updatedItemsSelling = itemsSelling.filter(
           (item) => item.id != itemId
@@ -103,43 +64,7 @@ export default function Sell() {
   };
 
   return (
-    <div>
-      <div>
-        <h1>Sell Item</h1>
-        <form onSubmit={onSubmit}>
-          <input
-            placeholder="Name"
-            value={formData.name}
-            onChange={handleInputChange}
-            name="name"
-          />
-          <input
-            placeholder="Price"
-            value={formData.price}
-            onChange={handleInputChange}
-            name="price"
-          />
-          <input
-            placeholder="Amount"
-            value={formData.amount}
-            onChange={handleInputChange}
-            name="amount"
-          />
-          <input
-            placeholder="Category"
-            value={formData.category}
-            onChange={handleInputChange}
-            name="category"
-          />
-          <input
-            placeholder="Desciption"
-            value={formData.description}
-            onChange={handleInputChange}
-            name="description"
-          />
-          <button type="submit">Sell</button>
-        </form>
-      </div>
+    <>
       <h1>Items I'm Selling</h1>
       <Grid container spacing={3}>
         {itemsSelling.map((item, index) => {
@@ -162,19 +87,9 @@ export default function Sell() {
                   <Typography align={"center"} variant="body2">
                     Price: {item.price}
                   </Typography>
-                  {/* <div style={{ display: "flex" }}> */}
-                    <Typography align={"center"} sx={{ fontSize: 14 }}>
-                      Amount: {item.amount}
-                    </Typography>
-                    {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <IconButton sx={{ color: yellow[500], margin: -4 }}>
-                        <ArrowUpwardIcon sx={{ padding: 4 }} />
-                      </IconButton>
-                      <IconButton sx={{ color: yellow[500], margin: -4 }}>
-                        <ArrowDownwardIcon sx={{ padding: 4 }} />
-                      </IconButton>
-                    </div> */}
-                  {/* </div> */}
+                  <Typography align={"center"} sx={{ fontSize: 14 }}>
+                    Amount: {item.amount}
+                  </Typography>
                   <Typography align={"center"} sx={{ fontSize: 14 }}>
                     Category: {item.category}
                   </Typography>
@@ -196,6 +111,6 @@ export default function Sell() {
           );
         })}
       </Grid>
-    </div>
+    </>
   );
 }
