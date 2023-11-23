@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { useSelector } from "react-redux/es/hooks/useSelector";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 import { Box, Grid } from "@mui/material/";
 import Card from "@mui/material/Card";
@@ -14,9 +14,10 @@ import Divider from "@mui/material/Divider";
 import CartItems from "./CartItems";
 
 const Cart = () => {
-  const [shoppingCart, setShoppingCart] = useState([]);
+  // const [shoppingCart, setShoppingCart] = useState([]);
   const [formData, setFormData] = useState(null);
   const [amount, setAmount] = useState(1);
+  const [shoppingCart, setShoppingCart] = useOutletContext()
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -60,6 +61,7 @@ const Cart = () => {
 
       const token = response.data;
       window.localStorage.setItem("token", token);
+      setShoppingCart([])
       navigate("/");
       console.log("checkout");
     } catch (error) {
@@ -68,7 +70,7 @@ const Cart = () => {
   };
 
   const clearShoppingCart = async () => {
-    console.log(userId)
+    // console.log(userId)
     try {
       const response = await axios.patch(
         `http://localhost:3000/items/clearShoppingCart/`,
