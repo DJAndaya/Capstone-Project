@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const prisma = new PrismaClient();
 
 // get all items data
-app.get("/", async (req, res, next) => {
+app.get("/a", async (req, res, next) => {
 
   try {
     res.send(await prisma.items.findMany());

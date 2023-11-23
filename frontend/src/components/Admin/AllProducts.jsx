@@ -91,12 +91,17 @@ export default function AllProducts() {
 
   const handleAddProduct = async () => {
     try {
+      const amountAsInt = parseInt(newProduct.amount, 10);
+
       const response = await fetch("http://localhost:3000/admin/addproduct", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newProduct),
+        body: JSON.stringify({
+          ...newProduct,
+          amount: amountAsInt,
+        }),
       });
 
       if (!response.ok) {
@@ -202,28 +207,28 @@ export default function AllProducts() {
       const editedProduct = await response.json();
 
       // Update the local state to include the edited product
-      setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product.id === editedProduct.id ? editedProduct : product
-        )
-      );
+      setProducts((prevProducts) => {
+        const index = prevProducts.findIndex(
+          (product) => product.id === editedProduct.id
+        );
+
+        if (index !== -1) {
+          const updatedProducts = [...prevProducts];
+          updatedProducts[index] = editedProduct;
+          return updatedProducts;
+        }
+
+        return prevProducts;
+      });
 
       // Reset the editing state
       setEditingProduct(null);
       setIsEditFormOpen(false);
-
-      // Update the current page to stay on the same page
-      setCurrentPage((prevCurrentPage) => {
-        const index = products.findIndex(
-          (product) => product.id === editedProduct.id
-        );
-        const newPage = Math.ceil((index + 1) / itemsPerPage);
-        return newPage;
-      });
     } catch (error) {
       console.error("Error editing product:", error);
     }
   };
+
   /********************************************************/
 
   const toggleDrawer = () => {
@@ -257,7 +262,7 @@ export default function AllProducts() {
           <div>
             <label>
               <input
-                type="text"
+                type="decimal"
                 placeholder="Price"
                 name="price"
                 value={newProduct.price}
@@ -268,7 +273,7 @@ export default function AllProducts() {
           <div>
             <label>
               <input
-                type="text"
+                type="integer"
                 placeholder="Amount"
                 name="amount"
                 value={newProduct.amount}
@@ -318,7 +323,7 @@ export default function AllProducts() {
           <div>
             <label>
               <input
-                type="text"
+                type="decimal"
                 placeholder="Price"
                 name="price"
                 value={editingProduct.price}
@@ -329,7 +334,7 @@ export default function AllProducts() {
           <div>
             <label>
               <input
-                type="text"
+                type="integer"
                 placeholder="Amount"
                 name="amount"
                 value={editingProduct.amount}
