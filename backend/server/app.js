@@ -1,13 +1,13 @@
 const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
-const cors = require("cors")
+const cors = require("cors");
 const app = express();
 
 // Logging middleware
 app.use(morgan("dev"));
 
-app.use(cors())
+app.use(cors());
 
 // Body parsing middleware
 app.use(express.json());
@@ -15,8 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, "../public")));
 
-app.use("/auth", require("./api/authorization"))
-app.use("/items", require("./api/items"))
+app.use("/auth", require("./api/authorization"));
+app.use("/items", require("./api/items"));
+app.use("/admin", require("./api/admin"));
 app.get("/", (req, res, next) => {
   try {
     res.send("index.html");
@@ -33,4 +34,5 @@ app.use((err, req, res, next) => {
 app.use((req, res) => {
   res.status(404).send("Not found.");
 });
+
 module.exports = app;
