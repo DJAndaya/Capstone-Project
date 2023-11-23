@@ -11,7 +11,7 @@ const Home = () => {
   useEffect(() => {
     const getItems = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/items/");
+        const response = await axios.get("http://localhost:3000/items/a");
 
         // console.log(response.data);
         const alphabeticalOrderData = response.data.sort((a, b) => {

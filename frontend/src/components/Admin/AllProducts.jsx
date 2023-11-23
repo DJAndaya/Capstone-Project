@@ -193,37 +193,37 @@ export default function AllProducts() {
           body: JSON.stringify(editingProduct),
         }
       );
-
+  
       if (!response.ok) {
         throw new Error("Failed to edit product");
       }
-
+  
       // Assuming the server responds with the edited product
       const editedProduct = await response.json();
-
+  
       // Update the local state to include the edited product
-      setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product.id === editedProduct.id ? editedProduct : product
-        )
-      );
-
+      setProducts((prevProducts) => {
+        const index = prevProducts.findIndex(
+          (product) => product.id === editedProduct.id
+        );
+  
+        if (index !== -1) {
+          const updatedProducts = [...prevProducts];
+          updatedProducts[index] = editedProduct;
+          return updatedProducts;
+        }
+  
+        return prevProducts;
+      });
+  
       // Reset the editing state
       setEditingProduct(null);
       setIsEditFormOpen(false);
-
-      // Update the current page to stay on the same page
-      setCurrentPage((prevCurrentPage) => {
-        const index = products.findIndex(
-          (product) => product.id === editedProduct.id
-        );
-        const newPage = Math.ceil((index + 1) / itemsPerPage);
-        return newPage;
-      });
     } catch (error) {
       console.error("Error editing product:", error);
     }
   };
+  
   /********************************************************/
 
   const toggleDrawer = () => {
