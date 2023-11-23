@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-import { useSelector } from "react-redux/es/hooks/useSelector";
-
-import { useOutletContext } from "react-router-dom";
+import React, { useState } from "react";
 
 import { Box, Grid } from "@mui/material/";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -20,7 +14,6 @@ import Divider from "@mui/material/Divider";
 import AddToCartButton from "./AddToCartButton";
 
 const CartItems = ({ item, formData, setFormData }) => {
-
   const itemId = item.id;
 
   return (
@@ -51,7 +44,7 @@ const CartItems = ({ item, formData, setFormData }) => {
 };
 
 const BasicSelect = ({ itemId, formData, setFormData }) => {
-    const [newAmount, setNewAmount] = useState(1);
+  const [newAmount, setNewAmount] = useState(1);
 
   const handleChange = (event) => {
     setNewAmount(event.target.value);
@@ -69,7 +62,11 @@ const BasicSelect = ({ itemId, formData, setFormData }) => {
   const renderMenuItem = () => {
     const items = [];
     for (let i = 1; i <= 9; i++) {
-      items.push(<MenuItem value={i} key={i}>{i}</MenuItem>);
+      items.push(
+        <MenuItem value={i} key={i}>
+          {i}
+        </MenuItem>
+      );
     }
 
     return items;
