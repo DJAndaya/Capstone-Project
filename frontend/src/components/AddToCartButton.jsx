@@ -115,3 +115,9 @@ export default AddToCartButton;
 3. the button either removes or adds the item from the array depending on if it's a remove or add 
 
 */
+
+/* Changes needed to fix 
+
+
+
+*/
