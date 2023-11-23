@@ -1,8 +1,8 @@
+import { useState, useEffect } from "react";
 import "./App.css";
-
-import { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import axios from 'axios'
 
 import Root from "./routes/root";
 import ErrorPage from "./routes/ErrorPage";
@@ -16,10 +16,15 @@ import AllUsers from "./components/Admin/AllUsers";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Sell from "./components/Sell";
-import Account from "./components/Account";
+import Logout from "./components/Logout";
+import Sell from "./components/Sell"
+import Confirmation from "./components/Confirmation";
+import { useDispatch, useSelector } from 'react-redux'
+import { setIsAuth, selectIsAuth } from './redux/isAuthSlice'
 
 export default function App() {
+  const dispatch = useDispatch()
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -67,12 +72,35 @@ export default function App() {
           element: <Register />,
         },
         {
-          path: "/account",
-          element: <Account />
-        }
+          path: "/logout",
+          element: <Logout />,
+        },
+        {
+          path: "/confirm/:token",
+          element: <Confirmation />,
+        },
       ],
     },
   ]);
 
+  useEffect(() => {
+    // const possiblyLogin = async () => {
+    //   const token = window.localStorage.getItem("token");
+    //   console.log(token)
+    //   if (token) {
+    //     const userResponse = await axios.get("http://localhost:3000/auth/loggedin", {
+    //       headers: {
+    //         authorization: token,
+    //       },
+    //     });
+
+    //     const user = userResponse.data;
+    //     dispatch(setIsAuth(user));
+    //   }
+    // };
+
+    // possiblyLogin();
+  }, []);
+  
   return <RouterProvider router={router} />;
 }

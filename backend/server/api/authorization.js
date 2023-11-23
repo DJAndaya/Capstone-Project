@@ -3,8 +3,19 @@ const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const { decode } = require("punycode");
 
 const prisma = new PrismaClient();
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.MAIL_SENDER_EMAIL,
+    pass: process.env.MAIL_SENDER_PASSWORD,
+  },
+});
 
 // registering users
 app.post("/register", async (req, res, next) => {
@@ -29,14 +40,65 @@ app.post("/register", async (req, res, next) => {
         firstName,
         lastName,
         address,
+        confirmationToken: crypto.randomBytes(20).toString("hex"),
       },
     });
 
-    const token = jwt.sign(newUser, process.env.JWT_SECRET_KEY);
-    res.send(token);
+    const confirmationLink = `http://localhost:5173/confirm/${newUser.confirmationToken}`;
+    const mailOptions = {
+      from: process.env.MAIL_SENDER_EMAIL,
+      to: email,
+      subject: "Confirm Your Email",
+      html: `Click <a href="${confirmationLink}">here</a> to confirm your email.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res
+      .status(200)
+      .send("Registration successful. Check your email for confirmation.");
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "unable to make account" });
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/confirm/:token", async (req, res, next) => {
+  const confirmationToken = req.params.token;
+  console.log(confirmationToken);
+  try {
+    const user = await prisma.users.findUnique({
+      where: { confirmationToken: confirmationToken },
+    });
+
+    if (!user) {
+      return res.status(404).send("Invalid confirmation token.");
+    }
+
+    if (user.isConfirmed) {
+      return res.status(200).send("User is already confirmed.");
+    }
+
+    await prisma.users.update({
+      where: { id: user.id },
+      data: {
+        isConfirmed: true,
+        confirmationToken: null,
+      },
+    });
+
+    const payload = {
+      id: user.id,
+      email: user.email,
+    };
+    console.log(payload);
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
+    console.log(token);
+    res.status(200).send(token);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -45,24 +107,24 @@ app.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const emailAlreadyUsed = await prisma.users.findUnique({
+    const emailConfirmed = await prisma.users.findUnique({
       where: {
         email,
+        isConfirmed: true,
       },
     });
 
-    if (!emailAlreadyUsed) {
+    if (!emailConfirmed) {
       return res.status(409).send({ message: "user does not exist" });
     }
 
-
     const isCorrectPassword = bcrypt.compareSync(
       password,
-      emailAlreadyUsed.password
+      emailConfirmed.password
     );
 
     if (isCorrectPassword) {
-      const token = jwt.sign(emailAlreadyUsed, process.env.JWT_SECRET_KEY);
+      const token = jwt.sign(emailConfirmed, process.env.JWT_SECRET_KEY);
       res.send(token);
     } else {
       res.status(401).send({ message: "Incorrect password" });
@@ -76,10 +138,17 @@ app.post("/login", async (req, res, next) => {
 // send user data
 app.get("/loggedin", async (req, res, next) => {
   const token = req.headers.authorization;
+  if (token) {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    if (decodedToken) {
+      const user = {
+        id: decodedToken.id,
+        email: decodedToken.email,
+      };
 
-  const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-  res.send(user);
+      res.send(user);
+    }
+  }
 });
 
 module.exports = app;

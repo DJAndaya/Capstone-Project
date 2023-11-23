@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { useState } from "react";
-import { useSelector } from 'react-redux'
+import { useSelector } from "react-redux";
 
 import { Box, AppBar, Toolbar, InputBase } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -54,10 +54,11 @@ export default function Root() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const userSignedIn = useSelector((state) => state.isAuth.value);
+  const [shoppingCart, setShoppingCart] = useState([])
 
   const handleSearch = () => {
     if (searchQuery.trim() != "") {
-      setSearchQuery("")
+      setSearchQuery("");
       navigate(`/results/${searchQuery}`);
     }
   };
@@ -106,21 +107,6 @@ export default function Root() {
                 Cart
               </Link>
             </Box>
-            {userSignedIn ? (
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="account"
-              >
-                Account
-              </Link>
-            ) : (
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="login"
-              >
-                Login
-              </Link>
-            )}
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
               <Link
                 style={{ textDecoration: "none", color: "white" }}
@@ -137,11 +123,40 @@ export default function Root() {
                 Admin
               </Link>
             </Box>
+            {userSignedIn ? (
+              <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+                <Link
+                  style={{ textDecoration: "none", color: "white" }}
+                  to="logout"
+                >
+                  Logout
+                </Link>
+              </Box>
+            ) : (
+              <div>
+                <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+                  <Link
+                    style={{ textDecoration: "none", color: "white" }}
+                    to="login"
+                  >
+                    Login
+                  </Link>
+                </Box>
+                <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+                  <Link
+                    style={{ textDecoration: "none", color: "white" }}
+                    to="register"
+                  >
+                    Register
+                  </Link>
+                </Box>
+              </div>
+            )}
             {/* Login/register/logout */}
           </Toolbar>
         </AppBar>
       </Box>
-      <Outlet />
+      <Outlet context={[shoppingCart, setShoppingCart]}/>
     </div>
   );
 }

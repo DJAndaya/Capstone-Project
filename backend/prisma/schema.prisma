@@ -11,18 +11,20 @@ datasource db {
 }
 
 model users {
-  id           Int       @id @default(autoincrement())
-  email        String    @unique
-  password     String
-  address      String
-  firstName    String
-  lastName     String
-  admin        Boolean   @default(false)
-  sellingItems items[]   @relation("seller")
-  wishlist     items[]   @relation("wishlist")
-  orderHistory items[]   @relation("orderhistory")
-  shoppingCart items[]   @relation("shoppingcart")
-  reviews      reviews[]
+  id                Int       @id @default(autoincrement())
+  email             String    @unique
+  password          String
+  address           String
+  firstName         String
+  lastName          String
+  admin             Boolean   @default(false)
+  isConfirmed       Boolean   @default(false)
+  confirmationToken String?   @unique
+  sellingItems      items[]   @relation("seller")
+  wishlist          items[]   @relation("wishlist")
+  orderHistory      items[]   @relation("orderhistory")
+  shoppingCart      items[]   @relation("shoppingcart")
+  reviews           reviews[]
 }
 
 model items {

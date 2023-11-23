@@ -3,6 +3,8 @@ import axios from "axios";
 
 import { useSelector } from "react-redux/es/hooks/useSelector";
 
+import { useOutletContext } from "react-router-dom";
+
 import { Box, Grid } from "@mui/material/";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -18,30 +20,8 @@ import Divider from "@mui/material/Divider";
 import AddToCartButton from "./AddToCartButton";
 
 const CartItems = ({ item, formData, setFormData }) => {
-  //   const [amount, setAmount] = useState(1);
 
-  const userId = useSelector((state) => state.isAuth?.value?.id);
   const itemId = item.id;
-
-  const removeFromShoppingCart = async () => {
-    // console.log("removed from cart works");
-    const patchData = { item, userId };
-    try {
-      const response = await axios.patch(
-        "http://localhost:3000/items/addOrRemoveFromShoppingCart",
-        patchData
-      );
-
-      const token = response.data;
-      window.localStorage.setItem("token", token);
-      // console.log(response.data)
-      // if (response) {
-      //   console.log("it worked");
-      // }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <Card sx={{ minWidth: 275 }}>

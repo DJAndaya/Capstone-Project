@@ -6,10 +6,12 @@ const shoppingCartSlice = createSlice({
     value: [],
   },
   reducers: {
-    setShoppingCart: (state, action) => {
+    updateShoppingCart: (state, action) => {
       state.value = action.payload;
     },
   },
 });
+
+export const { updateShoppingCart } = shoppingCartSlice.actions;
 
 export default shoppingCartSlice.reducer;

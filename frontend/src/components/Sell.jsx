@@ -12,8 +12,8 @@ export default function Sell() {
     category: "",
   });
 
-  const isAuth = useSelector(selectIsAuth);
-  console.log(isAuth)
+  const userId = useSelector((state) => state.isAuth?.value?.id);
+  console.log(userId)
 
   const addItemToSell = async (formData) => {
     try {

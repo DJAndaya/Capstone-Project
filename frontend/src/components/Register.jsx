@@ -26,22 +26,8 @@ const Register = () => {
         formData
       );
 
-      const token = response.data;
-
-      window.localStorage.setItem("token", token);
-
-      const userResponse = await axios.get(
-        "http://localhost:3000/auth/loggedin",
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-
-      const user = userResponse.data;
-      dispatch(setIsAuth(user));
-      navigate("/");
+      // check email for confirmation
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }
