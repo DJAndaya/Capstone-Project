@@ -18,6 +18,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use("/auth", require("./api/authorization"));
 app.use("/items", require("./api/items"));
 app.use("/admin", require("./api/admin"));
+app.use("/reviews", require("./api/reviews"));
 app.get("/", (req, res, next) => {
   try {
     res.send("index.html");
