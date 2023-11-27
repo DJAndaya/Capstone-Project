@@ -15,7 +15,8 @@ import CartItems from "./CartItems";
 
 const Cart = () => {
   const [formData, setFormData] = useState(null);
-  const [shoppingCart, setShoppingCart] = useOutletContext();
+  const [outletContext, setOutletContext] = useOutletContext();
+  const shoppingCart = outletContext.shoppingCart;
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -45,7 +46,11 @@ const Cart = () => {
 
       const token = response.data;
       window.localStorage.setItem("token", token);
-      setShoppingCart([]);
+      setOutletContext({
+        ...outletContext,
+        shoppingCart: []
+      })
+      // setShoppingCart([]);
       navigate("/");
       console.log("checkout");
     } catch (error) {
@@ -63,7 +68,11 @@ const Cart = () => {
           params: { userId: userId },
         }
       );
-      setShoppingCart([]);
+      setOutletContext({
+        ...outletContext,
+        shoppingCart: []
+      })
+      // setShoppingCart([]);
     } catch (error) {
       console.log(error);
     }

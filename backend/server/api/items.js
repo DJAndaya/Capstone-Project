@@ -8,7 +8,6 @@ const prisma = new PrismaClient();
 
 // get all items data
 app.get("/", async (req, res, next) => {
-
   try {
     res.send(await prisma.items.findMany());
   } catch (error) {
@@ -107,23 +106,25 @@ app.patch("/clearShoppingCart", async (req, res, next) => {
     // console.log(req.body)
     let { userId } = req.query;
     userId = parseInt(userId);
-    console.log(userId)
+    console.log(userId);
     const user = await prisma.users.findUnique({
       where: { id: userId },
       include: { shoppingCart: true },
     });
 
-    const itemsInShoppingCart = user.shoppingCart.map(item => ({ id: item.id }));
+    const itemsInShoppingCart = user.shoppingCart.map((item) => ({
+      id: item.id,
+    }));
     // console.log(userId);
-      updatedUserShoppingCart = await prisma.users.update({
-        where: { id: userId },
-        data: {
-          shoppingCart: {
-            disconnect: itemsInShoppingCart
-          },
+    updatedUserShoppingCart = await prisma.users.update({
+      where: { id: userId },
+      data: {
+        shoppingCart: {
+          disconnect: itemsInShoppingCart,
         },
-      });
-      // console.log("item being removed")
+      },
+    });
+    // console.log("item being removed")
     // console.log(updatedUserShoppingCart);
     const token = jwt.sign(updatedUserShoppingCart, process.env.JWT_SECRET_KEY);
     res.send(token);
@@ -131,7 +132,7 @@ app.patch("/clearShoppingCart", async (req, res, next) => {
     console.log(error);
     res.status(500).json({ error: "Error occured adding item" });
   }
-})
+});
 
 // get user's shopping cart
 app.get("/shoppingCart", async (req, res, next) => {
@@ -184,6 +185,42 @@ app.patch("/checkOut", async (req, res, next) => {
   });
   const token = jwt.sign(updatedUser, process.env.JWT_SECRET_KEY);
   res.send(token);
+});
+
+// get user's wishlist
+app.get("/wishlist", async (req, res, next) => {
+  try {
+    let { userId } = req.query;
+    userId = parseInt(userId);
+
+    // console.log(userId)
+    const userWithWishList = await prisma.users.findUnique({
+      where: { id: userId },
+      include: { wishList: true },
+    });
+    res.send(userWithWishList.wishList);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error occured displaying shopping cart" });
+  }
+});
+
+// gets user's order history
+app.get("/orderhistory", async (req, res, next) => {
+  try {
+    let { userId } = req.query;
+    userId = parseInt(userId);
+
+    // console.log(userId)
+    const userWithOrderHistory = await prisma.users.findUnique({
+      where: { id: userId },
+      include: { orderHistory: true },
+    });
+    res.send(userWithOrderHistory.orderHistory);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error occured displaying shopping cart" });
+  }
 });
 
 module.exports = app;

@@ -6,6 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
 import AddToCartButton from "./AddToCartButton";
+import AddToWishListButton from "./AddToWishListButton";
 
 const ItemCards = ({ item }) => {
   return (
@@ -22,6 +23,7 @@ const ItemCards = ({ item }) => {
           <CardActions>
             {/* <Button variant="contained">See Reviews</Button> */}
             <AddToCartButton item={item} />
+            <AddToWishListButton item={item} />
           </CardActions>
           <Typography variant="h6" component="div">
             ${item.price}

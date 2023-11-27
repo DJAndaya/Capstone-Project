@@ -3,22 +3,33 @@ import React from "react";
 import { setIsAuth } from "../redux/isAuthSlice";
 import { useDispatch } from "react-redux";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 
+import Home from "./Home";
+
 const Logout = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [outletContext, setOutletContext] = useOutletContext();
+
   const logOut = () => {
-    window.localStorage.setItem("token", null)
-    dispatch(setIsAuth(null))
-    navigate("/")
+    window.localStorage.setItem("token", null);
+    dispatch(setIsAuth(null));
+    setOutletContext({
+      wishList: [],
+      shoppingCart: []
+    })
+    navigate("/");
   };
   return (
-    <Button variant="contained" onClick={logOut}>
-      Log Out
-    </Button>
+    <>
+      <Button variant="contained" onClick={logOut}>
+        Log Out
+      </Button>
+      <Home />
+    </>
   );
 };
 

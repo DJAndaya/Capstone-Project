@@ -13,7 +13,6 @@ import Orders from "./components/Orders";
 import Admin from "./components/Admin";
 import AllProducts from "./components/Admin/AllProducts";
 import AllUsers from "./components/Admin/AllUsers";
-
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Logout from "./components/Logout";
