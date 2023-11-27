@@ -1,11 +1,12 @@
 import { Outlet, Link } from "react-router-dom";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 import { Box, AppBar, Toolbar, InputBase } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
+import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -99,17 +100,17 @@ export default function Root() {
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
               <Link
                 style={{ textDecoration: "none", color: "white" }}
-                to="user/orders"
+                to="user/cart"
               >
-                Orders
+                Cart
               </Link>
             </Box>
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
               <Link
                 style={{ textDecoration: "none", color: "white" }}
-                to="user/cart"
+                to="user/orders"
               >
-                Cart
+                Orders
               </Link>
             </Box>
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
@@ -120,15 +121,17 @@ export default function Root() {
                 Sell
               </Link>
             </Box>
-            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="admin"
-              >
-                Admin
-              </Link>
-            </Box>
-            {userSignedIn ? (
+            {isAuth && isAuth.admin ? (
+              <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+                <Link
+                  style={{ textDecoration: "none", color: "white" }}
+                  to="admin"
+                >
+                  Admin
+                </Link>
+              </Box>
+            ) : null}
+            {isAuth && isAuth.id ? (
               <Box sx={{ marginLeft: 5, marginRight: 5 }}>
                 <Link
                   style={{ textDecoration: "none", color: "white" }}

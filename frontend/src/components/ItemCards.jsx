@@ -7,8 +7,12 @@ import Typography from "@mui/material/Typography";
 
 import AddToCartButton from "./AddToCartButton";
 import AddToWishListButton from "./AddToWishListButton";
+import ReviewButton from "./ReviewButton";
 
 const ItemCards = ({ item }) => {
+
+  const seeReviews = () => {};
+
   return (
     <div>
       <Card sx={{ minWidth: 275 }}>
@@ -21,7 +25,7 @@ const ItemCards = ({ item }) => {
           </Typography>
           <Typography component="div">{item.description}</Typography>
           <CardActions>
-            {/* <Button variant="contained">See Reviews</Button> */}
+            <ReviewButton item={item} />
             <AddToCartButton item={item} />
             <AddToWishListButton item={item} />
           </CardActions>

@@ -15,6 +15,40 @@ app.get("/", async (req, res, next) => {
   }
 });
 
+app.get("/getItemsSelling", async (req, res, next) => {
+  const { userId } = req.query
+  try {
+    const response = await prisma.users.findUnique({
+      where: {
+        id: Number(userId),
+      },
+      include: {
+        sellingItems: true,
+      }
+    })
+    res.send(response)
+  } catch (error) {
+    console.log(error)
+  }
+});
+
+app.delete("/deleteItemSelling/:itemId", async (req, res, next) => {
+  const { itemId } = req.params
+  const { userId } = req.query
+
+  try {
+    const removedItem = await prisma.items.delete({
+      where: {
+        id: Number(itemId),
+        seller: { some: { id: Number(userId) } },
+      }
+    })
+    res.send(removedItem)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 app.post("/sell", async (req, res, next) => {
   try {
     const { name, price, amount, description, category } = req.body.formData;
@@ -32,6 +66,7 @@ app.post("/sell", async (req, res, next) => {
         },
       },
     });
+    res.send(newItem)
   } catch (error) {
     console.log(error);
   }
