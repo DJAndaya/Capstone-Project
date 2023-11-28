@@ -54,7 +54,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Root() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const userSignedIn = useSelector((state) => state.isAuth.value);
+  const isAuth = useSelector(selectIsAuth);
   // const [shoppingCart, setShoppingCart] = useState([])
   // const [wishList, setWishList] = useState([])
   const [outletContext, setOutletContext] = useState({
