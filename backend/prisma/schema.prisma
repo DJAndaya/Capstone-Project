@@ -19,6 +19,7 @@ model users {
   lastName          String
   admin             Boolean   @default(false)
   isConfirmed       Boolean   @default(false)
+  socketId          String?
   confirmationToken String?   @unique
   sellingItems      items[]   @relation("seller")
   wishlist          items[]   @relation("wishlist")
@@ -50,4 +51,12 @@ model reviews {
   user        users    @relation(fields: [userId], references: [id])
   itemId      Int
   item        items    @relation(fields: [itemId], references: [id])
+}
+
+model message {
+  id        Int      @id @default(autoincrement())
+  message   String
+  fromUser  Int
+  toUser    Int
+  createdAt DateTime @default(now())
 }
