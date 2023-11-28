@@ -195,6 +195,23 @@ app.patch("/checkOut", async (req, res, next) => {
   const itemIdAndAmount = req.body;
   console.log("checkout request went through");
 
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: itemIdAndAmount.map(item => ({
+      price_data: {
+        currency: 'usd',  
+        product_data: {
+          name: item.name,  
+        },
+        unit_amount: item.amount,
+      },
+      quantity: 1,
+    })),
+    mode: 'payment',
+    success_url: 'http://localhost:5173/checkout/success', 
+    cancel_url: 'http://localhost:5173/checkout/cancel', 
+  });
+
   for (const { itemId, amount } of itemIdAndAmount) {
     console.log(itemId);
     await prisma.items.update({
@@ -219,7 +236,7 @@ app.patch("/checkOut", async (req, res, next) => {
     },
   });
   const token = jwt.sign(updatedUser, process.env.JWT_SECRET_KEY);
-  res.send(token);
+  res.json({ sessionId: session.id, token});
 });
 
 // get user's wishlist
@@ -256,6 +273,11 @@ app.get("/orderhistory", async (req, res, next) => {
     console.log(error);
     res.status(500).json({ error: "Error occured displaying shopping cart" });
   }
+});
+
+// get stripeKey from backend
+app.get('/stripeKey', (req, res) => {
+  res.json({ publicKey: process.env.STRIPE_PUBLIC_KEY });
 });
 
 module.exports = app;
