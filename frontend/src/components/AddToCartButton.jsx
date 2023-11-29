@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // redux
 import { useSelector } from "react-redux";
 // router
@@ -9,7 +9,8 @@ import { Button } from "@mui/material";
 const AddToCartButton = ({ item }) => {
   const userId = useSelector((state) => state.isAuth?.value?.id);
 
-  const [shoppingCart, setShoppingCart] = useOutletContext();
+  const [outletContext, setOutletContext] = useOutletContext();
+  const shoppingCart = outletContext.shoppingCart;
   let isItemInShoppingCart = shoppingCart.some(
     (cartItem) => cartItem.id === item.id
   );
@@ -19,15 +20,27 @@ const AddToCartButton = ({ item }) => {
       const updatedShoppingCart = shoppingCart.filter((shoppingCartItem) => {
         return shoppingCartItem.id !== item.id;
       });
-      setShoppingCart(updatedShoppingCart);
+      setOutletContext({
+        ...outletContext,
+        shoppingCart: updatedShoppingCart,
+      });
+      // setShoppingCart(updatedShoppingCart);
     } else {
-      setShoppingCart([...shoppingCart, item]);
+      setOutletContext({
+        ...outletContext,
+        shoppingCart: [...outletContext.shoppingCart, item],
+      });
+      // setShoppingCart([...shoppingCart, item]);
     }
   };
 
+  // useEffect(() => {
+  //   console.log(outletContext.shoppingCart);
+  // }, [outletContext.shoppingCart]);
+
   return (
     <>
-      {!isItemInShoppingCart || !userId ? (
+      {!isItemInShoppingCart ? (
         <Button variant="contained" onClick={addRemoveFromShoppingCart}>
           Add to cart
         </Button>

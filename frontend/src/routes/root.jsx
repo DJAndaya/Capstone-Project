@@ -55,7 +55,12 @@ export default function Root() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
-  const [shoppingCart, setShoppingCart] = useState([])
+  // const [shoppingCart, setShoppingCart] = useState([])
+  // const [wishList, setWishList] = useState([])
+  const [outletContext, setOutletContext] = useState({
+    shoppingCart: [],
+    wishList: [],
+  })
 
   const handleSearch = () => {
     if (searchQuery.trim() != "") {
@@ -159,7 +164,7 @@ export default function Root() {
           </Toolbar>
         </AppBar>
       </Box>
-      <Outlet context={[shoppingCart, setShoppingCart]}/>
+      <Outlet context={[outletContext, setOutletContext]}/>
     </div>
   );
 }
