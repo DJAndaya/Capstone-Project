@@ -8,6 +8,14 @@ app.post("/submitReview", async (req, res) => {
   try {
     const { rating, comment, userId, itemId } = req.body;
 
+    if (!rating || !comment || !userId || !itemId) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    if (!userAuthenticated) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
     const newReview = await prisma.reviews.create({
       data: {
         rating,

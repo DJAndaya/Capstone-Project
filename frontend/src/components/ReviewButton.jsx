@@ -1,4 +1,4 @@
-import React, { useState,  } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 
 import Button from "@mui/material/Button";
@@ -7,6 +7,21 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
+import Rating from "@mui/material/Rating";
+
+const fetchItemReviews = async (itemId) => {
+  try {
+    const response = await fetch(`/api/reviews/itemReviews/${itemId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch reviews");
+    }
+
+    const reviews = await response.json();
+    console.log("Item reviews:", reviews);
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+  }
+};
 
 const ReviewButton = ({ itemId }) => {
   const [open, setOpen] = useState(false);
@@ -25,7 +40,7 @@ const ReviewButton = ({ itemId }) => {
 
   const handleReviewSubmit = async () => {
     try {
-      const response = await fetch("/api/reviews/submitReviews", {
+      const response = await fetch("/api/reviews/submitReview", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,6 +62,11 @@ const ReviewButton = ({ itemId }) => {
     } catch (error) {
       console.error("Error submitting review:", error);
     }
+
+    const handleOpen = () => {
+      setOpen(true);
+      fetchItemReviews(itemId);
+    };
   };
 
   return (
@@ -67,13 +87,13 @@ const ReviewButton = ({ itemId }) => {
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
           />
-          <TextField
-            label="Rating"
-            type="number"
-            InputProps={{ inputProps: { min: 1, max: 5 } }}
-            fullWidth
+          <Rating
+            name="rating"
             value={rating}
-            onChange={(e) => setRating(parseInt(e.target.value, 10))}
+            precision={1}
+            onChange={(event, newValue) => {
+              setRating(newValue);
+            }}
           />
         </DialogContent>
         <DialogActions>
