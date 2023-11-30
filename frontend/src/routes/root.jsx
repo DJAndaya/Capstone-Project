@@ -116,6 +116,14 @@ export default function Root() {
                 Sell
               </Link>
             </Box>
+            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="user/chat"
+              >
+                Chat
+              </Link>
+            </Box>
             {isAuth && isAuth.admin ? (
               <Box sx={{ marginLeft: 5, marginRight: 5 }}>
                 <Link

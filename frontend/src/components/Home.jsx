@@ -45,14 +45,6 @@ const Home = () => {
     };
     getItems();
 
-    if (user) {
-      socket.emit("user_joined", user);
-    }
-
-    socket.on("update_socket", (updatedUserData) => {
-      dispatch(setIsAuth(updatedUserData));
-    });
-
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
       console.log(allMessages);
@@ -65,7 +57,7 @@ const Home = () => {
   const startChat = async (toUser) => {
     console.log(toUser);
     console.log(toUser.id);
-    console.log(allMessages)
+    console.log(allMessages);
     if (toUser.socketId === user.socketId) {
       return;
     }
@@ -149,7 +141,10 @@ const Home = () => {
             <h3>You are chatting with {selectedUserToChatWith.socketId}</h3>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {allMessages.map((msg, index) => {
-                if (msg.toUser === selectedUserToChatWith.id || msg.fromUser === selectedUserToChatWith.id) {
+                if (
+                  msg.toUser === selectedUserToChatWith.id ||
+                  msg.fromUser === selectedUserToChatWith.id
+                ) {
                   return (
                     <div
                       key={index}
@@ -169,7 +164,7 @@ const Home = () => {
               })}
             </div>
 
-            <div style={{ position: "absolute", bottom: 0, marginTop: "auto"}}>
+            <div style={{ position: "absolute", bottom: 0, marginTop: "auto" }}>
               <input
                 value={message}
                 onChange={(ev) => setMessage(ev.target.value)}
