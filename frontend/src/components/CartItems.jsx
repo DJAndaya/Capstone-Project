@@ -32,7 +32,7 @@ const CartItems = ({ item, formData, setFormData }) => {
           {/* <Button variant="contained">See Reviews</Button> */}
           <AddToCartButton item={item} />
           <BasicSelect
-            itemId={itemId}
+            item={item}
             formData={formData}
             setFormData={setFormData}
           />
@@ -43,18 +43,18 @@ const CartItems = ({ item, formData, setFormData }) => {
   );
 };
 
-const BasicSelect = ({ itemId, formData, setFormData }) => {
+const BasicSelect = ({ item, formData, setFormData }) => {
   const [newAmount, setNewAmount] = useState(1);
 
   const handleChange = (event) => {
     setNewAmount(event.target.value);
-    updateFormData(itemId, newAmount);
+    updateFormData(item, newAmount);
   };
 
-  const updateFormData = (itemId, newAmount) => {
+  const updateFormData = (item, newAmount) => {
     setFormData((prevFormData) =>
-      prevFormData.map((item) =>
-        item.itemId === itemId ? { ...item, amount: newAmount } : item
+      prevFormData.map((dataItem) =>
+        dataItem.itemId === item.id ? { ...dataItem, amount: newAmount } : dataItem
       )
     );
   };

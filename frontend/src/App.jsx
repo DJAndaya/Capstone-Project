@@ -18,6 +18,9 @@ import Register from "./components/Register";
 import Logout from "./components/Logout";
 import Sell from "./components/Sell"
 import Confirmation from "./components/Confirmation";
+import CheckoutSuccess from "./components/CheckoutSuccess";
+import CheckoutCancel from "./components/CheckoutCancel";
+
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsAuth, selectIsAuth } from './redux/isAuthSlice'
 
@@ -80,11 +83,11 @@ export default function App() {
         },
         {
           path:"/checkout/success",
-          
+          element: <CheckoutSuccess />
         },
         {
           path: "/checkout/cancel",
-          
+          element: <CheckoutCancel />
         }
       ],
     },

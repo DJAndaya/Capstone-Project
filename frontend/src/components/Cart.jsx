@@ -29,8 +29,8 @@ const Cart = () => {
   // console.log(userId);
   useEffect(() => {
     const initialFormData = shoppingCart.map((item) => ({
-      itemId: item.id,
-      amount: 0,
+      item: item,
+      amount: 1,
     }));
     setFormData(initialFormData);
   }, []);
@@ -43,17 +43,23 @@ const Cart = () => {
 
     try {
       const stripe = await initializeStripe();
+      console.log(stripe._apiKey)
+      // const stripePublicKey = stripe._apiKey
+
       const response = await axios.patch(
         "http://localhost:3000/items/checkOut",
         formData,
         {
           params: { userId: userId },
+          headers: {
+            'Authorization': `Bearer ${await stripe._apiKey}`,
+          }
         }
       );
 
       const { sessionId, token } = response.data;
 
-      const result = await stripe.redirectToCheckout({
+      const result = stripe.redirectToCheckout({
         sessionId,
       });
 
@@ -142,3 +148,10 @@ const Cart = () => {
 };
 
 export default Cart;
+
+/* TO DO LIST FOR STRIPE
+
+1. change the data sent through checkout endpoint, send the entire item object rather than just the id
+2. within the api endpoint, 
+
+*/

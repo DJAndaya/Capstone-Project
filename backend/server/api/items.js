@@ -3,6 +3,7 @@ const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const prisma = new PrismaClient();
 
@@ -193,29 +194,29 @@ app.patch("/checkOut", async (req, res, next) => {
   userId = parseInt(userId);
   // console.log(req.body)
   const itemIdAndAmount = req.body;
-  console.log("checkout request went through");
-
+  // console.log("checkout request went through");
+  // console.log(itemIdAndAmount)
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: itemIdAndAmount.map(item => ({
       price_data: {
         currency: 'usd',  
         product_data: {
-          name: item.name,  
+          name: item.item.name,  
         },
-        unit_amount: item.amount,
+        unit_amount: item.item.amount,
       },
-      quantity: 1,
+      quantity: item.amount,
     })),
     mode: 'payment',
     success_url: 'http://localhost:5173/checkout/success', 
     cancel_url: 'http://localhost:5173/checkout/cancel', 
   });
 
-  for (const { itemId, amount } of itemIdAndAmount) {
-    console.log(itemId);
+  for (const { item, amount } of itemIdAndAmount) {
+    // console.log(item);
     await prisma.items.update({
-      where: { id: itemId },
+      where: { id: item.id },
       data: {
         amount: {
           decrement: amount,
@@ -228,10 +229,10 @@ app.patch("/checkOut", async (req, res, next) => {
     where: { id: userId },
     data: {
       shoppingCart: {
-        disconnect: itemIdAndAmount.map((item) => ({ id: item.itemId })),
+        disconnect: itemIdAndAmount.map((item) => ({ id: item.item.id })),
       },
       orderHistory: {
-        connect: itemIdAndAmount.map((item) => ({ id: item.itemId })),
+        connect: itemIdAndAmount.map((item) => ({ id: item.item.id })),
       },
     },
   });
