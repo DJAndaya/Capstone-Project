@@ -145,7 +145,8 @@ app.get("/loggedin", async (req, res, next) => {
       const user = {
         id: decodedToken.id,
         email: decodedToken.email,
-        admin: decodedToken.admin
+        admin: decodedToken.admin,
+        socketId: decodedToken.socketId
       };
 
       res.send(user);

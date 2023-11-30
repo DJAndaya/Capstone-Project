@@ -9,14 +9,26 @@ const prisma = new PrismaClient();
 // get all items data
 app.get("/", async (req, res, next) => {
   try {
-    res.send(await prisma.items.findMany());
+    res.send(
+      await prisma.items.findMany({
+        include: {
+          // Include the user information, including socketId
+          seller: {
+            select: {
+              id: true,
+              socketId: true,
+            },
+          },
+        },
+      })
+    );
   } catch (error) {
     console.log(error);
   }
 });
 
 app.get("/getItemsSelling", async (req, res, next) => {
-  const { userId } = req.query
+  const { userId } = req.query;
   try {
     const response = await prisma.users.findUnique({
       where: {
@@ -24,30 +36,30 @@ app.get("/getItemsSelling", async (req, res, next) => {
       },
       include: {
         sellingItems: true,
-      }
-    })
-    res.send(response)
+      },
+    });
+    res.send(response);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
 
 app.delete("/deleteItemSelling/:itemId", async (req, res, next) => {
-  const { itemId } = req.params
-  const { userId } = req.query
+  const { itemId } = req.params;
+  const { userId } = req.query;
 
   try {
     const removedItem = await prisma.items.delete({
       where: {
         id: Number(itemId),
         seller: { some: { id: Number(userId) } },
-      }
-    })
-    res.send(removedItem)
+      },
+    });
+    res.send(removedItem);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 app.post("/sell", async (req, res, next) => {
   try {
@@ -66,7 +78,7 @@ app.post("/sell", async (req, res, next) => {
         },
       },
     });
-    res.send(newItem)
+    res.send(newItem);
   } catch (error) {
     console.log(error);
   }
