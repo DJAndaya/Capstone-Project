@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import socketio from "socket.io-client";
 
@@ -8,12 +9,16 @@ const socket = socketio("http://localhost:3000");
 
 export default function Chat() {
   const user = useSelector(selectIsAuth);
+  const navigate = useNavigate()
   const [allMessages, setAllMessages] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
   const [chattingWith, setChattingWith] = useState(null);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
 
