@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import axios from 'axios'
+import axios from "axios";
 
 import Root from "./routes/root";
 import ErrorPage from "./routes/ErrorPage";
@@ -13,16 +13,21 @@ import Orders from "./components/Orders";
 import Admin from "./components/Admin";
 import AllProducts from "./components/Admin/AllProducts";
 import AllUsers from "./components/Admin/AllUsers";
+import Chat from "./components/Chat";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Logout from "./components/Logout";
-import Sell from "./components/Sell"
+import Sell from "./components/Sell";
 import Confirmation from "./components/Confirmation";
-import { useDispatch, useSelector } from 'react-redux'
-import { setIsAuth, selectIsAuth } from './redux/isAuthSlice'
+import { useDispatch, useSelector } from "react-redux";
+import { setIsAuth, selectIsAuth } from "./redux/isAuthSlice";
+import socketio from "socket.io-client";
+
+const socket = socketio("http://localhost:3000");
 
 export default function App() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const user = useSelector(selectIsAuth);
 
   const router = createBrowserRouter([
     {
@@ -49,6 +54,10 @@ export default function App() {
         {
           path: "/user/sell",
           element: <Sell />,
+        },
+        {
+          path: "/user/chat",
+          element: <Chat />,
         },
         {
           path: "/admin",
@@ -91,6 +100,13 @@ export default function App() {
   ]);
 
   useEffect(() => {
+    if (user) {
+      socket.emit("user_joined", user);
+    }
+
+    socket.on("update_socket", (updatedUserData) => {
+      dispatch(setIsAuth(updatedUserData));
+    });
     // const possiblyLogin = async () => {
     //   const token = window.localStorage.getItem("token");
     //   console.log(token)
@@ -108,6 +124,6 @@ export default function App() {
 
     // possiblyLogin();
   }, []);
-  
+
   return <RouterProvider router={router} />;
 }
