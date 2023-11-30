@@ -43,14 +43,14 @@ model items {
 }
 
 model reviews {
-  id          Int      @id @default(autoincrement())
-  dateAdded   DateTime @default(now())
-  rating      Int
-  description String?
-  userId      Int
-  user        users    @relation(fields: [userId], references: [id])
-  itemId      Int
-  item        items    @relation(fields: [itemId], references: [id])
+  id        Int      @id @default(autoincrement())
+  dateAdded DateTime @default(now())
+  rating    Int
+  comment   String?
+  userId    Int
+  user      users    @relation(fields: [userId], references: [id])
+  itemId    Int
+  item      items    @relation(fields: [itemId], references: [id])
 }
 
 model message {

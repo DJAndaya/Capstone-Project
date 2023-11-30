@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState,  } from "react";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -6,9 +8,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 
-const ReviewButton = ({ onClick }) => {
+const ReviewButton = ({ itemId }) => {
   const [open, setOpen] = useState(false);
   const [reviewText, setReviewText] = useState("");
+  const [rating, setRating] = useState(0);
+
+  const userId = useSelector((state) => state.isAuth?.value?.id);
 
   const handleOpen = () => {
     setOpen(true);
@@ -18,14 +23,30 @@ const ReviewButton = ({ onClick }) => {
     setOpen(false);
   };
 
-  const handleReviewSubmit = () => {
-    // TO DO
-    // Logic to save the review, e.g., send it to a server
-    console.log("Submitted review:", reviewText);
+  const handleReviewSubmit = async () => {
+    try {
+      const response = await fetch("/api/reviews/submitReviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rating,
+          comment: reviewText,
+          userId, // still to be figured out how to fetch
+          itemId,
+        }),
+      });
 
-    // Logic to save the review to a database or perform other actions
+      if (!response.ok) {
+        throw new Error("Failed to submit review");
+      }
 
-    handleClose();
+      console.log("Review submitted successfully");
+      handleClose();
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
   };
 
   return (
@@ -45,6 +66,14 @@ const ReviewButton = ({ onClick }) => {
             fullWidth
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
+          />
+          <TextField
+            label="Rating"
+            type="number"
+            InputProps={{ inputProps: { min: 1, max: 5 } }}
+            fullWidth
+            value={rating}
+            onChange={(e) => setRating(parseInt(e.target.value, 10))}
           />
         </DialogContent>
         <DialogActions>

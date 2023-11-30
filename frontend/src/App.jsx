@@ -87,6 +87,14 @@ export default function App() {
           path: "/confirm/:token",
           element: <Confirmation />,
         },
+        {
+          path:"/checkout/success",
+          
+        },
+        {
+          path: "/checkout/cancel",
+          
+        }
       ],
     },
   ]);

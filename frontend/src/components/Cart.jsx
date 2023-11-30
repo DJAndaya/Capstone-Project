@@ -11,11 +11,18 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+// import stripePromise from "./stripe";
+// import initializeStripe from "./stripe";
+
 import CartItems from "./CartItems";
+import initializeStripe from "./stripe";
 
 const Cart = () => {
   const [formData, setFormData] = useState(null);
-  const [shoppingCart, setShoppingCart] = useOutletContext();
+  const [outletContext, setOutletContext] = useOutletContext();
+  const shoppingCart = outletContext.shoppingCart;
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -35,6 +42,7 @@ const Cart = () => {
     }
 
     try {
+      const stripe = await initializeStripe();
       const response = await axios.patch(
         "http://localhost:3000/items/checkOut",
         formData,
@@ -43,9 +51,22 @@ const Cart = () => {
         }
       );
 
-      const token = response.data;
+      const { sessionId, token } = response.data;
+
+      const result = await stripe.redirectToCheckout({
+        sessionId,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
+
       window.localStorage.setItem("token", token);
-      setShoppingCart([]);
+      setOutletContext({
+        ...outletContext,
+        shoppingCart: [],
+      });
+      // setShoppingCart([]);
       navigate("/");
       console.log("checkout");
     } catch (error) {
@@ -63,7 +84,14 @@ const Cart = () => {
           params: { userId: userId },
         }
       );
-      setShoppingCart([]);
+
+      const token = response.data;
+      window.localStorage.setItem("token", token);
+      setOutletContext({
+        ...outletContext,
+        shoppingCart: [],
+      });
+      // setShoppingCart([]);
     } catch (error) {
       console.log(error);
     }
@@ -99,9 +127,11 @@ const Cart = () => {
           <Grid item xs={4}>
             <Card>
               <CardActions>
-                <Button variant="contained" onClick={checkOut}>
-                  Checkout
-                </Button>
+                <Elements stripe={initializeStripe()}>
+                  <Button variant="contained" onClick={checkOut}>
+                    Checkout
+                  </Button>
+                </Elements>
               </CardActions>
             </Card>
           </Grid>
