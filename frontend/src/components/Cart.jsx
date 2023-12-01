@@ -23,6 +23,7 @@ const Cart = () => {
   const [formData, setFormData] = useState(null);
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;
+  console.log(shoppingCart)
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -43,12 +44,12 @@ const Cart = () => {
 
     try {
       const stripe = await initializeStripe();
-      console.log(stripe._apiKey)
+      // console.log(stripe._apiKey)
       // const stripePublicKey = stripe._apiKey
-
+      // console.log("formData for checkout:",formData)
       const response = await axios.patch(
         "http://localhost:3000/items/checkOut",
-        formData,
+        shoppingCart,
         {
           params: { userId: userId },
           headers: {
@@ -102,7 +103,7 @@ const Cart = () => {
       console.log(error);
     }
   };
-  if (shoppingCart.length === 0) {
+  if (!shoppingCart) {
     return <h1>Cart is empty or loading</h1>;
   } else {
     // console.log(shoppingCart);
@@ -149,9 +150,10 @@ const Cart = () => {
 
 export default Cart;
 
-/* TO DO LIST FOR STRIPE
+/* TO DO LIST 
 
-1. change the data sent through checkout endpoint, send the entire item object rather than just the id
-2. within the api endpoint, 
+1. fix the amount so the formData corrrectly changes
+2. have wishlist and cart combine with db and local
+3. fix loggedin endpoint, rn it runs even when user is null
 
 */

@@ -21,7 +21,7 @@ const Home = () => {
 
   useEffect(() => {
     const getItems = async () => {
-      console.log("Current pathname:", pathname);
+      // console.log("Current pathname:", pathname);
       try {
         let response;
         if (pathname === "/user/orders") {

@@ -19,7 +19,10 @@ const Logout = () => {
     dispatch(setIsAuth(null));
     setOutletContext({
       wishList: [],
-      shoppingCart: []
+      shoppingCart: [{
+        item: null,
+        amount: 1,
+      }]
     })
     navigate("/");
   };

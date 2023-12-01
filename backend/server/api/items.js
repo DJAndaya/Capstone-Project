@@ -195,7 +195,7 @@ app.patch("/checkOut", async (req, res, next) => {
   // console.log(req.body)
   const itemIdAndAmount = req.body;
   // console.log("checkout request went through");
-  // console.log(itemIdAndAmount)
+  console.log(itemIdAndAmount)
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: itemIdAndAmount.map(item => ({
@@ -204,7 +204,7 @@ app.patch("/checkOut", async (req, res, next) => {
         product_data: {
           name: item.item.name,  
         },
-        unit_amount: item.item.amount,
+        unit_amount: parseInt(item.item.price) * 100,
       },
       quantity: item.amount,
     })),

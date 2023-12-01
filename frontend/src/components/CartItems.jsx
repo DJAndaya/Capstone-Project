@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { useOutletContext } from "react-router-dom";
+
 import { Box, Grid } from "@mui/material/";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -14,23 +16,22 @@ import Divider from "@mui/material/Divider";
 import AddToCartButton from "./AddToCartButton";
 
 const CartItems = ({ item, formData, setFormData }) => {
-  const itemId = item.id;
 
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
         <Typography variant="h5" component="div">
-          {item.name}
+          {item.item.name}
         </Typography>
         <Typography variant="h7" component="div">
           Seller Name
         </Typography>
         <Typography variant="h6" component="div">
-          ${item.price}
+          ${item.item.price}
         </Typography>
         <CardActions>
           {/* <Button variant="contained">See Reviews</Button> */}
-          <AddToCartButton item={item} />
+          <AddToCartButton item={item.item} />
           <BasicSelect
             item={item}
             formData={formData}
@@ -45,19 +46,29 @@ const CartItems = ({ item, formData, setFormData }) => {
 
 const BasicSelect = ({ item, formData, setFormData }) => {
   const [newAmount, setNewAmount] = useState(1);
-
+  const [outletContext, setOutletContext] = useOutletContext();
+  const shoppingCart = outletContext.shoppingCart;
+  // console.log(shoppingCart)
+  const currentItem = item.item
   const handleChange = (event) => {
-    setNewAmount(event.target.value);
-    updateFormData(item, newAmount);
+    const amount = event.target.value;
+    setNewAmount(amount);
+    // console.log(amount);
+    updateFormData(currentItem, amount);
   };
+  
 
-  const updateFormData = (item, newAmount) => {
-    setFormData((prevFormData) =>
-      prevFormData.map((dataItem) =>
-        dataItem.itemId === item.id ? { ...dataItem, amount: newAmount } : dataItem
-      )
-    );
+  const updateFormData = (currentItem, amount) => {
+    const newShoppingCartData = shoppingCart.map((cartItem) => {
+      return cartItem.item.id === currentItem.id ? { ... cartItem, amount: amount } : cartItem
+    })
+    // console.log(newShoppingCartData)
+        setOutletContext((prevContext) => ({
+      ...prevContext,
+      shoppingCart: newShoppingCartData
+  }))
   };
+  
 
   const renderMenuItem = () => {
     const items = [];
