@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -38,7 +39,9 @@ const ReviewButton = ({ itemId }) => {
 
   const fetchItemReviews = async (itemId) => {
     try {
-      const response = await fetch(`/reviews/itemReviews/${itemId}`);
+      const response = await fetch(
+        `http://localhost:3000/reviews/itemReviews/${itemId}`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch reviews: " + response.status);
       }
@@ -57,24 +60,21 @@ const ReviewButton = ({ itemId }) => {
 
   const handleReviewSubmit = async () => {
     try {
-      const response = await fetch("/reviews/submitReview", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.post(
+        "http://localhost:3000/reviews/submitReview",
+        {
           rating,
-          comment: reviewText,
           userId,
-          itemId,
-        }),
-      });
+          itemId: "111",
+          comment: reviewText,
+        }
+      );
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Failed to submit review");
       }
 
-      const newReview = await response.json();
+      const newReview = response.data;
       setReviews((prevReviews) => [...prevReviews, newReview]);
       handleClose();
     } catch (error) {
