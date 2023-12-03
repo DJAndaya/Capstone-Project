@@ -28,6 +28,7 @@ function ProductDetail() {
       <p>Amount: {product.amount}</p>
       <p>Description: {product.description}</p>
       <p>Category: {product.category}</p>
+      <p>Reviews:</p>
     </div>
   );
 }

@@ -98,7 +98,10 @@ export default function App() {
         {
           path: "/checkout/cancel",
         },
-        {},
+        {
+          path: "/product/:productId",
+          element: <ProductDetail />,
+        },
       ],
     },
   ]);

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux/es/hooks/useSelector";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -13,20 +13,26 @@ const fetchItemReviews = async (itemId) => {
   try {
     const response = await fetch(`/api/reviews/itemReviews/${itemId}`);
     if (!response.ok) {
-      throw new Error("Failed to fetch reviews");
+      throw new Error("Failed to fetch reviews: " + response.status);
     }
 
-    const reviews = await response.json();
-    console.log("Item reviews:", reviews);
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const reviews = await response.json();
+      console.log("Item reviews:", reviews);
+    } else {
+      throw new Error("Invalid response format: " + contentType);
+    }
   } catch (error) {
     console.error("Error fetching reviews:", error);
   }
 };
 
-const ReviewButton = ({ itemId }) => {
+const ReviewButton = ({ itemId, isAuth }) => {
   const [open, setOpen] = useState(false);
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
+  const [reviews, setReviews] = useState([]);
 
   const userId = useSelector((state) => state.isAuth?.value?.id);
 
@@ -38,9 +44,14 @@ const ReviewButton = ({ itemId }) => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    fetchItemReviews(itemId);
+  }, [itemId]);
+
   const handleReviewSubmit = async () => {
+    let response;
     try {
-      const response = await fetch("/api/reviews/submitReview", {
+      response = await fetch("/api/reviews/submitReview", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,33 +59,34 @@ const ReviewButton = ({ itemId }) => {
         body: JSON.stringify({
           rating,
           comment: reviewText,
-          userId, // still to be figured out how to fetch
+          userId,
           itemId,
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to submit review");
       }
-
+  
       console.log("Review submitted successfully");
       handleClose();
     } catch (error) {
       console.error("Error submitting review:", error);
     }
-
-    const handleOpen = () => {
-      setOpen(true);
-      fetchItemReviews(itemId);
-    };
+  
+    if (response) {
+      const newReview = await response.json();
+      setReviews((prevReviews) => [...prevReviews, newReview]);
+    }
   };
 
   return (
     <>
       <Button variant="contained" onClick={handleOpen}>
-        See / Add Reviews
+        Add a review
       </Button>
 
+      
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Write a Review</DialogTitle>
         <DialogContent>

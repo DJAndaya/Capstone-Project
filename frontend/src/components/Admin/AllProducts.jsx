@@ -417,7 +417,7 @@ export default function AllProducts() {
             <button onClick={() => handleDeleteProduct(product.id)}>
               Delete Product
             </button>
-            <Link to={`/product/${product.id}`}>View Details</Link>
+            <Link to={`/product/${product.id}`}><button>View Details</button></Link>
           </li>
         ))}
       </ul>
