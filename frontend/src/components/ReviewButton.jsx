@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -9,35 +10,21 @@ import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 import Rating from "@mui/material/Rating";
 
-const fetchItemReviews = async (itemId) => {
-  try {
-    const response = await fetch(`/api/reviews/itemReviews/${itemId}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch reviews: " + response.status);
-    }
-
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      const reviews = await response.json();
-      console.log("Item reviews:", reviews);
-    } else {
-      throw new Error("Invalid response format: " + contentType);
-    }
-  } catch (error) {
-    console.error("Error fetching reviews:", error);
-  }
-};
-
-const ReviewButton = ({ itemId, isAuth }) => {
+const ReviewButton = ({ itemId }) => {
   const [open, setOpen] = useState(false);
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
 
+  const isAuth = useSelector((state) => state.isAuth?.value);
   const userId = useSelector((state) => state.isAuth?.value?.id);
 
   const handleOpen = () => {
-    setOpen(true);
+    if (isAuth) {
+      setOpen(true);
+    } else {
+      alert("You must be logged in to write a review.");
+    }
   };
 
   const handleClose = () => {
@@ -45,38 +32,53 @@ const ReviewButton = ({ itemId, isAuth }) => {
   };
 
   useEffect(() => {
-    fetchItemReviews(itemId);
+    if (itemId) {
+      fetchItemReviews(itemId);
+    }
   }, [itemId]);
 
-  const handleReviewSubmit = async () => {
-    let response;
+  const fetchItemReviews = async (itemId) => {
     try {
-      response = await fetch("/api/reviews/submitReview", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          rating,
-          comment: reviewText,
-          userId,
-          itemId,
-        }),
-      });
-  
+      const response = await fetch(
+        `http://localhost:3000/reviews/itemReviews/${itemId}`
+      );
       if (!response.ok) {
+        throw new Error("Failed to fetch reviews: " + response.status);
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const reviews = await response.json();
+        setReviews(reviews);
+      } else {
+        throw new Error("Invalid response format: " + contentType);
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  const handleReviewSubmit = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/reviews/submitReview",
+        {
+          rating,
+          userId,
+          itemId: "111",
+          comment: reviewText,
+        }
+      );
+
+      if (response.status !== 200) {
         throw new Error("Failed to submit review");
       }
-  
-      console.log("Review submitted successfully");
+
+      const newReview = response.data;
+      setReviews((prevReviews) => [...prevReviews, newReview]);
       handleClose();
     } catch (error) {
       console.error("Error submitting review:", error);
-    }
-  
-    if (response) {
-      const newReview = await response.json();
-      setReviews((prevReviews) => [...prevReviews, newReview]);
     }
   };
 
@@ -86,7 +88,6 @@ const ReviewButton = ({ itemId, isAuth }) => {
         Add a review
       </Button>
 
-      
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Write a Review</DialogTitle>
         <DialogContent>
