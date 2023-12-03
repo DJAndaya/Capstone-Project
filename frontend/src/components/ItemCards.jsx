@@ -49,7 +49,7 @@ const ItemCards = ({ item, user }) => {
             >
               Chat
             </Button>
-            <ReviewButton item={item} />
+            <ReviewButton itemId={itemId} isAuth={isAuth} />
             <AddToCartButton item={item} />
             <AddToWishListButton item={item} />
           </CardActions>

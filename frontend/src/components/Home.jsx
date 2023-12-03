@@ -12,6 +12,7 @@ import {
 } from "@mui/material/";
 // component imports
 import ItemCards from "./ItemCards";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
@@ -34,7 +35,7 @@ const Home = () => {
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
-  const wishList = outletContext.wishList
+  const wishList = outletContext.wishList;
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(outletContext.shoppingCart)
 
@@ -51,19 +52,17 @@ const Home = () => {
             }
           );
           const alphabeticalOrderData = response.data.sort((a, b) =>
-          a.name > b.name ? 1 : -1
-        );
-        setItems(alphabeticalOrderData);
+            a.name > b.name ? 1 : -1
+          );
+          setItems(alphabeticalOrderData);
         } else if (pathname === "/logout") {
-          
-            setItems(wishList);
-          
+          setItems(wishList);
         } else {
           response = await axios.get("http://localhost:3000/items/");
           const alphabeticalOrderData = response.data.sort((a, b) =>
-          a.name > b.name ? 1 : -1
-        );
-        setItems(alphabeticalOrderData);
+            a.name > b.name ? 1 : -1
+          );
+          setItems(alphabeticalOrderData);
         }
 
         // const alphabeticalOrderData = response.data.sort((a, b) =>
@@ -141,7 +140,7 @@ const Home = () => {
                       <Typography component="div">
                         {item.description}
                       </Typography>
-                      <CardActions>
+                      <CardActions sx={{ justifyContent: "space-between" }}>
                         <Button
                           variant="contained"
                           color="secondary"
@@ -151,6 +150,11 @@ const Home = () => {
                         </Button>
                         <ReviewButton item={item} />
                         <AddToCartButton item={item} />
+                        <Link to={`/product/${item.id}`}>
+                          <Button variant="contained" color="primary">
+                            View Details
+                          </Button>
+                        </Link>
                       </CardActions>
                       <Typography variant="h6" component="div">
                         ${item.price}
@@ -215,6 +219,7 @@ const Home = () => {
       </Grid>
     );
   }
+
   return (
     <Grid container>
       <Box sx={{ flexGrow: 1 }}>

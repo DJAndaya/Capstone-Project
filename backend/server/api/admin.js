@@ -25,6 +25,21 @@ app.get("/allproducts", async (req, res) => {
   }
 });
 
+app.get("/allproducts/:productId", async (req, res) => {
+  const productId = parseInt(req.params.productId);
+  try {
+    const item = await prisma.items.findUnique({
+      where: {
+        id: productId,
+      },
+    });
+    res.json(item);
+  } catch (error) {
+    console.error("Error fetching item from database:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.get("/allusers", async (req, res) => {
   try {
     const users = await prisma.users.findMany();

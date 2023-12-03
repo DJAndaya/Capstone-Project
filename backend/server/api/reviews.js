@@ -4,9 +4,29 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-app.post("/submitReview", async (req, res) => {
+const authenticateUser = async (req, res, next) => {
+  // Replace this with your actual authentication logic
+  const isAuth = await checkUserAuthentication(req);
+
+  if (!isAuth) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  req.userAuthenticated = isAuth;
+  next();
+};
+
+app.post("/submitReview", authenticateUser, async (req, res) => {
   try {
     const { rating, comment, userId, itemId } = req.body;
+
+    if (!rating || !comment || !userId || !itemId) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    if (!isAuth) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     const newReview = await prisma.reviews.create({
       data: {
@@ -34,6 +54,9 @@ app.get("/itemReviews/:itemId", async (req, res) => {
       },
     });
 
+    if (reviews.length === 0) {
+      return res.status(204).send();
+    }
     res.json(reviews);
   } catch (error) {
     console.error("Error retrieving reviews:", error);

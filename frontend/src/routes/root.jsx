@@ -94,7 +94,7 @@ export default function Root() {
                 inputProps={{ "aria-label": "search" }}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
               />
             </Search>
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
