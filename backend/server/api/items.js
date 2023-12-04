@@ -136,7 +136,6 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
   }
 });
 
-
 // add user's shopping cart
 app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
   try {
@@ -157,7 +156,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
       updatedUserWishlist = await prisma.users.update({
         where: { id: userId },
         data: {
-          shoppingCart: {
+          wishlist: {
             disconnect: item,
           },
         },
@@ -168,7 +167,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
       updatedUserWishlist = await prisma.users.update({
         where: { id: userId },
         data: {
-          shoppingCart: {
+          wishlist: {
             connect: item,
           },
         },
@@ -177,7 +176,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
       // console.log("item added")
     }
     // console.log(updatedUserShoppingCart);
-    const token = jwt.sign(updatedUserShoppingCart, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign(updatedUserWishlist, process.env.JWT_SECRET_KEY);
     res.send(token);
   } catch (error) {
     console.log(error);

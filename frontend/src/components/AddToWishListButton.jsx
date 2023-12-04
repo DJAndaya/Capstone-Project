@@ -11,7 +11,7 @@ const AddToWishlistButton = ({ item }) => {
   const userId = useSelector((state) => state.isAuth?.value?.id);
 
   const [outletContext, setOutletContext] = useOutletContext();
-  const wishlist = outletContext.wishlist
+  const wishlist = outletContext.wishlist;
   let isItemInWishlist = wishlist.some(
     (wishlistItem) => wishlistItem.id === item.id
   );
@@ -23,24 +23,24 @@ const AddToWishlistButton = ({ item }) => {
       });
       setOutletContext({
         ...outletContext,
-        wishList: updatedWishlist
-      })
+        wishlist: updatedWishlist,
+      });
       // setWishlist(updatedWishlist);
     } else {
       setOutletContext({
         ...outletContext,
-        wishlist: [...outletContext.wishlist, item]
-      })
+        wishlist: [...outletContext.wishlist, item],
+      });
       // setWishlist([...wishlist, item]);
     }
     if (userId) {
       try {
         await axios.patch(
-          'http://localhost:3000/items/addOrRemoveFromWishlist',
-          { item, userId },
+          "http://localhost:3000/items/addOrRemoveFromWishlist",
+          { item, userId }
         );
       } catch (error) {
-        console.log(error)
+        console.log(error);
         // Handle errors as needed
       }
     }
