@@ -172,7 +172,7 @@ app.get("/loggedin", async (req, res, next) => {
 
 // update user's data after logging in
 app.patch("/login/update", async (req, res, next) => {
-  const {shoppingCartItems, wishList} = req.body
+  const {shoppingCartItems, wishlist} = req.body
   let {userId} = req.query
   userId = parseInt(userId)
 
@@ -188,9 +188,9 @@ app.patch("/login/update", async (req, res, next) => {
     ),
   ];
 
-  const newWishList = [
-    ...(user.wishList || []),
-    ...(wishList|| []).filter (
+  const newWishlist = [
+    ...(user.wishlist || []),
+    ...(wishlist|| []).filter (
       newItem => !user.wishlist.some(item => item.id === newItem.id)
     ),
   ];
@@ -202,7 +202,7 @@ app.patch("/login/update", async (req, res, next) => {
           set: newShoppingCart,
         },
         wishlist: {
-          set: newWishList,
+          set: newWishlist,
         },
       },
     });

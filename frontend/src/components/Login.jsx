@@ -14,7 +14,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [outletContext, setOutletContext] = useOutletContext();
-  const wishList = outletContext.wishList
+  const wishlist = outletContext.wishlist
   const shoppingCartItems = outletContext.shoppingCart.map(object => object.item)
   const shoppingCart = outletContext.shoppingCart
 
@@ -42,16 +42,16 @@ const Login = () => {
       dispatch(setIsAuth(user));
 
       // putting DB wishlist and shopping cart into local respectively
-      const userWishList = user.wishList || []
+      const userWishlist = user.Wishlist || []
       const userShoppingCart = user.shoppingCart || []
-      const combinedWishList = wishList.concat(userWishList.filter(item => wishList.indexOf(item) === -1))
+      const combinedWishlist = wishlist.concat(userWishlist.filter(item => wishlist.indexOf(item) === -1))
       const combineShoppingCart = shoppingCart.concat(
         userShoppingCart
         .filter(item => !shoppingCartItems.includes(item))
         .map(newItem => ({ item: newItem, amount: 1 }))
       )
       setOutletContext({
-        wishList: combinedWishList,
+        wishlist: combinedWishlist,
         shoppingCart: combineShoppingCart,
       })
 
@@ -59,7 +59,7 @@ const Login = () => {
       const updateUserResponse = await axios.patch(
         "http://localhost:3000/auth/login/update",
         {
-          wishList: combinedWishList,
+          wishlist: combinedWishlist,
           shoppingCart: combineShoppingCart,
         },
         {

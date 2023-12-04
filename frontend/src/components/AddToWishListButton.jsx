@@ -7,33 +7,33 @@ import { useOutletContext } from "react-router-dom";
 // components
 import { Button } from "@mui/material";
 
-const AddToWishListButton = ({ item }) => {
-  const user = useSelector((state) => state.isAuth?.value);
+const AddToWishlistButton = ({ item }) => {
+  const userId = useSelector((state) => state.isAuth?.value?.id);
 
   const [outletContext, setOutletContext] = useOutletContext();
-  const wishList = outletContext.wishList
-  let isItemInWishList = wishList.some(
-    (wishListItem) => wishListItem.id === item.id
+  const wishlist = outletContext.wishlist
+  let isItemInWishlist = wishlist.some(
+    (wishlistItem) => wishlistItem.id === item.id
   );
 
-  const addRemoveFromWishList = async () => {
-    if (isItemInWishList) {
-      const updatedWishList = wishList.filter((wishListItem) => {
-        return wishListItem.id !== item.id;
+  const addRemoveFromWishlist = async () => {
+    if (isItemInWishlist) {
+      const updatedWishlist = wishlist.filter((wishlistItem) => {
+        return wishlistItem.id !== item.id;
       });
       setOutletContext({
         ...outletContext,
-        wishList: updatedWishList
+        wishList: updatedWishlist
       })
-      // setWishList(updatedWishList);
+      // setWishlist(updatedWishlist);
     } else {
       setOutletContext({
         ...outletContext,
-        wishList: [...outletContext.wishList, item]
+        wishlist: [...outletContext.wishlist, item]
       })
-      // setWishList([...wishList, item]);
+      // setWishlist([...wishlist, item]);
     }
-    if (user.id) {
+    if (userId) {
       try {
         await axios.patch(
           'http://localhost:3000/items/addOrRemoveFromWishlist',
@@ -48,15 +48,15 @@ const AddToWishListButton = ({ item }) => {
 
   return (
     <>
-      {!isItemInWishList ? (
-        <Button variant="contained" onClick={addRemoveFromWishList}>
+      {!isItemInWishlist ? (
+        <Button variant="contained" onClick={addRemoveFromWishlist}>
           Add to wishlist
         </Button>
       ) : (
         <Button
           variant="contained"
           color="error"
-          onClick={addRemoveFromWishList}
+          onClick={addRemoveFromWishlist}
         >
           Remove from wishlist
         </Button>
@@ -65,4 +65,4 @@ const AddToWishListButton = ({ item }) => {
   );
 };
 
-export default AddToWishListButton;
+export default AddToWishlistButton;

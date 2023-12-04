@@ -15,7 +15,7 @@ const Home = () => {
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
-  const wishList = outletContext.wishList
+  const wishlist = outletContext.wishlist
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(outletContext.shoppingCart)
 
@@ -37,7 +37,7 @@ const Home = () => {
         setItems(alphabeticalOrderData);
         } else if (pathname === "/logout") {
           
-            setItems(wishList);
+            setItems(wishlist);
           
         } else {
           response = await axios.get("http://localhost:3000/items/");
@@ -62,9 +62,9 @@ const Home = () => {
   // Update items state when pathname is "/logout"
   // useEffect(() => {
   //   if (pathname === "/logout") {
-  //     setItems(wishList);
+  //     setItems(wishlist);
   //   }
-  // }, [pathname, wishList]);
+  // }, [pathname, wishlist]);
 
   if (!items) {
     return <h1>loading</h1>;

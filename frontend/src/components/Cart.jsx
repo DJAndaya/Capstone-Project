@@ -53,8 +53,8 @@ const Cart = () => {
         {
           params: { userId: userId },
           headers: {
-            'Authorization': `Bearer ${await stripe._apiKey}`,
-          }
+            Authorization: `Bearer ${await stripe._apiKey}`,
+          },
         }
       );
 

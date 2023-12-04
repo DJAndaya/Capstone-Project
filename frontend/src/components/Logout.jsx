@@ -18,7 +18,7 @@ const Logout = () => {
     window.localStorage.setItem("token", null);
     dispatch(setIsAuth(null));
     setOutletContext({
-      wishList: [],
+      wishlist: [],
       shoppingCart: []
     })
     navigate("/");

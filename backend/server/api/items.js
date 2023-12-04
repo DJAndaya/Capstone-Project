@@ -296,11 +296,11 @@ app.get("/wishlist", async (req, res, next) => {
     userId = parseInt(userId);
 
     // console.log(userId)
-    const userWithWishList = await prisma.users.findUnique({
+    const userWithWishlist = await prisma.users.findUnique({
       where: { id: userId },
-      include: { wishList: true },
+      include: { wishlist: true },
     });
-    res.send(userWithWishList.wishList);
+    res.send(userWithWishlist.wishlist);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error occured displaying shopping cart" });
