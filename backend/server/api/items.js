@@ -136,6 +136,55 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
   }
 });
 
+
+// add user's shopping cart
+app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
+  try {
+    // console.log(req.body)
+    const { item, userId } = req.body;
+    // console.log(userId);
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+      include: { wishlist: true },
+    });
+
+    const isItemInWishlist = user.wishlist.some(
+      (cartItem) => cartItem.id === item.id
+    );
+    let updatedUserWishlist = "";
+    // console.log(isItemInCart);
+    if (isItemInWishlist) {
+      updatedUserWishlist = await prisma.users.update({
+        where: { id: userId },
+        data: {
+          shoppingCart: {
+            disconnect: item,
+          },
+        },
+        // include: {shoppingCart: true}
+      });
+      // console.log("item being removed")
+    } else {
+      updatedUserWishlist = await prisma.users.update({
+        where: { id: userId },
+        data: {
+          shoppingCart: {
+            connect: item,
+          },
+        },
+        // include: {shoppingCart: true}
+      });
+      // console.log("item added")
+    }
+    // console.log(updatedUserShoppingCart);
+    const token = jwt.sign(updatedUserShoppingCart, process.env.JWT_SECRET_KEY);
+    res.send(token);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error occured adding item" });
+  }
+});
+
 // clear user's shopping cart
 app.patch("/clearShoppingCart", async (req, res, next) => {
   try {

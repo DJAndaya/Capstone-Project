@@ -23,7 +23,7 @@ const Cart = () => {
   const [formData, setFormData] = useState(null);
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;
-  console.log(shoppingCart)
+  // console.log(shoppingCart)
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -149,11 +149,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-/* TO DO LIST 
-
-1. fix the amount so the formData corrrectly changes
-2. have wishlist and cart combine with db and local
-3. fix loggedin endpoint, rn it runs even when user is null
-
-*/

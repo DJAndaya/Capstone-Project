@@ -142,15 +142,74 @@ app.get("/loggedin", async (req, res, next) => {
   if (token) {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (decodedToken) {
-      const user = {
-        id: decodedToken.id,
-        email: decodedToken.email,
-        admin: decodedToken.admin
-      };
+      const userId = decodedToken.id;
 
-      res.send(user);
+        const user = await prisma.users.findUnique({
+          where: { id: userId },
+          include: {
+            wishlist: true,
+            shoppingCart: true,
+          },
+        });
+
+        if (!user) {
+          return res.status(404).send("User not found");
+        }
+
+        // Extract relevant user information
+        const userInfo = {
+          id: user.id,
+          email: user.email,
+          admin: user.admin,
+          wishlist: user.wishlist,
+          shoppingCart: user.shoppingCart,
+        };
+
+        res.send(userInfo);
     }
   }
 });
+
+// update user's data after logging in
+app.patch("/login/update", async (req, res, next) => {
+  const {shoppingCartItems, wishList} = req.body
+  let {userId} = req.query
+  userId = parseInt(userId)
+
+  const user = await prisma.users.findUnique({
+    where: {id: userId},
+    include: {shoppingCart: true, wishlist: true}
+  })
+
+  const newShoppingCart = [
+    ...(user.shoppingCart || []),
+    ...(shoppingCartItems || []).filter(
+      newItem => !user.shoppingCart.some(item => item.id === newItem.id)
+    ),
+  ];
+
+  const newWishList = [
+    ...(user.wishList || []),
+    ...(wishList|| []).filter (
+      newItem => !user.wishlist.some(item => item.id === newItem.id)
+    ),
+  ];
+
+   const updatedUser = await prisma.users.update({
+      where: { id: userId },
+      data: {
+        shoppingCart: {
+          set: newShoppingCart,
+        },
+        wishlist: {
+          set: newWishList,
+        },
+      },
+    });
+
+    res.json(updatedUser);
+})
+
+// makes sure all user data is updated when logging out
 
 module.exports = app;
