@@ -1,10 +1,15 @@
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "address" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "admin" BOOLEAN NOT NULL DEFAULT false,
+    "isConfirmed" BOOLEAN NOT NULL DEFAULT false,
+    "socketId" TEXT,
+    "confirmationToken" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -26,11 +31,22 @@ CREATE TABLE "reviews" (
     "id" SERIAL NOT NULL,
     "dateAdded" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "rating" INTEGER NOT NULL,
-    "description" TEXT,
+    "comment" TEXT,
     "userId" INTEGER NOT NULL,
     "itemId" INTEGER NOT NULL,
 
     CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "message" (
+    "id" SERIAL NOT NULL,
+    "message" TEXT NOT NULL,
+    "fromUser" INTEGER NOT NULL,
+    "toUser" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "message_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -58,7 +74,10 @@ CREATE TABLE "_shoppingcart" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_name_key" ON "users"("name");
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_confirmationToken_key" ON "users"("confirmationToken");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_seller_AB_unique" ON "_seller"("A", "B");

@@ -110,7 +110,6 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
       where: { id: userId },
       include: { shoppingCart: true },
     });
-
     const isItemInCart = user.shoppingCart.some(
       (cartItem) => cartItem.id === item.id
     );
@@ -121,7 +120,9 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
         where: { id: userId },
         data: {
           shoppingCart: {
-            disconnect: item,
+            disconnect: {
+              id: item.id
+            }
           },
         },
         // include: {shoppingCart: true}
@@ -132,7 +133,9 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
         where: { id: userId },
         data: {
           shoppingCart: {
-            connect: item,
+            connect: {
+              id: item.id
+            }
           },
         },
         // include: {shoppingCart: true}
@@ -169,7 +172,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
         where: { id: userId },
         data: {
           wishlist: {
-            disconnect: item,
+            disconnect: {id: item.id},
           },
         },
         // include: {shoppingCart: true}
@@ -180,7 +183,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
         where: { id: userId },
         data: {
           wishlist: {
-            connect: item,
+            connect: {id: item.id},
           },
         },
         // include: {shoppingCart: true}
