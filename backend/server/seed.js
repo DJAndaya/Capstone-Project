@@ -70,7 +70,7 @@ const seed = async () => {
         let newProduct = {
           data: {
             name: productName,
-            price: faker.commerce.price(),
+            price: parseFloat(faker.commerce.price()),
             amount: Math.floor(Math.random() * 101),
             description: faker.commerce.productDescription(),
             category: faker.commerce.product(),

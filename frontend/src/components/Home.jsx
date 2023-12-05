@@ -35,13 +35,14 @@ const Home = () => {
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
-  const wishList = outletContext.wishList;
+
+  const wishlist = outletContext.wishlist
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(outletContext.shoppingCart)
 
   useEffect(() => {
     const getItems = async () => {
-      console.log("Current pathname:", pathname);
+      // console.log("Current pathname:", pathname);
       try {
         let response;
         if (pathname === "/user/orders") {
@@ -55,8 +56,8 @@ const Home = () => {
             a.name > b.name ? 1 : -1
           );
           setItems(alphabeticalOrderData);
-        } else if (pathname === "/logout") {
-          setItems(wishList);
+        } else if (pathname === "/logout") {      
+            setItems(wishlist);
         } else {
           response = await axios.get("http://localhost:3000/items/");
           const alphabeticalOrderData = response.data.sort((a, b) =>
@@ -85,9 +86,9 @@ const Home = () => {
   // Update items state when pathname is "/logout"
   // useEffect(() => {
   //   if (pathname === "/logout") {
-  //     setItems(wishList);
+  //     setItems(wishlist);
   //   }
-  // }, [pathname, wishList]);
+  // }, [pathname, wishlist]);
 
   const [selectedUserToChatWith, setSelectedUserToChatWith] = useState(null);
   const [message, setMessage] = useState("");

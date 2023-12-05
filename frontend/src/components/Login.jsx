@@ -4,7 +4,7 @@ import axios from "axios";
 import { setIsAuth } from "../redux/isAuthSlice";
 import { useDispatch } from "react-redux";
 
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useOutletContext } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +13,10 @@ const Login = () => {
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [outletContext, setOutletContext] = useOutletContext();
+  const wishlist = outletContext.wishlist
+  const shoppingCartItems = outletContext.shoppingCart.map(object => object.item)
+  const shoppingCart = outletContext.shoppingCart
 
   const loginUser = async (formData) => {
     try {
@@ -33,9 +37,37 @@ const Login = () => {
           },
         }
       );
-
-      const user = userResponse.data;
+        
+      let user = userResponse.data;
       dispatch(setIsAuth(user));
+
+      // putting DB wishlist and shopping cart into local respectively
+      const userWishlist = user.Wishlist || []
+      const userShoppingCart = user.shoppingCart || []
+      const combinedWishlist = wishlist.concat(userWishlist.filter(item => wishlist.indexOf(item) === -1))
+      const combineShoppingCart = shoppingCart.concat(
+        userShoppingCart
+        .filter(item => !shoppingCartItems.includes(item))
+        .map(newItem => ({ item: newItem, amount: 1 }))
+      )
+      setOutletContext({
+        wishlist: combinedWishlist,
+        shoppingCart: combineShoppingCart,
+      })
+
+      // updating user with new wishlist and shopping cart
+      const updateUserResponse = await axios.patch(
+        "http://localhost:3000/auth/login/update",
+        {
+          wishlist: combinedWishlist,
+          shoppingCart: combineShoppingCart,
+        },
+        {
+          params: {userId: user.id}
+        }
+      )
+      user = updateUserResponse.data
+      dispatch(setIsAuth(user))
       navigate("/")
     } catch (error) {
       console.log(error);

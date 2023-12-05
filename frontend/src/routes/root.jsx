@@ -56,10 +56,10 @@ export default function Root() {
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   // const [shoppingCart, setShoppingCart] = useState([])
-  // const [wishList, setWishList] = useState([])
+  // const [wishlist, setWishlist] = useState([])
   const [outletContext, setOutletContext] = useState({
     shoppingCart: [],
-    wishList: [],
+    wishlist: [],
   })
 
   const handleSearch = () => {

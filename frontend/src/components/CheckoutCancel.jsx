@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CancelPage = () => {
+const CheckoutCancel = () => {
   return (
     <div>
       <h1>Payment Canceled</h1>
@@ -9,4 +9,4 @@ const CancelPage = () => {
   );
 };
 
-export default CancelPage;
+export default CheckoutCancel;

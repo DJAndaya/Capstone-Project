@@ -19,12 +19,16 @@ import Register from "./components/Register";
 import Logout from "./components/Logout";
 import Sell from "./components/Sell";
 import Confirmation from "./components/Confirmation";
+import CheckoutSuccess from "./components/CheckoutSuccess";
+import CheckoutCancel from "./components/CheckoutCancel";
 import ProductDetail from "./components/ProductDetail";
+
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "./redux/isAuthSlice";
 import socketio from "socket.io-client";
 
 const socket = socketio("http://localhost:3000");
+
 
 export default function App() {
   const dispatch = useDispatch();
@@ -93,11 +97,13 @@ export default function App() {
           element: <Confirmation />,
         },
         {
-          path: "/checkout/success",
+          path:"/checkout/success",
+          element: <CheckoutSuccess />
         },
         {
           path: "/checkout/cancel",
-        },
+          element: <CheckoutCancel />
+        }
         {
           path: "/product/:productId",
           element: <ProductDetail />,
