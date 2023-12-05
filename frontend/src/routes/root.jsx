@@ -94,7 +94,7 @@ export default function Root() {
                 inputProps={{ "aria-label": "search" }}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
               />
             </Search>
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
@@ -119,6 +119,14 @@ export default function Root() {
                 to="user/sell"
               >
                 Sell
+              </Link>
+            </Box>
+            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
+              <Link
+                style={{ textDecoration: "none", color: "white" }}
+                to="user/chat"
+              >
+                Chat
               </Link>
             </Box>
             {isAuth && isAuth.admin ? (

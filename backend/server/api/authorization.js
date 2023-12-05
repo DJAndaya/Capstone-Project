@@ -136,6 +136,20 @@ app.post("/login", async (req, res, next) => {
   }
 });
 
+
+app.get("/getSocketId/:userId", async (req, res, next) => {
+  const { userId } = req.params
+  try {
+    const user = await prisma.users.findUnique({
+      where: { id: Number(userId) },
+    });
+
+    res.send(user);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 // send user data
 app.get("/loggedin", async (req, res, next) => {
   const token = req.headers.authorization;
@@ -163,6 +177,7 @@ app.get("/loggedin", async (req, res, next) => {
           admin: user.admin,
           wishlist: user.wishlist,
           shoppingCart: user.shoppingCart,
+          socketId: decodedToken.socketId
         };
 
         res.send(userInfo);

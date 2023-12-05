@@ -18,8 +18,11 @@ import { useDispatch, useSelector } from "react-redux";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { yellow } from '@mui/material/colors'
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Sell() {
+  const navigate = useNavigate();
+  const userId = useSelector((state) => state.isAuth?.value?.id)
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -61,6 +64,10 @@ export default function Sell() {
   const [itemsSelling, setItemsSelling] = useState([]);
 
   useEffect(() => {
+    if (!userId) {
+      navigate("/login");
+    }
+    
     const getItemsSelling = async () => {
       try {
         const response = await axios.get(
