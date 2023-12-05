@@ -65,7 +65,7 @@ const ReviewButton = ({ itemId }) => {
         {
           rating,
           userId,
-          itemId: "111",
+          itemId,
           comment: reviewText,
         }
       );
