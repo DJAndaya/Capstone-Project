@@ -23,18 +23,19 @@ import socketio from "socket.io-client";
 const socket = socketio("http://localhost:3000");
 // redux
 // router
-import { useLocation, useOutletContext } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectIsAuth);
   const [items, setItems] = useState(null);
   const [allMessages, setAllMessages] = useState([]);
+  const navigate = useNavigate()
 
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
-  const wishList = outletContext.wishList
+  const wishList = outletContext.wishList;
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(outletContext.shoppingCart)
 
@@ -51,19 +52,17 @@ const Home = () => {
             }
           );
           const alphabeticalOrderData = response.data.sort((a, b) =>
-          a.name > b.name ? 1 : -1
-        );
-        setItems(alphabeticalOrderData);
+            a.name > b.name ? 1 : -1
+          );
+          setItems(alphabeticalOrderData);
         } else if (pathname === "/logout") {
-          
-            setItems(wishList);
-          
+          setItems(wishList);
         } else {
           response = await axios.get("http://localhost:3000/items/");
           const alphabeticalOrderData = response.data.sort((a, b) =>
-          a.name > b.name ? 1 : -1
-        );
-        setItems(alphabeticalOrderData);
+            a.name > b.name ? 1 : -1
+          );
+          setItems(alphabeticalOrderData);
         }
 
         // const alphabeticalOrderData = response.data.sort((a, b) =>
@@ -141,17 +140,31 @@ const Home = () => {
                       <Typography component="div">
                         {item.description}
                       </Typography>
-                      <CardActions>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => startChat(item.seller[0])}
-                        >
-                          Chat
-                        </Button>
-                        <ReviewButton item={item} />
-                        <AddToCartButton item={item} />
-                      </CardActions>
+                      {userId ? (
+                        <CardActions>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => startChat(item.seller[0])}
+                          >
+                            Chat
+                          </Button>
+                          <ReviewButton item={item} />
+                          <AddToCartButton item={item} />
+                        </CardActions>
+                      ) : (
+                        <CardActions>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => navigate("/login")}
+                          >
+                            Chat
+                          </Button>
+                          <ReviewButton item={item} />
+                          <AddToCartButton item={item} />
+                        </CardActions>
+                      )}
                       <Typography variant="h6" component="div">
                         ${item.price}
                       </Typography>
