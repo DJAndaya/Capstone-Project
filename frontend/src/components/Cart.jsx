@@ -23,14 +23,15 @@ const Cart = () => {
   const [formData, setFormData] = useState(null);
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;
+  // console.log(shoppingCart)
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(userId);
   useEffect(() => {
     const initialFormData = shoppingCart.map((item) => ({
-      itemId: item.id,
-      amount: 0,
+      item: item,
+      amount: 1,
     }));
     setFormData(initialFormData);
   }, []);
@@ -43,17 +44,23 @@ const Cart = () => {
 
     try {
       const stripe = await initializeStripe();
+      // console.log(stripe._apiKey)
+      // const stripePublicKey = stripe._apiKey
+      // console.log("formData for checkout:",formData)
       const response = await axios.patch(
         "http://localhost:3000/items/checkOut",
-        formData,
+        shoppingCart,
         {
           params: { userId: userId },
+          headers: {
+            Authorization: `Bearer ${await stripe._apiKey}`,
+          },
         }
       );
 
       const { sessionId, token } = response.data;
 
-      const result = await stripe.redirectToCheckout({
+      const result = stripe.redirectToCheckout({
         sessionId,
       });
 
@@ -96,7 +103,7 @@ const Cart = () => {
       console.log(error);
     }
   };
-  if (shoppingCart.length === 0) {
+  if (!shoppingCart) {
     return <h1>Cart is empty or loading</h1>;
   } else {
     // console.log(shoppingCart);

@@ -56,10 +56,10 @@ export default function Root() {
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   // const [shoppingCart, setShoppingCart] = useState([])
-  // const [wishList, setWishList] = useState([])
+  // const [wishlist, setWishlist] = useState([])
   const [outletContext, setOutletContext] = useState({
     shoppingCart: [],
-    wishList: [],
+    wishlist: [],
   })
 
   const handleSearch = () => {
@@ -94,7 +94,7 @@ export default function Root() {
                 inputProps={{ "aria-label": "search" }}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
               />
             </Search>
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
