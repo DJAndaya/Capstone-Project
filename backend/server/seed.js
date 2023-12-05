@@ -48,7 +48,8 @@ const seed = async () => {
     const adminUser = {
       data: {
         email: faker.internet.email(),
-        password: bcrypt.hashSync("password1234", 10),
+        // password: bcrypt.hashSync("password1234", 10),
+        password: bcrypt.hashSync(process.env.ADMIN_USER_PW, 10),
         address: faker.address.streetAddress(),
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),

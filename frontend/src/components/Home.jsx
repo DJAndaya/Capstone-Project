@@ -148,7 +148,7 @@ const Home = () => {
                         >
                           Chat
                         </Button>
-                        <ReviewButton item={item} />
+                        <ReviewButton item={item} itemId={item.id}/>
                         <AddToCartButton item={item} />
                         <Link to={`/product/${item.id}`}>
                           <Button variant="contained" color="primary">
