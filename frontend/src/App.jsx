@@ -103,7 +103,7 @@ export default function App() {
         {
           path: "/checkout/cancel",
           element: <CheckoutCancel />
-        }
+        },
         {
           path: "/product/:productId",
           element: <ProductDetail />,
