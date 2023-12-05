@@ -9,6 +9,7 @@ import {
   CardContent,
   Typography,
   Button,
+  Modal,
 } from "@mui/material/";
 // component imports
 import ItemCards from "./ItemCards";
@@ -18,6 +19,7 @@ import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
 import AddToCartButton from "./AddToCartButton";
 import ReviewButton from "./ReviewButton";
+import ProductDetail from "./ProductDetail";
 
 import socketio from "socket.io-client";
 
@@ -31,6 +33,8 @@ const Home = () => {
   const user = useSelector(selectIsAuth);
   const [items, setItems] = useState(null);
   const [allMessages, setAllMessages] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
 
   const location = useLocation();
   const { pathname } = location;
@@ -38,6 +42,9 @@ const Home = () => {
   const wishList = outletContext.wishList;
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(outletContext.shoppingCart)
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const getItems = async () => {
@@ -148,13 +155,18 @@ const Home = () => {
                         >
                           Chat
                         </Button>
-                        <ReviewButton item={item} itemId={item.id}/>
+                        <ReviewButton item={item} itemId={item.id} />
                         <AddToCartButton item={item} />
-                        <Link to={`/product/${item.id}`}>
-                          <Button variant="contained" color="primary">
-                            View Details
-                          </Button>
-                        </Link>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            handleOpen();
+                            setSelectedItemId(item.id);
+                          }}
+                        >
+                          View Details
+                        </Button>
                       </CardActions>
                       <Typography variant="h6" component="div">
                         ${item.price}
@@ -166,6 +178,26 @@ const Home = () => {
             })}
           </Grid>
         </Box>
+
+        <Modal open={open} onClose={handleClose}>
+          <div
+            style={{
+              color: "black",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "50vh",
+              width: "50vw",
+              position: "fixed",
+              top: "25vh",
+              left: "25vw",
+              backgroundColor: "white",
+              opacity: 0.95 ,
+            }}
+          >
+            <ProductDetail productId={selectedItemId} />
+          </div>
+        </Modal>
 
         {selectedUserToChatWith && (
           <div

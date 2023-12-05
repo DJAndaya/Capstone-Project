@@ -58,3 +58,4 @@ function ProductDetail({ productId: propProductId }) {
 }
 
 export default ProductDetail;
+
