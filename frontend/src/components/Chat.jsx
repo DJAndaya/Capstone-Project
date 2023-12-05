@@ -116,6 +116,7 @@ export default function Chat() {
 //       message,
 //     });
 //   };
+
   return (
     <div>
       <div>
