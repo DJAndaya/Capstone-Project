@@ -24,18 +24,18 @@ import socketio from "socket.io-client";
 const socket = socketio("http://localhost:3000");
 // redux
 // router
-import { useLocation, useOutletContext } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectIsAuth);
   const [items, setItems] = useState(null);
   const [allMessages, setAllMessages] = useState([]);
+  const navigate = useNavigate()
 
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
-
   const wishlist = outletContext.wishlist
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(outletContext.shoppingCart)
@@ -141,22 +141,31 @@ const Home = () => {
                       <Typography component="div">
                         {item.description}
                       </Typography>
-                      <CardActions sx={{ justifyContent: "space-between" }}>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => startChat(item.seller[0])}
-                        >
-                          Chat
-                        </Button>
-                        <ReviewButton item={item} />
-                        <AddToCartButton item={item} />
-                        <Link to={`/product/${item.id}`}>
-                          <Button variant="contained" color="primary">
-                            View Details
+                      {userId ? (
+                        <CardActions>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => startChat(item.seller[0])}
+                          >
+                            Chat
                           </Button>
-                        </Link>
-                      </CardActions>
+                          <ReviewButton item={item} />
+                          <AddToCartButton item={item} />
+                        </CardActions>
+                      ) : (
+                        <CardActions>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => navigate("/login")}
+                          >
+                            Chat
+                          </Button>
+                          <ReviewButton item={item} />
+                          <AddToCartButton item={item} />
+                        </CardActions>
+                      )}
                       <Typography variant="h6" component="div">
                         ${item.price}
                       </Typography>
