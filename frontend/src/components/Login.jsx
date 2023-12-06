@@ -71,10 +71,6 @@ const Login = () => {
       console.log(updatedUser)
       // console.log("before updatedUserData is put onto local")
       dispatch(setIsAuth(updatedUser))
-      // console.log("before navigate")
-      // navigate("/")
-      // console.log("after navigate")
-      
     } catch (error) {
       console.log(error);
     }
@@ -82,9 +78,9 @@ const Login = () => {
 
   useEffect(() => {
     if (userId) {
-      console.log("before navigate in useEffect");
+      // console.log("before navigate in useEffect");
       navigate("/");
-      console.log("after navigate in useEffect");  
+      // console.log("after navigate in useEffect");  
     }
     }, [userId, navigate]);
 
