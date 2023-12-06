@@ -221,7 +221,7 @@ app.patch("/login/update", async (req, res, next) => {
         },
       },
     });
-
+    console.log(updatedUser)
     res.json(updatedUser);
 })
 

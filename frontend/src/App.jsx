@@ -34,6 +34,11 @@ export default function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectIsAuth);
 
+  // useEffect(() => {
+  //   console.log("redux state after login:", user)
+  //   // console.log("store after login", user.shoppingCart)
+  // }, [user])
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -118,6 +123,7 @@ export default function App() {
     }
 
     socket.on("update_socket", (updatedUserData) => {
+      console.log(updatedUserData)
       dispatch(setIsAuth(updatedUserData));
     });
     // const possiblyLogin = async () => {

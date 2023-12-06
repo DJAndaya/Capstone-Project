@@ -47,6 +47,7 @@ const Home = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  useEffect(()=> console.log("home component mounted"), [])
   useEffect(() => {
     const getItems = async () => {
       // console.log("Current pathname:", pathname);
@@ -65,6 +66,16 @@ const Home = () => {
           setItems(alphabeticalOrderData);
         } else if (pathname === "/logout") {      
             setItems(wishlist);
+        } else if (pathname.startsWith("/results")) {
+          const searchQuery = pathname.split("/").pop()
+          // console.log("Query working; searchQuery:", searchQuery)
+          response = await axios.get("http://localhost:3000/items/search", {
+            params: { searchQuery }
+          })
+          const alphabeticalOrderData = response.data.sort((a, b) =>
+            a.name > b.name ? 1 : -1
+          );
+          setItems(alphabeticalOrderData);
         } else {
           response = await axios.get("http://localhost:3000/items/");
           const alphabeticalOrderData = response.data.sort((a, b) =>
@@ -86,7 +97,7 @@ const Home = () => {
 
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
-      console.log(allMessages);
+      // console.log(allMessages);
     });
   }, [pathname, userId]);
 
@@ -252,26 +263,6 @@ const Home = () => {
       </Grid>
     );
   }
-
-  return (
-    <Grid container>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid
-          container
-          spacing={{ xs: 1, md: 1 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
-        >
-          {items.map((item, idx) => {
-            return (
-              <Grid item xs={2} sm={2} md={2} key={idx}>
-                <ItemCards item={item} />
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Box>
-    </Grid>
-  );
 };
 
 export default Home;

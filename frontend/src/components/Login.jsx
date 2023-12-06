@@ -2,7 +2,7 @@
 import axios from "axios";
 
 import { setIsAuth } from "../redux/isAuthSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { NavLink, useNavigate, useOutletContext } from "react-router-dom";
 
@@ -17,6 +17,7 @@ const Login = () => {
   const wishlist = outletContext.wishlist
   const shoppingCartItems = outletContext.shoppingCart.map(object => object.item)
   const shoppingCart = outletContext.shoppingCart
+  const userId = useSelector((state) => state.isAuth?.value?.id);
 
   const loginUser = async (formData) => {
     try {
@@ -38,7 +39,7 @@ const Login = () => {
         }
       );
         
-      let user = userResponse.data;
+      const user = userResponse.data;
       dispatch(setIsAuth(user));
 
       // putting DB wishlist and shopping cart into local respectively
@@ -66,13 +67,26 @@ const Login = () => {
           params: {userId: user.id}
         }
       )
-      user = updateUserResponse.data
-      dispatch(setIsAuth(user))
-      navigate("/")
+      const updatedUser = updateUserResponse.data
+      console.log(updatedUser)
+      // console.log("before updatedUserData is put onto local")
+      dispatch(setIsAuth(updatedUser))
+      // console.log("before navigate")
+      // navigate("/")
+      // console.log("after navigate")
+      
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (userId) {
+      console.log("before navigate in useEffect");
+      navigate("/");
+      console.log("after navigate in useEffect");  
+    }
+    }, [userId, navigate]);
 
   const onSubmit = (event) => {
     event.preventDefault();
