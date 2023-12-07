@@ -9,7 +9,8 @@ const socket = socketio("http://localhost:3000");
 
 export default function Chat() {
   const user = useSelector(selectIsAuth);
-  const navigate = useNavigate()
+  const userId = useSelector((state) => state.isAuth?.value?.id);
+  const navigate = useNavigate();
   const [allMessages, setAllMessages] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
   const [chattingWith, setChattingWith] = useState(null);
@@ -19,6 +20,11 @@ export default function Chat() {
     if (!user) {
       navigate("/login");
     }
+
+    socket.emit("get_messages", {
+      fromUser: user.id,
+    });
+
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
 
@@ -42,94 +48,36 @@ export default function Chat() {
       }
 
       setChatMessages(updatedChatMessages);
+      console.log(chatMessages, "a");
     });
-
-    socket.emit("get_messages", {
-      fromUser: user.id,
-    });
-  }, [user]);
+  }, [userId]);
 
   const sendMessage = () => {
     socket.emit("send_message", {
       fromUser: user.id,
       toUser: chattingWith,
       toSocketId: null,
-      message: message
+      message: message,
     });
   };
 
-  // useEffect(() => {
-  //   socket.on("receive_message", (msgs) => {
-  //     setAllMessages(msgs);
-
-  //     const updatedChatMessages = [];
-
-  //     const fetchData = async () => {
-  //       for (const msg of allMessages) {
-  //         const toUser = msg.toUser;
-
-  //         if (!updatedChatMessages.some(([user]) => user === toUser)) {
-  //           try {
-  //             const response = await axios.get(
-  //               `http://localhost:3000/auth/getSocketId/${toUser}`
-  //             );
-  //             const userData = response.data;
-  //             console.log(userData);
-
-  //             updatedChatMessages.push([toUser, []]);
-  //           } catch (error) {
-  //             console.error(
-  //               `Error fetching user data for user ID ${toUser}:`,
-  //               error
-  //             );
-  //           }
-  //         }
-  //       }
-
-  //       for (const user of updatedChatMessages) {
-  //         for (const msg of allMessages) {
-  //           if (msg.fromUser === user[0] || msg.toUser === user[0]) {
-  //             user[1].push(msg);
-  //           }
-  //         }
-  //       }
-
-  //       setChatMessages(updatedChatMessages);
-  //     };
-
-  //     fetchData();
-  //     console.log(allMessages);
-  //     console.log(chatMessages, "chat");
-  //   });
-
-  //   socket.emit("get_messages", {
-  //     fromUser: user.id,
-  //   });
-  // }, []);
-
-//   const sendMessage = () => {
-//     console.log(selectedUserToChatWith);
-//     socket.emit("send_message", {
-//       fromUser: user.id,
-//       toUser: selectedUserToChatWith.id,
-//       toSocketId: selectedUserToChatWith.socketId,
-//       message,
-//     });
-//   };
   return (
     <div>
       <div>
         <h2>Users:</h2>
         <ul>
-          {chatMessages.map((msg, index) => (
-            <li
-              key={index}
-              style={{ listStyleType: "none" }}
-              onClick={() => setChattingWith(msg[0])}
-            >
-              {msg[0]}
-            </li>
-          ))}
+          {chatMessages.map(
+            (msg, index) =>
+              msg[0] !== user.id && (
+                <li
+                  key={index}
+                  style={{ listStyleType: "none" }}
+                  onClick={() => setChattingWith(msg[0])}
+                >
+                  {msg[0]}
+                </li>
+              )
+          )}
         </ul>
       </div>
       <div>
