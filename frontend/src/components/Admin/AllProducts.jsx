@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import TemporaryDrawer from "./Drawer";
 
 const itemsPerPage = 20;
@@ -416,6 +417,7 @@ export default function AllProducts() {
             <button onClick={() => handleDeleteProduct(product.id)}>
               Delete Product
             </button>
+            <Link to={`/product/${product.id}`}><button>View Details</button></Link>
           </li>
         ))}
       </ul>

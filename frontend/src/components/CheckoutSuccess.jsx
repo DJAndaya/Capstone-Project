@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SuccessPage = () => {
+const CheckoutSuccess = () => {
   return (
     <div>
       <h1>Payment Successful!</h1>
@@ -9,4 +9,4 @@ const SuccessPage = () => {
   );
 };
 
-export default SuccessPage;
+export default CheckoutSuccess;

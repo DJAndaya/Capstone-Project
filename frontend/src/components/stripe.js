@@ -3,7 +3,7 @@ import axios from "axios";
 
 const getStripePublicKey = async () => {
   try {
-    const response = await axios.get('"http://localhost:3000/items/stripeKey');
+    const response = await axios.get('http://localhost:3000/items/stripeKey');
     return response.data.publicKey;
   } catch (error) {
     console.log(error);
@@ -12,13 +12,9 @@ const getStripePublicKey = async () => {
 
 const initializeStripe = async () => {
   const stripePublicKey = await getStripePublicKey();
-
   if (stripePublicKey) {
-    const stripe = await loadStripe(stripePublicKey);
-    // Use the 'stripe' object in the rest of your frontend code...
-    return stripe;
+    return loadStripe(stripePublicKey)
   }
-
   return null;
 };
 

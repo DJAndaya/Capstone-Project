@@ -3,6 +3,7 @@ const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const prisma = new PrismaClient();
 
@@ -147,6 +148,54 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
   }
 });
 
+// add user's shopping cart
+app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
+  try {
+    // console.log(req.body)
+    const { item, userId } = req.body;
+    // console.log(userId);
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+      include: { wishlist: true },
+    });
+
+    const isItemInWishlist = user.wishlist.some(
+      (cartItem) => cartItem.id === item.id
+    );
+    let updatedUserWishlist = "";
+    // console.log(isItemInCart);
+    if (isItemInWishlist) {
+      updatedUserWishlist = await prisma.users.update({
+        where: { id: userId },
+        data: {
+          wishlist: {
+            disconnect: item,
+          },
+        },
+        // include: {shoppingCart: true}
+      });
+      // console.log("item being removed")
+    } else {
+      updatedUserWishlist = await prisma.users.update({
+        where: { id: userId },
+        data: {
+          wishlist: {
+            connect: item,
+          },
+        },
+        // include: {shoppingCart: true}
+      });
+      // console.log("item added")
+    }
+    // console.log(updatedUserShoppingCart);
+    const token = jwt.sign(updatedUserWishlist, process.env.JWT_SECRET_KEY);
+    res.send(token);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error occured adding item" });
+  }
+});
+
 // clear user's shopping cart
 app.patch("/clearShoppingCart", async (req, res, next) => {
   try {
@@ -205,29 +254,29 @@ app.patch("/checkOut", async (req, res, next) => {
   userId = parseInt(userId);
   // console.log(req.body)
   const itemIdAndAmount = req.body;
-  console.log("checkout request went through");
-
+  // console.log("checkout request went through");
+  console.log(itemIdAndAmount)
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: itemIdAndAmount.map(item => ({
       price_data: {
         currency: 'usd',  
         product_data: {
-          name: item.name,  
+          name: item.item.name,  
         },
-        unit_amount: item.amount,
+        unit_amount: parseInt(item.item.price) * 100,
       },
-      quantity: 1,
+      quantity: item.amount,
     })),
     mode: 'payment',
     success_url: 'http://localhost:5173/checkout/success', 
     cancel_url: 'http://localhost:5173/checkout/cancel', 
   });
 
-  for (const { itemId, amount } of itemIdAndAmount) {
-    console.log(itemId);
+  for (const { item, amount } of itemIdAndAmount) {
+    // console.log(item);
     await prisma.items.update({
-      where: { id: itemId },
+      where: { id: item.id },
       data: {
         amount: {
           decrement: amount,
@@ -240,10 +289,10 @@ app.patch("/checkOut", async (req, res, next) => {
     where: { id: userId },
     data: {
       shoppingCart: {
-        disconnect: itemIdAndAmount.map((item) => ({ id: item.itemId })),
+        disconnect: itemIdAndAmount.map((item) => ({ id: item.item.id })),
       },
       orderHistory: {
-        connect: itemIdAndAmount.map((item) => ({ id: item.itemId })),
+        connect: itemIdAndAmount.map((item) => ({ id: item.item.id })),
       },
     },
   });
@@ -258,11 +307,11 @@ app.get("/wishlist", async (req, res, next) => {
     userId = parseInt(userId);
 
     // console.log(userId)
-    const userWithWishList = await prisma.users.findUnique({
+    const userWithWishlist = await prisma.users.findUnique({
       where: { id: userId },
-      include: { wishList: true },
+      include: { wishlist: true },
     });
-    res.send(userWithWishList.wishList);
+    res.send(userWithWishlist.wishlist);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error occured displaying shopping cart" });

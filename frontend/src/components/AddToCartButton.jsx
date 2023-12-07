@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import axios from "axios";
 // redux
 import { useSelector } from "react-redux";
 // router
@@ -12,13 +13,13 @@ const AddToCartButton = ({ item }) => {
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;
   let isItemInShoppingCart = shoppingCart.some(
-    (cartItem) => cartItem.id === item.id
+    (cartItem) => cartItem.item.id === item.id
   );
 
-  const addRemoveFromShoppingCart = () => {
+  const addRemoveFromShoppingCart = async () => {
     if (isItemInShoppingCart) {
       const updatedShoppingCart = shoppingCart.filter((shoppingCartItem) => {
-        return shoppingCartItem.id !== item.id;
+        return shoppingCartItem.item.id !== item.id;
       });
       setOutletContext({
         ...outletContext,
@@ -28,9 +29,27 @@ const AddToCartButton = ({ item }) => {
     } else {
       setOutletContext({
         ...outletContext,
-        shoppingCart: [...outletContext.shoppingCart, item],
+        shoppingCart: [
+          ...outletContext.shoppingCart,
+          {
+            item: item,
+            amount: 1,
+          },
+        ],
       });
       // setShoppingCart([...shoppingCart, item]);
+    }
+
+    if (userId) {
+      try {
+        await axios.patch(
+          "http://localhost:3000/items/addOrRemoveFromShoppingCart",
+          { item, userId }
+        );
+      } catch (error) {
+        console.log(error);
+        // Handle errors as needed
+      }
     }
   };
 
