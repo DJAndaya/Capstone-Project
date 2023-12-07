@@ -42,13 +42,15 @@ io.on("connection", (socket) => {
       console.log(error)
     }
   })
-  socket.on("send_message", async ({ fromUser, toUser, toSocketId, message }) => {
+  socket.on("send_message", async ({ fromUser, toUser, toFirstName, toLastName, toSocketId, message }) => {
     try {
       const newMessage = await prisma.message.create({
         data: {
           message,
           fromUser,
           toUser,
+          toFirstName,
+          toLastName
         },
       });
 
@@ -57,7 +59,8 @@ io.on("connection", (socket) => {
           OR: [{ fromUser: fromUser }, { toUser: fromUser }],
         },
       });
-
+      
+      console.log(allMessages)
       io.to(toSocketId).emit("receive_message", allMessages);
 
       io.to(socket.id).emit("receive_message", allMessages);

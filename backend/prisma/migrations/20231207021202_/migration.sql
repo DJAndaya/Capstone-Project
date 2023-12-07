@@ -44,6 +44,8 @@ CREATE TABLE "message" (
     "message" TEXT NOT NULL,
     "fromUser" INTEGER NOT NULL,
     "toUser" INTEGER NOT NULL,
+    "toFirstName" TEXT NOT NULL,
+    "toLastName" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "message_pkey" PRIMARY KEY ("id")

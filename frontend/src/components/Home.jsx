@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 // material UI imports
 import {
@@ -35,12 +35,11 @@ const Home = () => {
   const [allMessages, setAllMessages] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
-
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
 
-  const wishlist = outletContext.wishlist
+  const wishlist = outletContext.wishlist;
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(outletContext.shoppingCart)
 
@@ -63,14 +62,14 @@ const Home = () => {
             a.name > b.name ? 1 : -1
           );
           setItems(alphabeticalOrderData);
-        } else if (pathname === "/logout") {      
-            setItems(wishlist);
+        } else if (pathname === "/logout") {
+          setItems(wishlist);
         } else if (pathname.startsWith("/results")) {
-          const searchQuery = pathname.split("/").pop()
+          const searchQuery = pathname.split("/").pop();
           // console.log("Query working; searchQuery:", searchQuery)
           response = await axios.get("http://localhost:3000/items/search", {
-            params: { searchQuery }
-          })
+            params: { searchQuery },
+          });
           const alphabeticalOrderData = response.data.sort((a, b) =>
             a.name > b.name ? 1 : -1
           );
@@ -96,7 +95,7 @@ const Home = () => {
 
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
-      // console.log(allMessages);
+      console.log("received");
     });
   }, [pathname, userId]);
 
@@ -109,14 +108,23 @@ const Home = () => {
 
   const [selectedUserToChatWith, setSelectedUserToChatWith] = useState(null);
   const [message, setMessage] = useState("");
+  const messageContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [allMessages, selectedUserToChatWith]);
 
   const startChat = async (toUser) => {
     // console.log(toUser);
     // console.log(toUser.id);
     // console.log(allMessages);
-    if (toUser.socketId === user.socketId) {
+    if (toUser.id === user.id) {
       return;
     }
+    console.log(toUser);
     setSelectedUserToChatWith(toUser);
     socket.emit("get_messages", {
       fromUser: user.id,
@@ -124,13 +132,23 @@ const Home = () => {
   };
 
   const sendMessage = () => {
-    console.log(selectedUserToChatWith);
+    console.log(selectedUserToChatWith.socketId, "to");
+    console.log(user.socketId);
     socket.emit("send_message", {
       fromUser: user.id,
       toUser: selectedUserToChatWith.id,
+      toFirstName: selectedUserToChatWith.firstName,
+      toLastName: selectedUserToChatWith.lastName,
       toSocketId: selectedUserToChatWith.socketId,
       message,
     });
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
   };
 
   if (!items) {
@@ -154,7 +172,6 @@ const Home = () => {
                       </Typography>
                       <Typography variant="h7" component="div">
                         {item.seller[0].firstName} {item.seller[0].lastName[0]}.
-                        {console.log(item.seller[0])}
                       </Typography>
                       <Typography component="div">
                         {item.description}
@@ -163,7 +180,7 @@ const Home = () => {
                         <Button
                           variant="contained"
                           color="secondary"
-                          onClick={() => startChat(item.seller[0].firstName)}
+                          onClick={() => startChat(item.seller[0])}
                         >
                           Chat
                         </Button>
@@ -204,59 +221,96 @@ const Home = () => {
               top: "25vh",
               left: "25vw",
               backgroundColor: "white",
-              opacity: 0.95 ,
+              opacity: 0.95,
             }}
           >
             <ProductDetail productId={selectedItemId} />
           </div>
         </Modal>
-
         {selectedUserToChatWith && (
           <div
             style={{
-              border: "1px solid lightseagreen",
               position: "fixed",
               bottom: 16,
               right: 16,
-              overflowY: "auto", // Enable vertical scrolling
-              maxHeight: "50vh", // Set maximum height to 80% of the viewport height
-              width: 300,
-              backgroundColor: "rgba(0, 0, 0, 0.95)",
-              zIndex: 1000,
+              maxHeight: "50vh",
+              width: "40%",
+              maxWidth: "100%",
+              display: "flex",
+              flexDirection: "column",
+              outline: "5px solid black",
             }}
           >
-            <h3>You are chatting with {selectedUserToChatWith.socketId}</h3>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {allMessages.map((msg, index) => {
-                if (
-                  msg.toUser === selectedUserToChatWith.id ||
-                  msg.fromUser === selectedUserToChatWith.id
-                ) {
-                  return (
-                    <div
-                      key={index}
-                      style={{
-                        textAlign: msg.toUser === user.id ? "left" : "right",
-                      }}
-                    >
-                      <strong>
-                        {msg.fromUser === user.id ? user.id : msg.fromUser}
-                        {" - "}
-                      </strong>
-                      {msg.message}
-                    </div>
-                  );
-                }
-                return null; // Return null if the condition is not met
-              })}
+            <h3
+              style={{
+                margin: "0",
+                padding: "8px",
+                backgroundColor: "black",
+                color: "white",
+              }}
+            >
+              Chatting with {selectedUserToChatWith.firstName}{" "}
+              {selectedUserToChatWith.lastName}
+            </h3>
+            <div
+              ref={messageContainerRef}
+              style={{
+                maxHeight: "calc(50vh - 40px)",
+                overflowY: "auto",
+                flexGrow: 1,
+                padding: "10px",
+              }}
+            >
+              {allMessages.map((msg, index) => (
+                <div
+                  key={index}
+                  style={{
+                    textAlign: msg.toUser === user.id ? "left" : "right",
+                    margin: "8px 0",
+                  }}
+                >
+                  <strong>
+                    {msg.fromUser === user.id
+                      ? user.firstName
+                      : selectedUserToChatWith.firstName}
+                    {" - "}
+                  </strong>
+                  {msg.message}
+                </div>
+              ))}
             </div>
 
-            <div style={{ position: "absolute", bottom: 0, marginTop: "auto" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "8px",
+                alignItems: "flex-end",
+              }}
+            >
               <input
                 value={message}
                 onChange={(ev) => setMessage(ev.target.value)}
+                onKeyDown={handleKeyDown}
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  boxSizing: "border-box",
+                }}
               />
-              <button onClick={sendMessage}>Send message</button>
+              <button
+                onClick={sendMessage}
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  backgroundColor: "black",
+                  color: "white",
+                  cursor: "pointer",
+                  marginTop: "8px",
+                }}
+              >
+                Send message
+              </button>
             </div>
           </div>
         )}

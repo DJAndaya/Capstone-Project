@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import socketio from "socket.io-client";
 const socket = socketio("http://localhost:3000");
 
 export default function Chat() {
+  const messageContainerRef = useRef(null);
   const user = useSelector(selectIsAuth);
   const userId = useSelector((state) => state.isAuth?.value?.id);
   const navigate = useNavigate();
@@ -27,21 +28,26 @@ export default function Chat() {
 
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
-
+      console.log(allMessages, "allmessages");
       // Move the logic that depends on the updated state here
       const updatedChatMessages = [];
 
       for (const msg of msgs) {
         const toUser = msg.toUser;
 
-        if (!updatedChatMessages.some(([user]) => user === toUser)) {
-          updatedChatMessages.push([toUser, []]);
+        if (!updatedChatMessages.some(([user]) => user[0] === toUser)) {
+          updatedChatMessages.push([
+            [toUser, msg.toFirstName, msg.toLastName],
+            [],
+          ]);
         }
       }
-
+      console.log(updatedChatMessages, "up");
       for (const user of updatedChatMessages) {
         for (const msg of msgs) {
-          if (msg.fromUser === user[0] || msg.toUser === user[0]) {
+          // console.log(user)
+          // console.log(msg)
+          if (msg.fromUser === user[0][0] || msg.toUser === user[0][0]) {
             user[1].push(msg);
           }
         }
@@ -52,64 +58,110 @@ export default function Chat() {
     });
   }, [userId]);
 
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [allMessages, chattingWith]);
+
   const sendMessage = () => {
-    socket.emit("send_message", {
-      fromUser: user.id,
-      toUser: chattingWith,
-      toSocketId: null,
-      message: message,
-    });
+    if (message.trim() && chattingWith) {
+      socket.emit("send_message", {
+        fromUser: user.id,
+        toUser: chattingWith[0],
+        toFirstName: chattingWith[1],
+        toLastName: chattingWith[2],
+        toSocketId: null,
+        message: message,
+      });
+      setMessage("");
+    }
   };
-  
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
-    <div>
-      <div>
+    <div style={{ display: "flex", height: "90vh" }}>
+      <div
+        style={{
+          flex: "0 0 13%",
+          padding: "15px",
+          outline: "2px solid #333",
+          marginRight: "20px",
+          overflowY: "auto",
+        }}
+      >
         <h2>Users:</h2>
-        <ul>
+        <ul style={{ listStyleType: "none", margin: 0, padding: 0 }}>
           {chatMessages.map(
             (msg, index) =>
-              msg[0] !== user.id && (
+              msg[0][0] !== user.id && (
                 <li
                   key={index}
                   style={{ listStyleType: "none" }}
                   onClick={() => setChattingWith(msg[0])}
                 >
-                  {msg[0]}
+                  {msg[0][1]} {msg[0][2]}
                 </li>
               )
           )}
         </ul>
       </div>
-      <div>
+      <div
+        style={{
+          flex: "1",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {chattingWith ? (
-          <div>
-            <h2>Chatting with {chattingWith}</h2>
-            {allMessages.map((msg, index) => {
-              if (
-                msg.toUser === chattingWith ||
-                msg.fromUser === chattingWith
-              ) {
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      textAlign: msg.toUser === user.id ? "left" : "right",
-                    }}
-                  >
-                    <strong>
-                      {msg.fromUser === user.id ? user.id : msg.fromUser}
-                      {" - "}
-                    </strong>
-                    {msg.message}
-                  </div>
-                );
-              }
-              return null; // Return null if the condition is not met
-            })}
-            <div style={{ position: "absolute", bottom: 0, marginTop: "auto" }}>
+          <div
+            style={{ height: "100%", display: "flex", flexDirection: "column" }}
+          >
+            <h2>
+              Chatting with {chattingWith[1]} {chattingWith[2]}
+            </h2>
+            <div
+              ref={messageContainerRef}
+              style={{ flex: "1", overflowY: "auto", padding: "15px" }}
+            >
+              {allMessages.map((msg, index) => {
+                if (
+                  msg.toUser === chattingWith[0] ||
+                  msg.fromUser === chattingWith[0]
+                ) {
+                  return (
+                    <div
+                      key={index}
+                      style={{
+                        textAlign: msg.toUser === user.id ? "left" : "right",
+                      }}
+                    >
+                      <strong>
+                        {msg.fromUser === user.id
+                          ? user.firstName
+                          : chattingWith[1]}
+                        {" - "}
+                      </strong>
+                      {msg.message}
+                    </div>
+                  );
+                }
+                return null;
+              })}
+            </div>
+            <div style={{ padding: "15px", borderTop: "2px solid #333" }}>
               <input
                 value={message}
                 onChange={(ev) => setMessage(ev.target.value)}
+                onKeyDown={handleKeyDown}
               />
               <button onClick={sendMessage}>Send message</button>
             </div>
