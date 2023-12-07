@@ -18,6 +18,8 @@ app.get("/", async (req, res, next) => {
             select: {
               id: true,
               socketId: true,
+              firstName: true,
+              lastName: true,
             },
           },
         },

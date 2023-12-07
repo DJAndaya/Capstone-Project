@@ -111,9 +111,9 @@ const Home = () => {
   const [message, setMessage] = useState("");
 
   const startChat = async (toUser) => {
-    console.log(toUser);
-    console.log(toUser.id);
-    console.log(allMessages);
+    // console.log(toUser);
+    // console.log(toUser.id);
+    // console.log(allMessages);
     if (toUser.socketId === user.socketId) {
       return;
     }
@@ -153,7 +153,8 @@ const Home = () => {
                         {item.name}
                       </Typography>
                       <Typography variant="h7" component="div">
-                        Seller Name
+                        {item.seller[0].firstName} {item.seller[0].lastName[0]}.
+                        {console.log(item.seller[0])}
                       </Typography>
                       <Typography component="div">
                         {item.description}
@@ -162,7 +163,7 @@ const Home = () => {
                         <Button
                           variant="contained"
                           color="secondary"
-                          onClick={() => startChat(item.seller[0])}
+                          onClick={() => startChat(item.seller[0].firstName)}
                         >
                           Chat
                         </Button>
