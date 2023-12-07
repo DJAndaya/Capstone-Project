@@ -47,7 +47,6 @@ const Home = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  useEffect(()=> console.log("home component mounted"), [])
   useEffect(() => {
     const getItems = async () => {
       // console.log("Current pathname:", pathname);

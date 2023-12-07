@@ -68,7 +68,7 @@ const Login = () => {
         }
       )
       const updatedUser = updateUserResponse.data
-      console.log(updatedUser)
+      // console.log(updatedUser)
       // console.log("before updatedUserData is put onto local")
       dispatch(setIsAuth(updatedUser))
     } catch (error) {
