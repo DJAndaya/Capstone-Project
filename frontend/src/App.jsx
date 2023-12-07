@@ -120,13 +120,13 @@ export default function App() {
   useEffect(() => {
     if (user) {
       socket.emit("user_joined", user);
-      console.log("user has joined with socket")
+      // console.log("user has joined with socket")
     }
 
     socket.on("update_socket", (updatedUserData) => {
-      console.log("updatedUserData:", updatedUserData) // not showing up
+      // console.log("updatedUserData:", updatedUserData) // not showing up
       dispatch(setIsAuth(updatedUserData));
-      console.log("user info after dispatch:", user) // not showing up
+      // console.log("user info after dispatch:", user) // not showing up
     });
     // const possiblyLogin = async () => {
     //   const token = window.localStorage.getItem("token");
