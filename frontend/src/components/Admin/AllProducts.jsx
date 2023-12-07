@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
-import TemporaryDrawer from "./Drawer";
-
-const itemsPerPage = 20;
+import { Link } from "react-router-dom";
+import "../cssFiles/Admin.css";
 
 export default function AllProducts() {
   const [products, setProducts] = useState([]);
@@ -12,6 +10,8 @@ export default function AllProducts() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [pageInput, setPageInput] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [dropdownDisplay, setDropdownDisplay] = useState("Items per page");
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -35,6 +35,10 @@ export default function AllProducts() {
 
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    calculateTotalPages(products.length);
+  }, [products, itemsPerPage]);
 
   /********************************************************/
   /********* P * A * G * I * N * A * T * I * O * N ********/
@@ -238,15 +242,12 @@ export default function AllProducts() {
 
   return (
     <div>
-      <TemporaryDrawer />
       <h1>ALL PRODUCTS</h1>
 
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
 
-      <h2 onClick={toggleDrawer}>
-        Click here to add New Product (work in progress)
-      </h2>
+      <button onClick={toggleDrawer}>Add new product</button>
       {isDrawerOpen && (
         <form className="product-form" onSubmit={handleFormSubmit}>
           <div>
@@ -374,6 +375,12 @@ export default function AllProducts() {
           Page {currentPage} of {totalPages}
         </p>
         <button
+          onClick={() => handlePageChange(1)}
+          disabled={currentPage === 1}
+        >
+          First Page
+        </button>
+        <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
@@ -401,6 +408,31 @@ export default function AllProducts() {
             Next Page
           </button>
         </span>
+        <button
+          onClick={() => handlePageChange(totalPages)}
+          disabled={currentPage === totalPages}
+        >
+          Last Page
+        </button>
+        <select
+          value={dropdownDisplay}
+          onChange={(e) => {
+            if (e.target.value === "All products") {
+              setItemsPerPage(products.length);
+              setDropdownDisplay("Items per page");
+            } else if (e.target.value !== "Items per page") {
+              setItemsPerPage(Number(e.target.value));
+              setDropdownDisplay("Items per page");
+            }
+          }}
+        >
+          <option value="Items per page">Items per page</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="All products">All products</option>
+        </select>
       </div>
 
       <ul>
@@ -417,7 +449,9 @@ export default function AllProducts() {
             <button onClick={() => handleDeleteProduct(product.id)}>
               Delete Product
             </button>
-            <Link to={`/product/${product.id}`}><button>View Details</button></Link>
+            <Link to={`/product/${product.id}`}>
+              <button>View Details</button>
+            </Link>
           </li>
         ))}
       </ul>

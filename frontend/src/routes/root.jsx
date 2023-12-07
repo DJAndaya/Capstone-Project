@@ -8,6 +8,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -60,7 +61,7 @@ export default function Root() {
   const [outletContext, setOutletContext] = useState({
     shoppingCart: [],
     wishlist: [],
-  })
+  });
 
   const handleSearch = () => {
     if (searchQuery.trim() != "") {
@@ -78,7 +79,7 @@ export default function Root() {
   return (
     <div>
       <Box marginBottom={10}>
-        <AppBar>
+        <AppBar style={{ zIndex: 1301 }}>
           <Toolbar>
             <Box sx={{ marginLeft: 5, marginRight: 5 }}>
               <Link style={{ textDecoration: "none", color: "white" }} to="/">
@@ -172,7 +173,7 @@ export default function Root() {
           </Toolbar>
         </AppBar>
       </Box>
-      <Outlet context={[outletContext, setOutletContext]}/>
+      <Outlet context={[outletContext, setOutletContext]} />
     </div>
   );
 }
