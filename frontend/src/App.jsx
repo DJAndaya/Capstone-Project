@@ -33,7 +33,7 @@ const socket = socketio("http://localhost:3000");
 export default function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectIsAuth);
-
+  const userId = useSelector((state) => state.isAuth?.value?.id);
   // useEffect(() => {
   //   console.log("redux state after login:", user)
   //   // console.log("store after login", user.shoppingCart)
@@ -120,11 +120,13 @@ export default function App() {
   useEffect(() => {
     if (user) {
       socket.emit("user_joined", user);
+      console.log("user has joined with socket")
     }
 
     socket.on("update_socket", (updatedUserData) => {
-      console.log(updatedUserData)
+      console.log("updatedUserData:", updatedUserData) // not showing up
       dispatch(setIsAuth(updatedUserData));
+      console.log("user info after dispatch:", user) // not showing up
     });
     // const possiblyLogin = async () => {
     //   const token = window.localStorage.getItem("token");
@@ -142,7 +144,7 @@ export default function App() {
     // };
 
     // possiblyLogin();
-  }, []);
+  }, [userId]);
 
   return <RouterProvider router={router} />;
 }
