@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
         socketId: socket.id
       }
     })
-    console.log(updatedUserData)
+    // console.log("backend:",updatedUserData)
     io.to(socket.id).emit("update_socket", updatedUserData)
   });
   

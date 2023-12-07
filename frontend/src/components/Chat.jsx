@@ -60,7 +60,7 @@ export default function Chat() {
       message: message,
     });
   };
-
+  
   return (
     <div>
       <div>
