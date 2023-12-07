@@ -9,6 +9,7 @@ import {
   CardContent,
   Typography,
   Button,
+  Modal,
 } from "@mui/material/";
 // component imports
 import ItemCards from "./ItemCards";
@@ -18,27 +19,33 @@ import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
 import AddToCartButton from "./AddToCartButton";
 import ReviewButton from "./ReviewButton";
+import ProductDetail from "./ProductDetail";
 
 import socketio from "socket.io-client";
 
 const socket = socketio("http://localhost:3000");
 // redux
 // router
-import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectIsAuth);
   const [items, setItems] = useState(null);
   const [allMessages, setAllMessages] = useState([]);
-  const navigate = useNavigate()
+  const [open, setOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
 
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
+
   const wishlist = outletContext.wishlist
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(outletContext.shoppingCart)
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const getItems = async () => {
@@ -58,6 +65,16 @@ const Home = () => {
           setItems(alphabeticalOrderData);
         } else if (pathname === "/logout") {      
             setItems(wishlist);
+        } else if (pathname.startsWith("/results")) {
+          const searchQuery = pathname.split("/").pop()
+          // console.log("Query working; searchQuery:", searchQuery)
+          response = await axios.get("http://localhost:3000/items/search", {
+            params: { searchQuery }
+          })
+          const alphabeticalOrderData = response.data.sort((a, b) =>
+            a.name > b.name ? 1 : -1
+          );
+          setItems(alphabeticalOrderData);
         } else {
           response = await axios.get("http://localhost:3000/items/");
           const alphabeticalOrderData = response.data.sort((a, b) =>
@@ -79,7 +96,7 @@ const Home = () => {
 
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
-      console.log(allMessages);
+      // console.log(allMessages);
     });
   }, [pathname, userId]);
 
@@ -94,9 +111,9 @@ const Home = () => {
   const [message, setMessage] = useState("");
 
   const startChat = async (toUser) => {
-    console.log(toUser);
-    console.log(toUser.id);
-    console.log(allMessages);
+    // console.log(toUser);
+    // console.log(toUser.id);
+    // console.log(allMessages);
     if (toUser.socketId === user.socketId) {
       return;
     }
@@ -136,36 +153,33 @@ const Home = () => {
                         {item.name}
                       </Typography>
                       <Typography variant="h7" component="div">
-                        Seller Name
+                        {item.seller[0].firstName} {item.seller[0].lastName[0]}.
+                        {console.log(item.seller[0])}
                       </Typography>
                       <Typography component="div">
                         {item.description}
                       </Typography>
-                      {userId ? (
-                        <CardActions>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => startChat(item.seller[0])}
-                          >
-                            Chat
-                          </Button>
-                          <ReviewButton item={item} />
-                          <AddToCartButton item={item} />
-                        </CardActions>
-                      ) : (
-                        <CardActions>
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => navigate("/login")}
-                          >
-                            Chat
-                          </Button>
-                          <ReviewButton item={item} />
-                          <AddToCartButton item={item} />
-                        </CardActions>
-                      )}
+                      <CardActions sx={{ justifyContent: "space-between" }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => startChat(item.seller[0].firstName)}
+                        >
+                          Chat
+                        </Button>
+                        <ReviewButton item={item} itemId={item.id} />
+                        <AddToCartButton item={item} />
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            handleOpen();
+                            setSelectedItemId(item.id);
+                          }}
+                        >
+                          View Details
+                        </Button>
+                      </CardActions>
                       <Typography variant="h6" component="div">
                         ${item.price}
                       </Typography>
@@ -176,6 +190,26 @@ const Home = () => {
             })}
           </Grid>
         </Box>
+
+        <Modal open={open} onClose={handleClose}>
+          <div
+            style={{
+              color: "black",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "50vh",
+              width: "50vw",
+              position: "fixed",
+              top: "25vh",
+              left: "25vw",
+              backgroundColor: "white",
+              opacity: 0.95 ,
+            }}
+          >
+            <ProductDetail productId={selectedItemId} />
+          </div>
+        </Modal>
 
         {selectedUserToChatWith && (
           <div
@@ -229,26 +263,6 @@ const Home = () => {
       </Grid>
     );
   }
-
-  return (
-    <Grid container>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid
-          container
-          spacing={{ xs: 1, md: 1 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
-        >
-          {items.map((item, idx) => {
-            return (
-              <Grid item xs={2} sm={2} md={2} key={idx}>
-                <ItemCards item={item} />
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Box>
-    </Grid>
-  );
 };
 
 export default Home;
