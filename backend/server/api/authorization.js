@@ -170,9 +170,10 @@ app.get("/loggedin", async (req, res, next) => {
           return res.status(404).send("User not found");
         }
 
-        // Extract relevant user information
         const userInfo = {
           id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
           email: user.email,
           admin: user.admin,
           wishlist: user.wishlist,

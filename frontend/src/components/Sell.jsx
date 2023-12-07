@@ -153,11 +153,7 @@ export default function Sell() {
           return (
             <Grid key={index} item xs={2}>
               <Card style={{ position: "relative" }}>
-                {/* <CardMedia
-                  onClick={() => window.open(restaurant.googleUrl, "_blank")}
-                  sx={{ height: 100, width: "100%" }}
-                  image={restaurant.imageUrl}
-                /> */}
+
                 <CardContent>
                   <Typography
                     align={"center"}
@@ -169,19 +165,9 @@ export default function Sell() {
                   <Typography align={"center"} variant="body2">
                     Price: {item.price}
                   </Typography>
-                  {/* <div style={{ display: "flex" }}> */}
                     <Typography align={"center"} sx={{ fontSize: 14 }}>
                       Amount: {item.amount}
                     </Typography>
-                    {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <IconButton sx={{ color: yellow[500], margin: -4 }}>
-                        <ArrowUpwardIcon sx={{ padding: 4 }} />
-                      </IconButton>
-                      <IconButton sx={{ color: yellow[500], margin: -4 }}>
-                        <ArrowDownwardIcon sx={{ padding: 4 }} />
-                      </IconButton>
-                    </div> */}
-                  {/* </div> */}
                   <Typography align={"center"} sx={{ fontSize: 14 }}>
                     Category: {item.category}
                   </Typography>

@@ -28,7 +28,6 @@ export default function Chat() {
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
 
-      // Move the logic that depends on the updated state here
       const updatedChatMessages = [];
 
       for (const msg of msgs) {
