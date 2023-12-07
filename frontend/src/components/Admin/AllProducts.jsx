@@ -199,6 +199,7 @@ export default function AllProducts() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify(editingProduct),
         }
@@ -208,10 +209,8 @@ export default function AllProducts() {
         throw new Error("Failed to edit product");
       }
 
-      // Assuming the server responds with the edited product
       const editedProduct = await response.json();
 
-      // Update the local state to include the edited product
       setProducts((prevProducts) => {
         const index = prevProducts.findIndex(
           (product) => product.id === editedProduct.id
@@ -226,7 +225,6 @@ export default function AllProducts() {
         return prevProducts;
       });
 
-      // Reset the editing state
       setEditingProduct(null);
       setIsEditFormOpen(false);
     } catch (error) {
