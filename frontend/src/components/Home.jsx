@@ -163,7 +163,7 @@ const Home = () => {
                         <Button
                           variant="contained"
                           color="secondary"
-                          onClick={() => startChat(item.seller[0].firstName)}
+                          onClick={() => startChat(item.seller[0])}
                         >
                           Chat
                         </Button>
