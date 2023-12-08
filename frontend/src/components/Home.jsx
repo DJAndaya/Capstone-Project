@@ -185,8 +185,8 @@ const Home = () => {
                         >
                           Chat
                         </Button>
-                        {/* <ReviewButton item={item} itemId={item.id} />
-                        <AddToCartButton item={item} /> */}
+                        <ReviewButton item={item} itemId={item.id} />
+                        <AddToCartButton item={item} />
                         <Button
                           variant="contained"
                           color="primary"
