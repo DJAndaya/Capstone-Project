@@ -82,7 +82,7 @@ const Orders = () => {
       getItems();
     }
     // console.log(allMessages);
-  }, []);
+  }, [userId]);
 
   const formatDate = (inputDate) => {
     const date = new Date(inputDate);
@@ -130,7 +130,7 @@ const Orders = () => {
                     <CardContent>
                       <Typography variant="64" component="div">
                         Date Ordered: {formatDate(item.dateOrdered)}
-                        <DeleteForeverIcon onClick={() => removeFromOrderHistory(item.item.id)}/>
+                        <DeleteForeverIcon onClick={() => removeFromOrderHistory(item.id)}/>
                       </Typography>
                       <Typography variant="h7" component="div">
                         {item.item.name}
