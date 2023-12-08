@@ -32,7 +32,7 @@ import ProductDetail from "./ProductDetail";
 // router
 import { useLocation, useOutletContext } from "react-router-dom";
 
-const Home = () => {
+const Wishlist = () => {
   // const dispatch = useDispatch();
   // const user = useSelector(selectIsAuth);
   const [items, setItems] = useState(null);
@@ -55,66 +55,47 @@ const Home = () => {
   useEffect(() => {
     const getItems = async () => {
       // console.log("Current pathname:", pathname);
-      try {
-        let response;
 
-        if (pathname === "/logout") {
-          setItems(wishlist);
-        } else if (pathname.startsWith("/results")) {
-          const searchQuery = pathname.split("/").pop();
-          // console.log("Query working; searchQuery:", searchQuery)
-          response = await axios.get("http://localhost:3000/items/search", {
-            params: { searchQuery },
-          });
-        } else {
-          response = await axios.get("http://localhost:3000/items/");
-        }
-        const alphabeticalOrderData = response.data.sort((a, b) =>
-          a.name > b.name ? 1 : -1
-        );
-        setItems(alphabeticalOrderData);
+      setItems(wishlist);
 
-        let sortedItems;
-        switch (sortOption) {
-          case "alphabeticalAsc":
-            sortedItems = response.data.sort((a, b) =>
-              a.name > b.name ? 1 : -1
-            );
-            break;
-          case "alphabeticalDesc":
-            sortedItems = response.data.sort((a, b) =>
-              a.name < b.name ? 1 : -1
-            );
-            break;
-          case "ratingDesc":
-            sortedItems = response.data.sort((a, b) =>
-              a.averageRating < b.averageRating ? 1 : -1
-            );
-            break;
-          case "ratingAsc":
-            sortedItems = response.data.sort((a, b) =>
-              a.averageRating > b.averageRating ? 1 : -1
-            );
-            break;
-          case "priceDesc":
-            sortedItems = response.data.sort((a, b) =>
-              a.price < b.price ? 1 : -1
-            );
-            break;
-          case "priceAsc":
-            sortedItems = response.data.sort((a, b) =>
-              a.price > b.price ? 1 : -1
-            );
-            break;
-          default:
-            sortedItems = response.data;
-            break;
-        }
-
-        setItems(sortedItems);
-      } catch (error) {
-        console.log(error);
+      let sortedItems;
+      switch (sortOption) {
+        case "alphabeticalAsc":
+          sortedItems = wishlist.sort((a, b) =>
+            a.name > b.name ? 1 : -1
+          );
+          break;
+        case "alphabeticalDesc":
+          sortedItems = wishlist.sort((a, b) =>
+            a.name < b.name ? 1 : -1
+          );
+          break;
+        case "ratingDesc":
+          sortedItems = wishlist.sort((a, b) =>
+            a.averageRating < b.averageRating ? 1 : -1
+          );
+          break;
+        case "ratingAsc":
+          sortedItems = wishlist.sort((a, b) =>
+            a.averageRating > b.averageRating ? 1 : -1
+          );
+          break;
+        case "priceDesc":
+          sortedItems = wishlist.sort((a, b) =>
+            a.price < b.price ? 1 : -1
+          );
+          break;
+        case "priceAsc":
+          sortedItems = wishlist.sort((a, b) =>
+            a.price > b.price ? 1 : -1
+          );
+          break;
+        default:
+          sortedItems = wishlist;
+          break;
       }
+
+      setItems(sortedItems);
     };
 
     getItems();
@@ -160,7 +141,7 @@ const Home = () => {
               items.map((item, idx) => {
                 // console.log(item.reviews)
                 return (
-                  <Grid item xs={12} sm={6} md={4} lg={4} key={idx}>
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
                     <Card>
                       <CardContent>
                         <Typography variant="h5" component="div">
@@ -239,4 +220,4 @@ const Home = () => {
   }
 };
 
-export default Home;
+export default Wishlist;

@@ -128,22 +128,27 @@ export default function App() {
       dispatch(setIsAuth(updatedUserData));
       // console.log("user info after dispatch:", user) // not showing up
     });
-    // const possiblyLogin = async () => {
-    //   const token = window.localStorage.getItem("token");
-    //   console.log(token)
-    //   if (token) {
-    //     const userResponse = await axios.get("http://localhost:3000/auth/loggedin", {
-    //       headers: {
-    //         authorization: token,
-    //       },
-    //     });
+    const possiblyLogin = async () => {
+      const token = window.localStorage?.getItem("token");
+      // console.log(token)
+      if (token) {
+        try {
+          const userResponse = await axios.get("http://localhost:3000/auth/loggedin", {
+          headers: {
+            authorization: token,
+          },
+        });
 
-    //     const user = userResponse.data;
-    //     dispatch(setIsAuth(user));
-    //   }
-    // };
+        const user = userResponse.data;
+        dispatch(setIsAuth(user));
+      } catch (error) {
+        console.log(error)
+      }
+        }
+        
+    };
 
-    // possiblyLogin();
+    possiblyLogin();
   }, [userId]);
 
   return <RouterProvider router={router} />;

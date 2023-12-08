@@ -7,7 +7,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 
-import Home from "./Home";
+import Wishlist from "./Wishlist";
 
 const Logout = () => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const Logout = () => {
   const [outletContext, setOutletContext] = useOutletContext();
 
   const logOut = () => {
-    window.localStorage.setItem("token", null);
+    window.localStorage.removeItem("token");
     dispatch(setIsAuth(null));
     setOutletContext({
       wishlist: [],
@@ -28,7 +28,7 @@ const Logout = () => {
       <Button variant="contained" onClick={logOut}>
         Log Out
       </Button>
-      <Home />
+      <Wishlist />
     </>
   );
 };

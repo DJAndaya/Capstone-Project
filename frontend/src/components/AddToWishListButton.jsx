@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 // components
 import { Button } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const AddToWishlistButton = ({ item }) => {
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -49,17 +51,13 @@ const AddToWishlistButton = ({ item }) => {
   return (
     <>
       {!isItemInWishlist ? (
-        <Button variant="contained" onClick={addRemoveFromWishlist}>
-          Add to wishlist
-        </Button>
+        <FavoriteBorderIcon fontSize="small" onClick={addRemoveFromWishlist} />
       ) : (
-        <Button
-          variant="contained"
-          color="error"
+        <FavoriteIcon
+          style={{ color: "#FF69B4" }}
+          fontSize="small"
           onClick={addRemoveFromWishlist}
-        >
-          Remove from wishlist
-        </Button>
+        />
       )}
     </>
   );

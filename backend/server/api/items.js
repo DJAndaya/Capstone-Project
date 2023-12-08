@@ -22,9 +22,15 @@ app.get("/", async (req, res, next) => {
               lastName: true,
             },
           },
+          images: true,
+          reviews: {
+            select: {
+              rating: true,
+            },
+          },
         },
       })
-    )
+    );
   } catch (error) {
     console.log(error);
   }
@@ -32,22 +38,39 @@ app.get("/", async (req, res, next) => {
 
 // get searched items
 app.get("/search", async (req, res, next) => {
-  const { searchQuery } = req.query
-  console.log(searchQuery)
+  const { searchQuery } = req.query;
+  console.log(searchQuery);
   try {
     const filteredItems = await prisma.items.findMany({
-        where: {
-          name: {
-            startsWith: searchQuery,
-            mode: "insensitive"
-          }
-        }
-      })
-    res.send(filteredItems)
+      where: {
+        name: {
+          startsWith: searchQuery,
+          mode: "insensitive",
+        },
+      },
+      include: {
+        // Include the user information, including socketId
+        seller: {
+          select: {
+            id: true,
+            socketId: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        images: true,
+        reviews: {
+          select: {
+            rating: true,
+          },
+        },
+      },
+    });
+    res.send(filteredItems);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 app.get("/getItemsSelling", async (req, res, next) => {
   const { userId } = req.query;
@@ -288,20 +311,28 @@ app.patch("/checkOut", async (req, res, next) => {
         },
         unit_amount: parseInt(item.item.price) * 100,
       },
-      quantity: item.amount,
+      quantity: item.purchaseAmount,
     })),
     mode: "payment",
     success_url: "http://localhost:5173/checkout/success",
     cancel_url: "http://localhost:5173/checkout/cancel",
   });
 
-  for (const { item, amount } of itemIdAndAmount) {
+  for (const { item, purchaseAmount } of itemIdAndAmount) {
     // console.log(item);
+    await prisma.orderHistory.create({
+      data: {
+        dateOrdered: new Date(),
+        userId: userId,
+        itemId: item.id,
+      },
+    });
+
     await prisma.items.update({
       where: { id: item.id },
       data: {
         amount: {
-          decrement: amount,
+          decrement: purchaseAmount,
         },
       },
     });
@@ -313,9 +344,9 @@ app.patch("/checkOut", async (req, res, next) => {
       shoppingCart: {
         disconnect: itemIdAndAmount.map((item) => ({ id: item.item.id })),
       },
-      orderHistory: {
-        connect: itemIdAndAmount.map((item) => ({ id: item.item.id })),
-      },
+      // orderHistory: {
+      //   connect: itemIdAndAmount.map((item) => ({ id: item.item.id })),
+      // },
     },
   });
   const token = jwt.sign(updatedUser, process.env.JWT_SECRET_KEY);
@@ -346,15 +377,54 @@ app.get("/orderhistory", async (req, res, next) => {
     let { userId } = req.query;
     userId = parseInt(userId);
 
-    // console.log(userId)
+    // console.log(userId);
     const userWithOrderHistory = await prisma.users.findUnique({
       where: { id: userId },
-      include: { orderHistory: true },
+      include: {
+        orderHistory: {
+          include: {
+            item: {
+              include: {
+                images: true,
+                seller: {
+                  select: {
+                    id: true,
+                    socketId: true,
+                    firstName: true,
+                    lastName: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
+
     res.send(userWithOrderHistory.orderHistory);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error occured displaying shopping cart" });
+  }
+});
+
+app.delete("/deleteOrderHistoryItem/:itemId", async (req, res) => {
+  const orderId = parseInt(req.params.itemId, 10);
+  console.log("endpoint called")
+  try {
+    // Delete the order history entry directly
+    const deletedOrder = await prisma.orderHistory.delete({
+      where: { id: orderId },
+    });
+
+    if (!deletedOrder) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res.status(200).json({ message: "Order history entry deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

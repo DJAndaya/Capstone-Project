@@ -49,7 +49,7 @@ const Login = () => {
       const combineShoppingCart = shoppingCart.concat(
         userShoppingCart
         .filter(item => !shoppingCartItems.includes(item))
-        .map(newItem => ({ item: newItem, amount: 1 }))
+        .map(newItem => ({ item: newItem, purchaseAmount: 1 }))
       )
       setOutletContext({
         wishlist: combinedWishlist,

@@ -33,13 +33,12 @@ const AddToCartButton = ({ item }) => {
           ...outletContext.shoppingCart,
           {
             item: item,
-            amount: 1,
+            purchaseAmount: 1,
           },
         ],
       });
       // setShoppingCart([...shoppingCart, item]);
     }
-
     if (userId) {
       try {
         await axios.patch(

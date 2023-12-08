@@ -20,28 +20,31 @@ import CartItems from "./CartItems";
 import initializeStripe from "./stripe";
 
 const Cart = () => {
-  const [formData, setFormData] = useState(null);
+  // const [formData, setFormData] = useState(null);
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;
-  // console.log(shoppingCart)
+  console.log(shoppingCart)
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // console.log(userId);
-  useEffect(() => {
-    const initialFormData = shoppingCart.map((item) => ({
-      item: item,
-      amount: 1,
-    }));
-    setFormData(initialFormData);
-  }, []);
+  // useEffect(() => {
+  //   const initialFormData = shoppingCart.map((item) => ({
+  //     item: item,
+  //     purchaseAmount: 1,
+  //   }));
+  //   setFormData(initialFormData);
+  // }, []);
 
   const checkOut = async () => {
     if (!userId) {
       navigate("/login");
       return;
     }
-
+    if (!shoppingCart) {
+      navigate("/");
+      return;
+    }
     try {
       const stripe = await initializeStripe();
       // console.log(stripe._apiKey)
@@ -103,17 +106,25 @@ const Cart = () => {
       console.log(error);
     }
   };
-  if (!shoppingCart) {
+  if (shoppingCart.length === 0) {
     return <h1>Cart is empty or loading</h1>;
   } else {
     // console.log(shoppingCart);
 
     return (
       <>
-        <h1>shopping cart</h1>
-        <Button variant="contained" color="error" onClick={clearShoppingCart}>
-          Clear shopping cart
-        </Button>
+        <span>
+          <h1>
+            Shopping Cart <br />
+            <Button
+              variant="contained"
+              color="error"
+              onClick={clearShoppingCart}
+            >
+              Clear shopping cart
+            </Button>
+          </h1>
+        </span>
         <Grid container spacing={1}>
           <Box sx={{ flexGrow: 1 }}>
             <Grid container item xs={8} spacing={2} columns={2}>
@@ -122,8 +133,8 @@ const Cart = () => {
                   <Grid item xs={12} key={idx}>
                     <CartItems
                       item={item}
-                      formData={formData}
-                      setFormData={setFormData}
+                      // formData={formData}
+                      // setFormData={setFormData}
                     />
                   </Grid>
                 );
