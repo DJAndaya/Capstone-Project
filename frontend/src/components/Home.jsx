@@ -81,7 +81,7 @@ const Home = () => {
           );
           setItems(alphabeticalOrderData);
         }
-
+        console.log(user, "Home")
         // const alphabeticalOrderData = response.data.sort((a, b) =>
         //   a.name > b.name ? 1 : -1
         // );
@@ -129,11 +129,12 @@ const Home = () => {
     socket.emit("get_messages", {
       fromUser: user.id,
     });
+    console.log(user.socketId)
   };
 
   const sendMessage = () => {
     console.log(selectedUserToChatWith.socketId, "to");
-    console.log(user.socketId);
+    console.log(user.socketId, "sender");
     socket.emit("send_message", {
       fromUser: user.id,
       toUser: selectedUserToChatWith.id,
@@ -155,7 +156,7 @@ const Home = () => {
     return <h1>loading</h1>;
   } else {
     return (
-      <Grid container>
+      <Grid container spacing={3}>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -184,8 +185,8 @@ const Home = () => {
                         >
                           Chat
                         </Button>
-                        <ReviewButton item={item} itemId={item.id} />
-                        <AddToCartButton item={item} />
+                        {/* <ReviewButton item={item} itemId={item.id} />
+                        <AddToCartButton item={item} /> */}
                         <Button
                           variant="contained"
                           color="primary"
@@ -227,6 +228,7 @@ const Home = () => {
             <ProductDetail productId={selectedItemId} />
           </div>
         </Modal>
+        
         {selectedUserToChatWith && (
           <div
             style={{

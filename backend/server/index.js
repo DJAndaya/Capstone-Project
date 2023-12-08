@@ -19,16 +19,16 @@ io.on("connection", (socket) => {
   socket.on("user_joined", async (user) => {
     const updatedUserData = await prisma.users.update({
       where: {
-        id: user.id
+        id: user.id,
       },
       data: {
-        socketId: socket.id
-      }
-    })
-    // console.log("backend:",updatedUserData)
-    io.to(socket.id).emit("update_socket", updatedUserData)
+        socketId: socket.id,
+      },
+    });
+    console.log("backend:", updatedUserData);
+    io.to(socket.id).emit("update_socket", updatedUserData);
   });
-  
+
   socket.on("get_messages", async ({ fromUser }) => {
     try {
       const allMessages = await prisma.message.findMany({
@@ -36,38 +36,49 @@ io.on("connection", (socket) => {
           OR: [{ fromUser: fromUser }, { toUser: fromUser }],
         },
       });
-      
-      io.to(socket.id).emit("receive_message", allMessages);
-    } catch (error) {
-      console.log(error)
-    }
-  })
-  socket.on("send_message", async ({ fromUser, toUser, toFirstName, toLastName, toSocketId, message }) => {
-    try {
-      const newMessage = await prisma.message.create({
-        data: {
-          message,
-          fromUser,
-          toUser,
-          toFirstName,
-          toLastName
-        },
-      });
-
-      const allMessages = await prisma.message.findMany({
-        where: {
-          OR: [{ fromUser: fromUser }, { toUser: fromUser }],
-        },
-      });
-      
-      console.log(allMessages)
-      io.to(toSocketId).emit("receive_message", allMessages);
 
       io.to(socket.id).emit("receive_message", allMessages);
     } catch (error) {
       console.log(error);
     }
   });
+
+  socket.on(
+    "send_message",
+    async ({
+      fromUser,
+      toUser,
+      toFirstName,
+      toLastName,
+      toSocketId,
+      message,
+    }) => {
+      try {
+        const newMessage = await prisma.message.create({
+          data: {
+            message,
+            fromUser,
+            toUser,
+            toFirstName,
+            toLastName,
+          },
+        });
+
+        const allMessages = await prisma.message.findMany({
+          where: {
+            OR: [{ fromUser: fromUser }, { toUser: fromUser }],
+          },
+        });
+        console.log(toSocketId, "receiver");
+        console.log(socket.id, "sender");
+        io.to(toSocketId).emit("receive_message", allMessages);
+
+        io.to(socket.id).emit("receive_message", allMessages);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  );
 });
 
 module.exports = app;
