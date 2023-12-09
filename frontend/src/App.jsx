@@ -29,10 +29,14 @@ import socketio from "socket.io-client";
 
 const socket = socketio("http://localhost:3000");
 
-
 export default function App() {
   const dispatch = useDispatch();
   const user = useSelector(selectIsAuth);
+  const userId = useSelector((state) => state.isAuth?.value?.id);
+  // useEffect(() => {
+  //   console.log("redux state after login:", user)
+  //   // console.log("store after login", user.shoppingCart)
+  // }, [user])
 
   const router = createBrowserRouter([
     {
@@ -97,12 +101,12 @@ export default function App() {
           element: <Confirmation />,
         },
         {
-          path:"/checkout/success",
-          element: <CheckoutSuccess />
+          path: "/checkout/success",
+          element: <CheckoutSuccess />,
         },
         {
           path: "/checkout/cancel",
-          element: <CheckoutCancel />
+          element: <CheckoutCancel />,
         },
         {
           path: "/product/:productId",
@@ -115,11 +119,16 @@ export default function App() {
   useEffect(() => {
     if (user) {
       socket.emit("user_joined", user);
+      socket.on("update_socket", (updatedUserData) => {
+        // console.log("updatedUserData:", updatedUserData) // not showing up
+        dispatch(setIsAuth(updatedUserData));
+        console.log(updatedUserData);
+        console.log(user, "App")
+        // console.log("user info after dispatch:", user) // not showing up
+      });
+      // console.log("user has joined with socket")
     }
 
-    socket.on("update_socket", (updatedUserData) => {
-      dispatch(setIsAuth(updatedUserData));
-    });
     // const possiblyLogin = async () => {
     //   const token = window.localStorage.getItem("token");
     //   console.log(token)
@@ -136,7 +145,7 @@ export default function App() {
     // };
 
     // possiblyLogin();
-  }, []);
+  }, [userId]);
 
   return <RouterProvider router={router} />;
 }

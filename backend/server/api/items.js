@@ -18,15 +18,36 @@ app.get("/", async (req, res, next) => {
             select: {
               id: true,
               socketId: true,
+              firstName: true,
+              lastName: true,
             },
           },
         },
       })
-    );
+    )
   } catch (error) {
     console.log(error);
   }
 });
+
+// get searched items
+app.get("/search", async (req, res, next) => {
+  const { searchQuery } = req.query
+  console.log(searchQuery)
+  try {
+    const filteredItems = await prisma.items.findMany({
+        where: {
+          name: {
+            startsWith: searchQuery,
+            mode: "insensitive"
+          }
+        }
+      })
+    res.send(filteredItems)
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 app.get("/getItemsSelling", async (req, res, next) => {
   const { userId } = req.query;
@@ -121,8 +142,8 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
         data: {
           shoppingCart: {
             disconnect: {
-              id: item.id
-            }
+              id: item.id,
+            },
           },
         },
         // include: {shoppingCart: true}
@@ -133,9 +154,7 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
         where: { id: userId },
         data: {
           shoppingCart: {
-            connect: {
-              id: item.id
-            }
+            connect: { id: item.id },
           },
         },
         // include: {shoppingCart: true}
@@ -172,7 +191,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
         where: { id: userId },
         data: {
           wishlist: {
-            disconnect: {id: item.id},
+            disconnect: { id: item.id },
           },
         },
         // include: {shoppingCart: true}
@@ -183,7 +202,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
         where: { id: userId },
         data: {
           wishlist: {
-            connect: {id: item.id},
+            connect: { id: item.id },
           },
         },
         // include: {shoppingCart: true}
@@ -258,22 +277,22 @@ app.patch("/checkOut", async (req, res, next) => {
   // console.log(req.body)
   const itemIdAndAmount = req.body;
   // console.log("checkout request went through");
-  console.log(itemIdAndAmount)
+  console.log(itemIdAndAmount);
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    line_items: itemIdAndAmount.map(item => ({
+    payment_method_types: ["card"],
+    line_items: itemIdAndAmount.map((item) => ({
       price_data: {
-        currency: 'usd',  
+        currency: "usd",
         product_data: {
-          name: item.item.name,  
+          name: item.item.name,
         },
         unit_amount: parseInt(item.item.price) * 100,
       },
       quantity: item.amount,
     })),
-    mode: 'payment',
-    success_url: 'http://localhost:5173/checkout/success', 
-    cancel_url: 'http://localhost:5173/checkout/cancel', 
+    mode: "payment",
+    success_url: "http://localhost:5173/checkout/success",
+    cancel_url: "http://localhost:5173/checkout/cancel",
   });
 
   for (const { item, amount } of itemIdAndAmount) {
@@ -300,7 +319,7 @@ app.patch("/checkOut", async (req, res, next) => {
     },
   });
   const token = jwt.sign(updatedUser, process.env.JWT_SECRET_KEY);
-  res.json({ sessionId: session.id, token});
+  res.json({ sessionId: session.id, token });
 });
 
 // get user's wishlist
@@ -340,7 +359,7 @@ app.get("/orderhistory", async (req, res, next) => {
 });
 
 // get stripeKey from backend
-app.get('/stripeKey', (req, res) => {
+app.get("/stripeKey", (req, res) => {
   res.json({ publicKey: process.env.STRIPE_PUBLIC_KEY });
 });
 

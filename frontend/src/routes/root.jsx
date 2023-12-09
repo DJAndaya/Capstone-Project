@@ -1,8 +1,9 @@
 import { Outlet, Link } from "react-router-dom";
 import { useState } from "react";
 
-import { Box, AppBar, Toolbar, InputBase } from "@mui/material";
+import { Box, AppBar, Toolbar, InputBase, Menu, MenuItem, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { AccountCircle } from '@mui/icons-material'
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
@@ -62,7 +63,14 @@ export default function Root() {
     shoppingCart: [],
     wishlist: [],
   });
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const handleSearch = () => {
     if (searchQuery.trim() != "") {
       setSearchQuery("");
@@ -98,78 +106,130 @@ export default function Root() {
                 onKeyDown={handleKeyPress}
               />
             </Search>
-            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="user/cart"
-              >
-                Cart
-              </Link>
-            </Box>
-            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="user/orders"
-              >
-                Orders
-              </Link>
-            </Box>
-            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="user/sell"
-              >
-                Sell
-              </Link>
-            </Box>
-            <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="user/chat"
-              >
-                Chat
-              </Link>
-            </Box>
-            {isAuth && isAuth.admin ? (
-              <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-                <Link
-                  style={{ textDecoration: "none", color: "white" }}
-                  to="admin"
-                >
-                  Admin
-                </Link>
-              </Box>
-            ) : null}
+
             {isAuth && isAuth.id ? (
-              <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-                <Link
-                  style={{ textDecoration: "none", color: "white" }}
-                  to="logout"
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
                 >
-                  Logout
-                </Link>
-              </Box>
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
+                      navigate("/user/cart");
+                    }}
+                  >
+                    Cart
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
+                      navigate("/user/orders");
+                    }}
+                  >
+                    Orders
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
+                      navigate("/user/sell");
+                    }}
+                  >
+                    Sell
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
+                      navigate("/user/chat");
+                    }}
+                  >
+                    Chat
+                  </MenuItem>
+                  {isAuth && isAuth.admin ? (
+                    <MenuItem
+                      onClick={() => {
+                        setAnchorEl(null);
+                        navigate("/admin");
+                      }}
+                    >
+                      Admin
+                    </MenuItem>
+                  ) : null}
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
+                      navigate("/logout");
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </>
             ) : (
-              <div>
-                <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-                  <Link
-                    style={{ textDecoration: "none", color: "white" }}
-                    to="login"
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                                    <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
+                      navigate("/login");
+                    }}
                   >
                     Login
-                  </Link>
-                </Box>
-                <Box sx={{ marginLeft: 5, marginRight: 5 }}>
-                  <Link
-                    style={{ textDecoration: "none", color: "white" }}
-                    to="register"
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
+                      navigate("/register");
+                    }}
                   >
                     Register
-                  </Link>
-                </Box>
-              </div>
+                  </MenuItem>
+                </Menu>
+              </>
             )}
-            {/* Login/register/logout */}
           </Toolbar>
         </AppBar>
       </Box>
