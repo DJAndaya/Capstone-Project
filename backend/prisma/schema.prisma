@@ -35,6 +35,8 @@ model items {
   amount       Int
   description  String
   category     String
+  isDeleted    Boolean   @default(false)
+  deletedAt    DateTime? 
   seller       users[]   @relation("seller")
   wishlist     users[]   @relation("wishlist")
   orderHistory users[]   @relation("orderhistory")

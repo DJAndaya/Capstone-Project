@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.6.0",
+    "@prisma/client": "^5.7.0",
     "@stripe/react-stripe-js": "^2.4.0",
     "@stripe/stripe-js": "^2.2.0",
     "axios": "^1.6.2",
@@ -25,7 +25,6 @@
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.7",
     "nodemon": "^3.0.1",
-    "prisma": "^5.5.2",
     "semver": "^7.5.4",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
@@ -33,6 +32,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.2.0",
-    "prisma": "^5.6.0"
+    "prisma": "^5.7.0"
   }
 }

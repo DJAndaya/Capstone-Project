@@ -104,21 +104,54 @@ app.delete("/deleteproduct/:productId", async (req, res) => {
   const productId = parseInt(req.params.productId);
 
   try {
-    const deletedItem = await prisma.items.delete({
+    const updatedItem = await prisma.items.update({
       where: {
         id: productId,
       },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
     });
 
-    if (!deletedItem) {
+    if (!updatedItem) {
       res.status(404).send("Product not found");
     } else {
-      res.json(deletedItem);
+      res.json(updatedItem);
     }
   } catch (error) {
     console.error("Error deleting product from the database:", error);
     res.status(500).send("Internal Server Error");
   }
+});
+
+app.patch("/restoreproduct/:productId", async (req, res) => {
+  const productId = parseInt(req.params.productId);
+  try {
+    const updatedItem = await prisma.items.update({
+      where: {
+        id: productId,
+      },
+      data: {
+        isDeleted: false,
+        deletedAt: null,
+      },
+    });
+    if (!updatedItem) {
+      res.status(404).send("Product not found");
+    } else {
+      res.json(updatedItem);
+    }
+  } catch (error) {
+    console.error("Error undoing delete product from the database:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/deletedproducts", async (req, res) => {
+  const days = req.query.days;
+  // Use the days query parameter to filter products deleted within the last 'days' days
+  // The actual implementation depends on your database and ORM
 });
 
 module.exports = app;
