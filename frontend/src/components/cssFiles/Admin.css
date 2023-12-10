@@ -69,3 +69,7 @@ body.admin-page {
     font-size:larger;
     text-align: center;
 }
+
+.inputFieldContainer {
+  border-color: white;
+}

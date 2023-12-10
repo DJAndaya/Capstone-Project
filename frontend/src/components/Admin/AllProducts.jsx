@@ -222,7 +222,7 @@ export default function AllProducts() {
       <button onClick={toggleDrawer}>Add new product</button>
       {isDrawerOpen && (
         <form className="product-form" onSubmit={handleFormSubmit}>
-          <div>
+          <div className="inputFieldContainer">
             <label>
               <input
                 type="text"
@@ -277,7 +277,7 @@ export default function AllProducts() {
               />
             </label>
           </div>
-          <button type="submit">Add Product</button>
+          <button type="submit">Add New Product</button>
         </form>
       )}
       {isEditFormOpen && (

@@ -17,7 +17,9 @@ app.get("/", (req, res) => {
 
 app.get("/allproducts", async (req, res) => {
   try {
-    const items = await prisma.items.findMany();
+    const items = await prisma.items.findMany({
+      
+    }); // add query to filter out deleted products! (SELECT * FROM items WHERE...)
     res.json(items);
   } catch (error) {
     console.error("Error fetching items from database:", error);
