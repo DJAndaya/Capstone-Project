@@ -12,9 +12,7 @@ export default function AllProducts() {
   const [pageInput, setPageInput] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [dropdownDisplay, setDropdownDisplay] = useState("Items per page");
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -22,7 +20,6 @@ export default function AllProducts() {
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
-
         const data = await response.json();
         setProducts(data);
         calculateTotalPages(data.length);
@@ -32,18 +29,14 @@ export default function AllProducts() {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
-
   useEffect(() => {
     calculateTotalPages(products.length);
   }, [products, itemsPerPage]);
-
   /********************************************************/
   /********* P * A * G * I * N * A * T * I * O * N ********/
   /********************************************************/
-
   const calculateTotalPages = (totalItems) => {
     setTotalPages(Math.ceil(totalItems / itemsPerPage));
   };
@@ -51,7 +44,6 @@ export default function AllProducts() {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-
   const handleManualPageChange = () => {
     const pageNumber = parseInt(pageInput, 10);
     if (pageNumber > 0 && pageNumber <= totalPages) {
@@ -59,18 +51,15 @@ export default function AllProducts() {
       setPageInput("");
     }
   };
-
   const renderProductsForCurrentPage = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return products.slice(startIndex, endIndex);
   };
   /********************************************************/
-
   /********************************************************/
   /******* A * D * M * I * N *** S * T * U * F * F ********/
   /********************************************************/
-
   const [newProduct, setNewProduct] = useState({
     name: "",
     price: "",
@@ -78,7 +67,6 @@ export default function AllProducts() {
     description: "",
     category: "",
   });
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (isEditFormOpen) {
@@ -148,11 +136,9 @@ export default function AllProducts() {
     }
   };
   /********************************************************/
-
   /********************************************************/
   /* D * E * L * E * T * E *** P * R * O * D * U * C * T **/
   /********************************************************/
-
   const handleDeleteProduct = async (productId) => {
     try {
       const response = await fetch(
@@ -161,11 +147,9 @@ export default function AllProducts() {
           method: "DELETE",
         }
       );
-
       if (!response.ok) {
         throw new Error("Failed to delete product");
       }
-
       // Filter out the deleted product from the local state
       setProducts((prevProducts) =>
         prevProducts.filter((product) => product.id !== productId)
@@ -174,15 +158,12 @@ export default function AllProducts() {
       console.error("Error deleting product:", error);
     }
   };
-
   /********************************************************/
-
   /********************************************************/
   /***** E * D * I * T *** P * R * O * D * U * C * T ******/
   /********************************************************/
   const [editingProduct, setEditingProduct] = useState(null);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-
   const handleEditClick = (productId) => {
     const productToEdit = products.find((product) => product.id === productId);
     setEditingProduct(productToEdit);
@@ -190,7 +171,6 @@ export default function AllProducts() {
     setCurrentProductId(productId);
     setIsEditFormOpen(true);
   };
-
   const handleEditProduct = async () => {
     try {
       const response = await fetch(
@@ -199,32 +179,26 @@ export default function AllProducts() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(editingProduct),
         }
       );
-
       if (!response.ok) {
         throw new Error("Failed to edit product");
       }
-
       const editedProduct = await response.json();
-
       setProducts((prevProducts) => {
         const index = prevProducts.findIndex(
           (product) => product.id === editedProduct.id
         );
-
         if (index !== -1) {
           const updatedProducts = [...prevProducts];
           updatedProducts[index] = editedProduct;
           return updatedProducts;
         }
-
         return prevProducts;
       });
-
       setEditingProduct(null);
       setIsEditFormOpen(false);
     } catch (error) {
@@ -306,7 +280,6 @@ export default function AllProducts() {
           <button type="submit">Add Product</button>
         </form>
       )}
-
       {isEditFormOpen && (
         <form className="product-form" onSubmit={handleEditProduct}>
           <div>
@@ -327,6 +300,28 @@ export default function AllProducts() {
                 placeholder="Price"
                 name="price"
                 value={editingProduct.price}
+                onChange={handleInputChange}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="integer"
+                placeholder="Amount"
+                name="amount"
+                value={editingProduct.amount}
+                onChange={handleInputChange}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="text"
+                placeholder="Description"
+                name="description"
+                value={editingProduct.description}
                 onChange={handleInputChange}
               />
             </label>
@@ -432,7 +427,6 @@ export default function AllProducts() {
           <option value="All products">All products</option>
         </select>
       </div>
-
       <ul>
         {renderProductsForCurrentPage().map((product) => (
           <li key={product.id}>

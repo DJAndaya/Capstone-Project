@@ -7,7 +7,7 @@ import AllUsers from "./Admin/AllUsers";
 import "./cssFiles/Admin.css";
 
 export default function Admin() {
-  const [showComponent, setShowComponent] = useState('AllProducts');
+  const [showComponent, setShowComponent] = useState("AllProducts");
   const user = useSelector((state) => state.isAuth.value);
   const navigate = useNavigate();
 
@@ -18,10 +18,10 @@ export default function Admin() {
   }, [user, navigate]);
 
   useEffect(() => {
-    document.body.classList.add('admin-page');
+    document.body.classList.add("admin-page");
 
     return () => {
-      document.body.classList.remove('admin-page');
+      document.body.classList.remove("admin-page");
     };
   }, []);
 
@@ -31,14 +31,21 @@ export default function Admin() {
         <TemporaryDrawer />
 
         <h1 className="admin-header">ADMIN PAGE</h1>
-        <div className="admin-description">Here you can view, add, edit and delete products and users to and from the database.</div>
-        <button onClick={() => setShowComponent('AllProducts')}>Show All Products</button>
-        <button onClick={() => setShowComponent('AllUsers')}>Show All Users</button>
+        <div className="admin-description">
+          Here you can view, add, edit and delete products and users to and from
+          the database.
+        </div>
+        <button onClick={() => setShowComponent("AllProducts")}>
+          Show All Products
+        </button>
+        <button onClick={() => setShowComponent("AllUsers")}>
+          Show All Users
+        </button>
       </div>
-      
+
       <div className="scrollable-content">
-        {showComponent === 'AllProducts' && <AllProducts />}
-        {showComponent === 'AllUsers' && <AllUsers />}
+        {showComponent === "AllProducts" && <AllProducts />}
+        {showComponent === "AllUsers" && <AllUsers />}
       </div>
     </div>
   );

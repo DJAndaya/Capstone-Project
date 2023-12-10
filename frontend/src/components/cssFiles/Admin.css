@@ -28,3 +28,7 @@ body.admin-page {
   overflow-y: auto;
   width: 98.5vw;
 }
+
+.to-delete {
+  color: red;
+}
