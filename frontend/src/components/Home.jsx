@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
 import AddToCartButton from "./AddToCartButton";
+import ShoppingCartButton from "./ShoppingCartButton";
 import ReviewButton from "./ReviewButton";
 import ProductDetail from "./ProductDetail";
 
@@ -156,169 +157,171 @@ const Home = () => {
     return <h1>loading</h1>;
   } else {
     return (
-      <Grid container spacing={3}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 1, md: 1 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {items.map((item, idx) => {
-              return (
-                <Grid item xs={2} sm={2} md={2} key={idx}>
-                  <Card sx={{ minWidth: 275 }}>
-                    <CardContent>
-                      <Typography variant="h5" component="div">
-                        {item.name}
-                      </Typography>
-                      <Typography variant="h7" component="div">
-                        {item.seller[0].firstName} {item.seller[0].lastName[0]}.
-                      </Typography>
-                      <Typography component="div">
-                        {item.description}
-                      </Typography>
-                      <CardActions sx={{ justifyContent: "space-between" }}>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => startChat(item.seller[0])}
-                        >
-                          Chat
-                        </Button>
-                        <ReviewButton item={item} itemId={item.id} />
-                        <AddToCartButton item={item} />
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleOpen();
-                            setSelectedItemId(item.id);
-                          }}
-                        >
-                          View Details
-                        </Button>
-                      </CardActions>
-                      <Typography variant="h6" component="div">
-                        ${item.price}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              );
-            })}
-          </Grid>
-        </Box>
+      <>
+        <ShoppingCartButton />
+        <Grid container spacing={3}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid
+              container
+              spacing={{ xs: 1, md: 1 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+              {items.map((item, idx) => {
+                return (
+                  <Grid item xs={2} sm={2} md={2} key={idx}>
+                    <Card sx={{ minWidth: 275 }}>
+                      <CardContent>
+                        <Typography variant="h5" component="div">
+                          {item.name}
+                        </Typography>
+                        <Typography variant="h7" component="div">
+                          {item.seller[0] ? `${item.seller[0].firstName} ${item.seller[0].lastName[0]}.` : 'No seller'}
+                        </Typography>
+                        <Typography component="div">
+                          {item.description}
+                        </Typography>
+                        <CardActions sx={{ justifyContent: "space-between" }}>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => startChat(item.seller[0])}
+                          >
+                            Chat
+                          </Button>
+                          <ReviewButton item={item} itemId={item.id} />
+                          <AddToCartButton item={item} />
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                              handleOpen();
+                              setSelectedItemId(item.id);
+                            }}
+                          >
+                            View Details
+                          </Button>
+                        </CardActions>
+                        <Typography variant="h6" component="div">
+                          ${item.price}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </Box>
 
-        <Modal open={open} onClose={handleClose}>
-          <div
-            style={{
-              color: "black",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "50vh",
-              width: "50vw",
-              position: "fixed",
-              top: "25vh",
-              left: "25vw",
-              backgroundColor: "white",
-              opacity: 0.95,
-            }}
-          >
-            <ProductDetail productId={selectedItemId} />
-          </div>
-        </Modal>
-        
-        {selectedUserToChatWith && (
-          <div
-            style={{
-              position: "fixed",
-              bottom: 16,
-              right: 16,
-              maxHeight: "50vh",
-              width: "40%",
-              maxWidth: "100%",
-              display: "flex",
-              flexDirection: "column",
-              outline: "5px solid black",
-            }}
-          >
-            <h3
-              style={{
-                margin: "0",
-                padding: "8px",
-                backgroundColor: "black",
-                color: "white",
-              }}
-            >
-              Chatting with {selectedUserToChatWith.firstName}{" "}
-              {selectedUserToChatWith.lastName}
-            </h3>
+          <Modal open={open} onClose={handleClose}>
             <div
-              ref={messageContainerRef}
               style={{
-                maxHeight: "calc(50vh - 40px)",
-                overflowY: "auto",
-                flexGrow: 1,
-                padding: "10px",
+                color: "black",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "50vh",
+                width: "50vw",
+                position: "fixed",
+                top: "25vh",
+                left: "25vw",
+                backgroundColor: "white",
+                opacity: 0.95,
               }}
             >
-              {allMessages.map((msg, index) => (
-                <div
-                  key={index}
-                  style={{
-                    textAlign: msg.toUser === user.id ? "left" : "right",
-                    margin: "8px 0",
-                  }}
-                >
-                  <strong>
-                    {msg.fromUser === user.id
-                      ? user.firstName
-                      : selectedUserToChatWith.firstName}
-                    {" - "}
-                  </strong>
-                  {msg.message}
-                </div>
-              ))}
+              <ProductDetail productId={selectedItemId} />
             </div>
-
+          </Modal>
+          
+          {selectedUserToChatWith && (
             <div
               style={{
+                position: "fixed",
+                bottom: 16,
+                right: 16,
+                maxHeight: "50vh",
+                width: "40%",
+                maxWidth: "100%",
                 display: "flex",
                 flexDirection: "column",
-                padding: "8px",
-                alignItems: "flex-end",
+                outline: "5px solid black",
               }}
             >
-              <input
-                value={message}
-                onChange={(ev) => setMessage(ev.target.value)}
-                onKeyDown={handleKeyDown}
+              <h3
                 style={{
-                  width: "100%",
-                  padding: "8px",
-                  boxSizing: "border-box",
-                }}
-              />
-              <button
-                onClick={sendMessage}
-                style={{
-                  width: "100%",
+                  margin: "0",
                   padding: "8px",
                   backgroundColor: "black",
                   color: "white",
-                  cursor: "pointer",
-                  marginTop: "8px",
                 }}
               >
-                Send message
-              </button>
+                Chatting with {selectedUserToChatWith.firstName}{" "}
+                {selectedUserToChatWith.lastName}
+              </h3>
+              <div
+                ref={messageContainerRef}
+                style={{
+                  maxHeight: "calc(50vh - 40px)",
+                  overflowY: "auto",
+                  flexGrow: 1,
+                  padding: "10px",
+                }}
+              >
+                {allMessages.map((msg, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      textAlign: msg.toUser === user.id ? "left" : "right",
+                      margin: "8px 0",
+                    }}
+                  >
+                    <strong>
+                      {msg.fromUser === user.id
+                        ? user.firstName
+                        : selectedUserToChatWith.firstName}
+                      {" - "}
+                    </strong>
+                    {msg.message}
+                  </div>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: "8px",
+                  alignItems: "flex-end",
+                }}
+              >
+                <input
+                  value={message}
+                  onChange={(ev) => setMessage(ev.target.value)}
+                  onKeyDown={handleKeyDown}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    boxSizing: "border-box",
+                  }}
+                />
+                <button
+                  onClick={sendMessage}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    backgroundColor: "black",
+                    color: "white",
+                    cursor: "pointer",
+                    marginTop: "8px",
+                  }}
+                >
+                  Send message
+                </button>
+              </div>
             </div>
-          </div>
-        )}
-      </Grid>
-    );
-  }
+          )}
+        </Grid>      
+      </>
+    );  }
 };
 
 export default Home;
