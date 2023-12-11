@@ -41,6 +41,8 @@ model items {
   wishlist     users[]        @relation("wishlist")
   orderHistory orderHistory[]
   shoppingCart users[]        @relation("shoppingcart")
+  isDeleted    Boolean   @default(false)
+  deletedAt    DateTime? 
   reviews      reviews[]
 }
 
@@ -72,9 +74,11 @@ model reviews {
 }
 
 model message {
-  id        Int      @id @default(autoincrement())
-  message   String
-  fromUser  Int
-  toUser    Int
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  message     String
+  fromUser    Int
+  toUser      Int
+  toFirstName String
+  toLastName  String
+  createdAt   DateTime @default(now())
 }

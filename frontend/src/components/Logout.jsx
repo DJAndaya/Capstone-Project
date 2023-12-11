@@ -19,13 +19,26 @@ const Logout = () => {
     dispatch(setIsAuth(null));
     setOutletContext({
       wishlist: [],
-      shoppingCart: []
-    })
+      shoppingCart: [],
+    });
     navigate("/");
   };
   return (
-    <>
-      <Button variant="contained" onClick={logOut}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        marginTop: '-70px'
+      }}
+    >
+      <Button
+        variant="contained"
+        onClick={logOut}
+        style={{ marginBottom: "20px" }}
+      >
         Log Out
       </Button>
       <Wishlist />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 // material UI imports
 import {
@@ -23,7 +23,9 @@ import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
 import AddToCartButton from "./AddToCartButton";
 import AddToWishlistButton from "./AddToWishListButton";
-// import ReviewButton from "./ReviewButton";
+import ShoppingCartButton from "./ShoppingCartButton";
+import ReviewButton from "./ReviewButton";
+
 import ProductDetail from "./ProductDetail";
 
 // import socketio from "socket.io-client";
@@ -41,7 +43,8 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null); // New state variable
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
-
+  const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
+  
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
@@ -58,7 +61,19 @@ const Home = () => {
       // console.log("Current pathname:", pathname);
       try {
         let response;
-        if (pathname === "/logout") {
+
+        if (pathname === "/user/orders") {
+          response = await axios.get(
+            "http://localhost:3000/items/orderhistory",
+            {
+              params: { userId: userId },
+            }
+          );
+          const alphabeticalOrderData = response.data.sort((a, b) =>
+            a.name > b.name ? 1 : -1
+          );
+          setItems(alphabeticalOrderData);
+        } else if (pathname === "/logout") {
           setItems(wishlist);
         } else if (pathname.startsWith("/results")) {
           const searchQuery = pathname.split("/").pop();
@@ -66,6 +81,10 @@ const Home = () => {
           response = await axios.get("http://localhost:3000/items/search", {
             params: { searchQuery },
           });
+          const alphabeticalOrderData = response.data.sort((a, b) =>
+            a.name > b.name ? 1 : -1
+          );
+          setItems(alphabeticalOrderData);
         } else {
           response = await axios.get("http://localhost:3000/items/");
         }
@@ -119,8 +138,61 @@ const Home = () => {
 
     getItems();
 
+  }, [pathname, userId]);
+
+  // Update items state when pathname is "/logout"
+  // useEffect(() => {
+  //   if (pathname === "/logout") {
+  //     setItems(wishlist);
+  //   }
+  // }, [pathname, wishlist]);
+
+  const [selectedUserToChatWith, setSelectedUserToChatWith] = useState(null);
+  const [message, setMessage] = useState("");
+  const messageContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [allMessages, selectedUserToChatWith]);
+
+  const startChat = async (toUser) => {
+    // console.log(toUser);
+    // console.log(toUser.id);
     // console.log(allMessages);
-  }, [pathname, userId, sortOption]);
+    if (toUser.id === user.id) {
+      return;
+    }
+    console.log(toUser);
+    setSelectedUserToChatWith(toUser);
+    socket.emit("get_messages", {
+      fromUser: user.id,
+    });
+    console.log(user.socketId);
+  };
+
+  const sendMessage = () => {
+    console.log(selectedUserToChatWith.socketId, "to");
+    console.log(user.socketId, "sender");
+    socket.emit("send_message", {
+      fromUser: user.id,
+      toUser: selectedUserToChatWith.id,
+      toFirstName: selectedUserToChatWith.firstName,
+      toLastName: selectedUserToChatWith.lastName,
+      toSocketId: selectedUserToChatWith.socketId,
+      message,
+    });
+  };
+
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
 
   if (!items) {
     return <h1>loading</h1>;
@@ -128,6 +200,8 @@ const Home = () => {
     console.log(outletContext);
     return (
       <Grid container>
+      
+       <ShoppingCartButton />
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container

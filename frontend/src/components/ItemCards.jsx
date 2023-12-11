@@ -6,7 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
 import AddToCartButton from "./AddToCartButton";
-import AddToWishlistButton from "./AddToWishListButton";
+import AddToWishListButton from "./AddToWishListButton";
 import ReviewButton from "./ReviewButton";
 
 const ItemCards = ({ item, user }) => {
@@ -49,9 +49,9 @@ const ItemCards = ({ item, user }) => {
             >
               Chat
             </Button>
-            <ReviewButton itemId={item.Id} isAuth={isAuth} />
+            <ReviewButton itemId={itemId} isAuth={isAuth} />
             <AddToCartButton item={item} />
-            <AddToWishlistButton item={item} />
+            <AddToWishListButton item={item} />
           </CardActions>
           <Typography variant="h6" component="div">
             ${item.price}

@@ -48,42 +48,73 @@ const Register = () => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        marginTop: '-80px'
+      }}
+    >
       <h1>Registration</h1>
-      <form onSubmit={onSubmit}>
+      <form
+        onSubmit={onSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "10px", // Add spacing between inputs
+        }}
+      >
         <input
           placeholder="Email"
           value={formData.email}
           onChange={handleInputChange}
           name="email"
+          style={{ padding: "8px" }}
         />
         <input
           placeholder="Password"
           value={formData.password}
           onChange={handleInputChange}
           name="password"
+          style={{ padding: "8px" }}
         />
         <input
           placeholder="First Name"
           value={formData.firstName}
           onChange={handleInputChange}
           name="firstName"
+          style={{ padding: "8px" }}
         />
         <input
           placeholder="Last Name"
           value={formData.lastName}
           onChange={handleInputChange}
           name="lastName"
+          style={{ padding: "8px" }}
         />
         <input
           placeholder="Address"
           value={formData.address}
           onChange={handleInputChange}
           name="address"
+          style={{ padding: "8px" }}
         />
-        <button type="submit">Register</button>
+        <button
+          type="submit"
+          style={{
+            padding: "8px",
+            color: "white",
+            cursor: "pointer",
+          }}
+        >
+          Register
+        </button>
       </form>
-    </>
+    </div>
   );
 };
 

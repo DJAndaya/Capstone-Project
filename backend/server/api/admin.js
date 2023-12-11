@@ -17,7 +17,9 @@ app.get("/", (req, res) => {
 
 app.get("/allproducts", async (req, res) => {
   try {
-    const items = await prisma.items.findMany();
+    const items = await prisma.items.findMany({
+      
+    }); // add query to filter out deleted products! (SELECT * FROM items WHERE...)
     res.json(items);
   } catch (error) {
     console.error("Error fetching items from database:", error);
@@ -104,19 +106,67 @@ app.delete("/deleteproduct/:productId", async (req, res) => {
   const productId = parseInt(req.params.productId);
 
   try {
-    const deletedItem = await prisma.items.delete({
+    const updatedItem = await prisma.items.update({
       where: {
         id: productId,
       },
+      data: {
+        isDeleted: true,
+        deletedAt: new Date(),
+      },
     });
 
-    if (!deletedItem) {
+    if (!updatedItem) {
       res.status(404).send("Product not found");
     } else {
-      res.json(deletedItem);
+      res.json(updatedItem);
     }
   } catch (error) {
     console.error("Error deleting product from the database:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.patch("/restoreproduct/:productId", async (req, res) => {
+  const productId = parseInt(req.params.productId);
+  try {
+    const updatedItem = await prisma.items.update({
+      where: {
+        id: productId,
+      },
+      data: {
+        isDeleted: false,
+        deletedAt: null,
+      },
+    });
+    if (!updatedItem) {
+      res.status(404).send("Product not found");
+    } else {
+      res.json(updatedItem);
+    }
+  } catch (error) {
+    console.error("Error undoing delete product from the database:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/deletedproducts", async (req, res) => {
+  const days = Number(req.query.days);
+  if (isNaN(days)) {
+    return res.status(400).send("Invalid number of days");
+  }
+  try {
+    const deletedProducts = await prisma.items.findMany({
+      where: {
+        isDeleted: true,
+        deletedAt: {
+          gte: new Date(new Date() - days * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+    res.json(deletedProducts);
+  } catch (error) {
+    console.error("Error fetching deleted products from database:", error);
     res.status(500).send("Internal Server Error");
   }
 });

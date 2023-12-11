@@ -17,12 +17,12 @@ import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 import { useDispatch, useSelector } from "react-redux";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { yellow } from '@mui/material/colors'
+import { yellow } from "@mui/material/colors";
 import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Sell() {
   const navigate = useNavigate();
-  const userId = useSelector((state) => state.isAuth?.value?.id)
+  const userId = useSelector((state) => state.isAuth?.value?.id);
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -59,6 +59,13 @@ export default function Sell() {
     event.preventDefault();
 
     addItemToSell(formData);
+    setFormData({
+      name: "",
+      price: "",
+      amount: "",
+      description: "",
+      category: "",
+    });
   };
 
   const [itemsSelling, setItemsSelling] = useState([]);
@@ -67,7 +74,7 @@ export default function Sell() {
     if (!userId) {
       navigate("/login");
     }
-    
+
     const getItemsSelling = async () => {
       try {
         const response = await axios.get(
@@ -110,99 +117,128 @@ export default function Sell() {
   };
 
   return (
-    <div>
-      <div>
-        <h1>Sell Item</h1>
-        <form onSubmit={onSubmit}>
+    <div
+      style={{
+        display: "flex",
+      }}
+    >
+      <div
+        style={{
+          width: "12%",
+          display: "flex",
+          flexDirection: "column",
+          border: "5px solid black",
+          padding: "15px",
+          overflowY: "auto",
+          boxSizing: "border-box",
+          textAlign: "center",
+        }}
+      >
+        <h1
+          style={{
+          }}
+        >
+          Sell Item
+        </h1>
+        <form
+          onSubmit={onSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "10px", // Add spacing between inputs
+          }}
+        >
           <input
             placeholder="Name"
             value={formData.name}
             onChange={handleInputChange}
             name="name"
+            style={{ padding: "8px" }}
           />
           <input
-            placeholder="Price"
+            placeholder="Price (Enter Number)"
             value={formData.price}
             onChange={handleInputChange}
             name="price"
+            style={{ padding: "8px" }}
           />
           <input
-            placeholder="Amount"
+            placeholder="Amount (Enter Number)"
             value={formData.amount}
             onChange={handleInputChange}
             name="amount"
+            style={{ padding: "8px" }}
           />
           <input
             placeholder="Category"
             value={formData.category}
             onChange={handleInputChange}
             name="category"
+            style={{ padding: "8px" }}
           />
           <input
             placeholder="Desciption"
             value={formData.description}
             onChange={handleInputChange}
             name="description"
+            style={{ padding: "8px" }}
           />
           <button type="submit">Sell</button>
         </form>
       </div>
-      <h1>Items I'm Selling</h1>
-      <Grid container spacing={3}>
-        {itemsSelling.map((item, index) => {
-          return (
-            <Grid key={index} item xs={2}>
-              <Card style={{ position: "relative" }}>
-                {/* <CardMedia
-                  onClick={() => window.open(restaurant.googleUrl, "_blank")}
-                  sx={{ height: 100, width: "100%" }}
-                  image={restaurant.imageUrl}
-                /> */}
-                <CardContent>
-                  <Typography
-                    align={"center"}
-                    variant="body1"
-                    sx={{ fontWeight: "bold" }}
-                  >
-                    Name: {item.name}
-                  </Typography>
-                  <Typography align={"center"} variant="body2">
-                    Price: {item.price}
-                  </Typography>
-                  {/* <div style={{ display: "flex" }}> */}
+      <div
+        style={{
+          width: "88%",
+          border: "5px solid black",
+          padding: "15px",
+          overflowY: "auto",
+          boxSizing: "border-box",
+          textAlign: "center",
+        }}
+      >
+        <h1>Items I'm Selling</h1>
+        <Grid container spacing={3}>
+          {itemsSelling.map((item, index) => {
+            return (
+              <Grid key={index} item xs={2}>
+                <Card style={{ position: "relative" }}>
+                  <CardContent>
+                    <Typography
+                      align={"center"}
+                      variant="body1"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      Name: {item.name}
+                    </Typography>
+                    <Typography align={"center"} variant="body2">
+                      Price: {item.price}
+                    </Typography>
                     <Typography align={"center"} sx={{ fontSize: 14 }}>
                       Amount: {item.amount}
                     </Typography>
-                    {/* <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <IconButton sx={{ color: yellow[500], margin: -4 }}>
-                        <ArrowUpwardIcon sx={{ padding: 4 }} />
-                      </IconButton>
-                      <IconButton sx={{ color: yellow[500], margin: -4 }}>
-                        <ArrowDownwardIcon sx={{ padding: 4 }} />
-                      </IconButton>
-                    </div> */}
-                  {/* </div> */}
-                  <Typography align={"center"} sx={{ fontSize: 14 }}>
-                    Category: {item.category}
-                  </Typography>
-                  <Typography align={"center"} sx={{ fontSize: 14 }}>
-                    Description: {item.description}
-                  </Typography>
-                  <CardActions style={{ justifyContent: "center" }}>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => removeItem(item.id)}
-                    >
-                      Remove Item
-                    </Button>
-                  </CardActions>
-                </CardContent>
-              </Card>
-            </Grid>
-          );
-        })}
-      </Grid>
+                    <Typography align={"center"} sx={{ fontSize: 14 }}>
+                      Category: {item.category}
+                    </Typography>
+                    <Typography align={"center"} sx={{ fontSize: 14 }}>
+                      Description: {item.description}
+                    </Typography>
+                    <CardActions style={{ justifyContent: "center" }}>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => removeItem(item.id)}
+                      >
+                        Remove Item
+                      </Button>
+                    </CardActions>
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </div>
     </div>
   );
 }
