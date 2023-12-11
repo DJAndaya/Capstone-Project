@@ -11,37 +11,55 @@ datasource db {
 }
 
 model users {
-  id                Int       @id @default(autoincrement())
-  email             String    @unique
+  id                Int            @id @default(autoincrement())
+  email             String         @unique
   password          String
   address           String
   firstName         String
   lastName          String
-  admin             Boolean   @default(false)
-  isConfirmed       Boolean   @default(false)
+  admin             Boolean        @default(false)
+  isConfirmed       Boolean        @default(false)
   socketId          String?
-  confirmationToken String?   @unique
-  sellingItems      items[]   @relation("seller")
-  wishlist          items[]   @relation("wishlist")
-  orderHistory      items[]   @relation("orderhistory")
-  shoppingCart      items[]   @relation("shoppingcart")
+  confirmationToken String?        @unique
+  sellingItems      items[]        @relation("seller")
+  wishlist          items[]        @relation("wishlist")
+  orderHistory      orderHistory[]
+  shoppingCart      items[]        @relation("shoppingcart")
   reviews           reviews[]
 }
 
 model items {
-  id           Int       @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   name         String
   price        Decimal
   amount       Int
   description  String
   category     String
+  averageRating Float?
+  images       images[]
+  seller       users[]        @relation("seller")
+  wishlist     users[]        @relation("wishlist")
+  orderHistory orderHistory[]
+  shoppingCart users[]        @relation("shoppingcart")
   isDeleted    Boolean   @default(false)
   deletedAt    DateTime? 
-  seller       users[]   @relation("seller")
-  wishlist     users[]   @relation("wishlist")
-  orderHistory users[]   @relation("orderhistory")
-  shoppingCart users[]   @relation("shoppingcart")
   reviews      reviews[]
+}
+
+model images {
+  id       Int    @id @default(autoincrement())
+  imageUrl String
+  itemId   Int
+  item     items  @relation(fields: [itemId], references: [id])
+}
+
+model orderHistory {
+  id          Int      @id @default(autoincrement())
+  dateOrdered DateTime @default(now())
+  userId      Int
+  user        users    @relation(fields: [userId], references: [id])
+  itemId      Int
+  item        items    @relation(fields: [itemId], references: [id])
 }
 
 model reviews {

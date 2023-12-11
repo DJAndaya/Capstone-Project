@@ -6,6 +6,10 @@ import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 // components
 import { Button } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+// material UI
+import Tooltip from "@mui/material/Tooltip";
 
 const AddToWishlistButton = ({ item }) => {
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -39,6 +43,8 @@ const AddToWishlistButton = ({ item }) => {
           "http://localhost:3000/items/addOrRemoveFromWishlist",
           { item, userId }
         );
+
+        // console.log("item added to wishlist DB")
       } catch (error) {
         console.log(error);
         // Handle errors as needed
@@ -49,17 +55,20 @@ const AddToWishlistButton = ({ item }) => {
   return (
     <>
       {!isItemInWishlist ? (
-        <Button variant="contained" onClick={addRemoveFromWishlist}>
-          Add to wishlist
-        </Button>
+        <Tooltip title="Add to wishlist">
+          <FavoriteBorderIcon
+            fontSize="small"
+            onClick={addRemoveFromWishlist}
+          />
+        </Tooltip>
       ) : (
-        <Button
-          variant="contained"
-          color="error"
-          onClick={addRemoveFromWishlist}
-        >
-          Remove from wishlist
-        </Button>
+        <Tooltip title="Remove from wishlist">
+          <FavoriteIcon
+            style={{ color: "#FF69B4" }}
+            fontSize="small"
+            onClick={addRemoveFromWishlist}
+          />
+        </Tooltip>
       )}
     </>
   );

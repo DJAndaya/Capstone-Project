@@ -42,19 +42,20 @@ const Login = () => {
       );
 
       const user = userResponse.data;
+      console.log("user info after login:",user)
       dispatch(setIsAuth(user));
 
       // putting DB wishlist and shopping cart into local respectively
-      const userWishlist = user.Wishlist || [];
-      const userShoppingCart = user.shoppingCart || [];
-      const combinedWishlist = wishlist.concat(
-        userWishlist.filter((item) => wishlist.indexOf(item) === -1)
-      );
+      const userWishlist = user.wishlist || []
+      // console.log("user's wishlist:", userWishlist)
+      const userShoppingCart = user.shoppingCart || []
+      // console.log("user's shoppingcart:", userShoppingCart)
+      const combinedWishlist = wishlist.concat(userWishlist.filter(item => wishlist.indexOf(item) === -1))
       const combineShoppingCart = shoppingCart.concat(
         userShoppingCart
-          .filter((item) => !shoppingCartItems.includes(item))
-          .map((newItem) => ({ item: newItem, amount: 1 }))
-      );
+        .filter(item => !shoppingCartItems.includes(item))
+        .map(newItem => ({ item: newItem, purchaseAmount: 1 }))
+      )
       setOutletContext({
         wishlist: combinedWishlist,
         shoppingCart: combineShoppingCart,
@@ -83,6 +84,7 @@ const Login = () => {
   useEffect(() => {
     if (userId) {
       // console.log("before navigate in useEffect");
+      console.log(outletContext)
       navigate("/");
       // console.log("after navigate in useEffect");
     }

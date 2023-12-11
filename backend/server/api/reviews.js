@@ -4,6 +4,25 @@ const app = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+
+const updateItemAverageRating = async (itemId) => {
+  const reviews = await prisma.reviews.findMany({
+    where: {
+      itemId: itemId,
+    },
+  });
+
+  const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+  const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+
+  await prisma.items.update({
+    where: { id: itemId },
+    data: {
+      averageRating: averageRating,
+    },
+  });
+};
+
 app.get("/", (req, res) => {
   res.send("This is the Review backend");
 });
@@ -17,7 +36,7 @@ app.get("/itemReviews/:itemId", async (req, res) => {
         itemId: itemId,
       },
     });
-    console.log("Fetched reviews:", reviews); // Added this line
+    // console.log("Fetched reviews:", reviews); // Added this line
     res.json(reviews);
   } catch (error) {
     console.error("Error fetching reviews:", error);
@@ -46,6 +65,8 @@ app.post("/submitReview", async (req, res) => {
       },
     });
 
+    await updateItemAverageRating(parsedItemId)
+
     res.json(newReview);
   } catch (error) {
     console.error("Error submitting review:", error);
@@ -66,6 +87,9 @@ app.put("/editReview/:reviewId", async (req, res) => {
         comment,
       },
     });
+
+    await updateItemAverageRating(updatedReview.itemId)
+
     res.json(updatedReview);
   } catch (error) {
     console.error("Error updating review:", error);
@@ -81,6 +105,9 @@ app.delete("/deleteReview/:reviewId", async (req, res) => {
         id: reviewId,
       },
     });
+
+    await updateItemAverageRating(deletedReview.itemId)
+
     res.json(deletedReview);
   } catch (error) {
     console.error("Error deleting review:", error);

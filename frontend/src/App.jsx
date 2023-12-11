@@ -129,22 +129,33 @@ export default function App() {
       // console.log("user has joined with socket")
     }
 
-    // const possiblyLogin = async () => {
-    //   const token = window.localStorage.getItem("token");
-    //   console.log(token)
-    //   if (token) {
-    //     const userResponse = await axios.get("http://localhost:3000/auth/loggedin", {
-    //       headers: {
-    //         authorization: token,
-    //       },
-    //     });
+    socket.on("update_socket", (updatedUserData) => {
+      // console.log("updatedUserData:", updatedUserData) // not showing up
+      dispatch(setIsAuth(updatedUserData));
+      // console.log("user info after dispatch:", user) // not showing up
+    });
+    const possiblyLogin = async () => {
+      const token = window.localStorage?.getItem("token");
+      // console.log(token)
+      if (token) {
+        try {
+          const userResponse = await axios.get("http://localhost:3000/auth/loggedin", {
+          headers: {
+            authorization: token,
+          },
+        });
 
-    //     const user = userResponse.data;
-    //     dispatch(setIsAuth(user));
-    //   }
-    // };
 
-    // possiblyLogin();
+        const user = userResponse.data;
+        dispatch(setIsAuth(user));
+      } catch (error) {
+        console.log(error)
+      }
+        }
+        
+    };
+
+    possiblyLogin();
   }, [userId]);
 
   return <RouterProvider router={router} />;
