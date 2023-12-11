@@ -48,7 +48,6 @@ const seed = async () => {
     const adminUser = {
       data: {
         email: faker.internet.email(),
-        // password: bcrypt.hashSync("password1234", 10),
         password: bcrypt.hashSync(process.env.ADMIN_USER_PW, 10),
         address: faker.address.streetAddress(),
         firstName: faker.name.firstName(),
@@ -75,6 +74,7 @@ const seed = async () => {
             amount: Math.floor(Math.random() * 101),
             description: faker.commerce.productDescription(),
             category: faker.commerce.product(),
+            deletedAt: null,
             seller: {
               connect: { id: user.id },
             },

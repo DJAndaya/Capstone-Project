@@ -17,7 +17,9 @@ app.get("/", (req, res) => {
 
 app.get("/allproducts", async (req, res) => {
   try {
-    const items = await prisma.items.findMany();
+    const items = await prisma.items.findMany({
+      
+    }); // add query to filter out deleted products! (SELECT * FROM items WHERE...)
     res.json(items);
   } catch (error) {
     console.error("Error fetching items from database:", error);
@@ -149,9 +151,24 @@ app.patch("/restoreproduct/:productId", async (req, res) => {
 });
 
 app.get("/deletedproducts", async (req, res) => {
-  const days = req.query.days;
-  // Use the days query parameter to filter products deleted within the last 'days' days
-  // The actual implementation depends on your database and ORM
+  const days = Number(req.query.days);
+  if (isNaN(days)) {
+    return res.status(400).send("Invalid number of days");
+  }
+  try {
+    const deletedProducts = await prisma.items.findMany({
+      where: {
+        isDeleted: true,
+        deletedAt: {
+          gte: new Date(new Date() - days * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+    res.json(deletedProducts);
+  } catch (error) {
+    console.error("Error fetching deleted products from database:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 module.exports = app;

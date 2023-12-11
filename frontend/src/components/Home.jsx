@@ -82,7 +82,7 @@ const Home = () => {
           );
           setItems(alphabeticalOrderData);
         }
-        console.log(user, "Home")
+        console.log(user, "Home");
         // const alphabeticalOrderData = response.data.sort((a, b) =>
         //   a.name > b.name ? 1 : -1
         // );
@@ -130,7 +130,7 @@ const Home = () => {
     socket.emit("get_messages", {
       fromUser: user.id,
     });
-    console.log(user.socketId)
+    console.log(user.socketId);
   };
 
   const sendMessage = () => {
@@ -175,7 +175,9 @@ const Home = () => {
                           {item.name}
                         </Typography>
                         <Typography variant="h7" component="div">
-                          {item.seller[0] ? `${item.seller[0].firstName} ${item.seller[0].lastName[0]}.` : 'No seller'}
+                          {item.seller[0]
+                            ? `${item.seller[0].firstName} ${item.seller[0].lastName[0]}.`
+                            : "No seller"}
                         </Typography>
                         <Typography component="div">
                           {item.description}
@@ -231,7 +233,7 @@ const Home = () => {
               <ProductDetail productId={selectedItemId} />
             </div>
           </Modal>
-          
+
           {selectedUserToChatWith && (
             <div
               style={{
@@ -244,6 +246,7 @@ const Home = () => {
                 display: "flex",
                 flexDirection: "column",
                 outline: "5px solid black",
+                backgroundColor: "grey",
               }}
             >
               <h3
@@ -256,6 +259,18 @@ const Home = () => {
               >
                 Chatting with {selectedUserToChatWith.firstName}{" "}
                 {selectedUserToChatWith.lastName}
+                
+                <button 
+                  onClick={() => setSelectedUserToChatWith(null)} 
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    color: "white",
+                    backgroundColor: "black"
+                  }}
+                >
+                  X
+                </button>{" "}
               </h3>
               <div
                 ref={messageContainerRef}
@@ -284,7 +299,6 @@ const Home = () => {
                   </div>
                 ))}
               </div>
-
               <div
                 style={{
                   display: "flex",
@@ -319,9 +333,10 @@ const Home = () => {
               </div>
             </div>
           )}
-        </Grid>      
+        </Grid>
       </>
-    );  }
+    );
+  }
 };
 
 export default Home;

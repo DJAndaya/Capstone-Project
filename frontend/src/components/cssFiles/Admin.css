@@ -32,3 +32,44 @@ body.admin-page {
 .to-delete {
   color: red;
 }
+
+/* AllProducts Styles */
+
+.allProducts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-right: 20px;
+}
+
+.listOfProducts {
+  display: flexbox;
+  list-style-type: none;
+  flex-wrap: wrap;
+  background-color: white;
+  width: 300px;
+  color: green;
+  margin: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.product-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.productName {
+    font-weight: bold;
+    font-size:larger;
+    text-align: center;
+}
+
+.inputFieldContainer {
+  border-color: white;
+}

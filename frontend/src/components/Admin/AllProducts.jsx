@@ -222,7 +222,7 @@ export default function AllProducts() {
       <button onClick={toggleDrawer}>Add new product</button>
       {isDrawerOpen && (
         <form className="product-form" onSubmit={handleFormSubmit}>
-          <div>
+          <div className="inputFieldContainer">
             <label>
               <input
                 type="text"
@@ -277,7 +277,7 @@ export default function AllProducts() {
               />
             </label>
           </div>
-          <button type="submit">Add Product</button>
+          <button type="submit">Add New Product</button>
         </form>
       )}
       {isEditFormOpen && (
@@ -427,23 +427,44 @@ export default function AllProducts() {
           <option value="All products">All products</option>
         </select>
       </div>
-      <ul>
+      <ul className="allProducts">
         {renderProductsForCurrentPage().map((product) => (
-          <li key={product.id}>
-            <p>Product: {product.name}</p>
+          <li key={product.id} className="listOfProducts product-item">
+            <p className="productName">{product.name}</p>
             <p>Price: ${parseFloat(product.price).toFixed(2)}</p>
-            <p>Amount: {product.amount} left</p>
-            <p>Description: {product.description}</p>
+            <p>
+              Amount:{" "}
+              <span
+                style={{
+                  color: product.amount === 0 ? "red" : "inherit",
+                  fontWeight: product.amount === 0 ? "bold" : "normal",
+                }}
+              >
+                {product.amount}
+              </span>{" "}
+              left
+            </p>
+            <style jsx>{`
+              .description {
+                text-decoration: underline;
+              }
+            `}</style>
+            <p>
+              <span className="description">Description</span>:<br />
+              {product.description}
+            </p>
             <p>Category: {product.category}</p>
-            <button onClick={() => handleEditClick(product.id)}>
-              Edit Product
-            </button>
-            <button onClick={() => handleDeleteProduct(product.id)}>
-              Delete Product
-            </button>
-            <Link to={`/product/${product.id}`}>
-              <button>View Details</button>
-            </Link>
+            <div className="button-container">
+              <button onClick={() => handleEditClick(product.id)}>
+                Edit Product
+              </button>
+              <button onClick={() => handleDeleteProduct(product.id)}>
+                Delete Product
+              </button>
+              <Link to={`/product/${product.id}`}>
+                <button>View Details</button>
+              </Link>
+            </div>
           </li>
         ))}
       </ul>
