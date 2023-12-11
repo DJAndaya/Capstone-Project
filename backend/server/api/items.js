@@ -197,8 +197,9 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
 app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
   try {
     // console.log(req.body)
+    // console.log("endpoint is occuring")
     const { item, userId } = req.body;
-    // console.log(userId);
+    // console.log("item:", item, "userId:", userId);
     const user = await prisma.users.findUnique({
       where: { id: userId },
       include: { wishlist: true },
@@ -210,6 +211,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
     let updatedUserWishlist = "";
     // console.log(isItemInCart);
     if (isItemInWishlist) {
+      console.log("disconnecting item from wishlist")
       updatedUserWishlist = await prisma.users.update({
         where: { id: userId },
         data: {
@@ -221,6 +223,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
       });
       // console.log("item being removed")
     } else {
+      // console.log("conecting item to wishlist")
       updatedUserWishlist = await prisma.users.update({
         where: { id: userId },
         data: {
@@ -232,7 +235,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
       });
       // console.log("item added")
     }
-    // console.log(updatedUserShoppingCart);
+    // console.log(updatedUserWishlist);
     const token = jwt.sign(updatedUserWishlist, process.env.JWT_SECRET_KEY);
     res.send(token);
   } catch (error) {
@@ -362,7 +365,21 @@ app.get("/wishlist", async (req, res, next) => {
     // console.log(userId)
     const userWithWishlist = await prisma.users.findUnique({
       where: { id: userId },
-      include: { wishlist: true },
+      include: {
+        wishlist: {
+          include: {
+            images: true,
+            seller: {
+              select: {
+                id: true,
+                socketId: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
     });
     res.send(userWithWishlist.wishlist);
   } catch (error) {

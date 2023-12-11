@@ -40,11 +40,14 @@ const Login = () => {
       );
         
       const user = userResponse.data;
+      console.log("user info after login:",user)
       dispatch(setIsAuth(user));
 
       // putting DB wishlist and shopping cart into local respectively
-      const userWishlist = user.Wishlist || []
+      const userWishlist = user.wishlist || []
+      // console.log("user's wishlist:", userWishlist)
       const userShoppingCart = user.shoppingCart || []
+      // console.log("user's shoppingcart:", userShoppingCart)
       const combinedWishlist = wishlist.concat(userWishlist.filter(item => wishlist.indexOf(item) === -1))
       const combineShoppingCart = shoppingCart.concat(
         userShoppingCart
@@ -68,6 +71,7 @@ const Login = () => {
         }
       )
       const updatedUser = updateUserResponse.data
+      console.log(updatedUser)
       // console.log(updatedUser)
       // console.log("before updatedUserData is put onto local")
       dispatch(setIsAuth(updatedUser))
@@ -79,6 +83,7 @@ const Login = () => {
   useEffect(() => {
     if (userId) {
       // console.log("before navigate in useEffect");
+      console.log(outletContext)
       navigate("/");
       // console.log("after navigate in useEffect");  
     }

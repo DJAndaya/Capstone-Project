@@ -43,7 +43,7 @@ const Wishlist = () => {
 
   const location = useLocation();
   const { pathname } = location;
-  const [outletContext] = useOutletContext();
+  const [outletContext, setOutletContext] = useOutletContext();
 
   const wishlist = outletContext.wishlist;
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -96,16 +96,38 @@ const Wishlist = () => {
       }
 
       setItems(sortedItems);
+
+      
     };
 
     getItems();
-
     // console.log(allMessages);
   }, [pathname, userId, sortOption]);
 
-  if (!items) {
-    return <h1>loading</h1>;
+  useEffect(() => {
+    if (userId && wishlist.length === 0) {
+      const getUserWishlistData = async () => {
+        const response = await axios.get(
+          "http://localhost:3000/items/wishlist",
+          {
+            params: { userId },
+          }
+        );
+        const userWishlist = response.data;
+        // console.log(userWishlist)
+        setOutletContext({
+          ...outletContext,
+          wishlist: userWishlist,
+        });
+      };
+      getUserWishlistData();
+    }
+  }, )
+
+  if (wishlist.length === 0) {
+    return <h1>wishlist is empty</h1>;
   } else {
+    // console.log(wishlist)
     return (
       <Grid container>
         <Box sx={{ flexGrow: 1 }}>
@@ -139,7 +161,7 @@ const Wishlist = () => {
             </Grid>
             {items &&
               items.map((item, idx) => {
-                // console.log(item.reviews)
+                // console.log(item)
                 return (
                   <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
                     <Card>
@@ -157,8 +179,8 @@ const Wishlist = () => {
                           }}
                         >
                           <span>
-                            {item.seller[0].firstName}{" "}
-                            {item.seller[0].lastName[0]}.
+                            {/* {item.seller[0].firstName}{" "} */}
+                            {/* {item.seller[0].lastName[0]}. */}
                           </span>
                           <span>
                             Avg. Rating: {item.averageRating.toFixed(2)}/5

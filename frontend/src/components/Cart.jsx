@@ -5,7 +5,7 @@ import { useSelector } from "react-redux/es/hooks/useSelector";
 
 import { useNavigate, useOutletContext } from "react-router-dom";
 
-import { Box, Grid } from "@mui/material/";
+import { Box, Grid, Paper } from "@mui/material/";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
@@ -23,7 +23,7 @@ const Cart = () => {
   // const [formData, setFormData] = useState(null);
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;
-  console.log(shoppingCart)
+  console.log(shoppingCart);
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -35,6 +35,35 @@ const Cart = () => {
   //   }));
   //   setFormData(initialFormData);
   // }, []);
+
+  useEffect(() => {
+    if (userId && shoppingCart.length === 0) {
+      const getUserShoppingCartData = async () => {
+        const response = await axios.get(
+          "http://localhost:3000/items/shoppingCart",
+          {
+            params: { userId },
+          }
+        );
+        let userShoppingCart = response.data;
+
+        userShoppingCart = userShoppingCart.map((cartItem) => ({
+          item: cartItem,
+          purchaseAmount: 1,
+        }));
+        setOutletContext({
+          ...outletContext,
+          shoppingCart: userShoppingCart,
+        });
+      };
+      getUserShoppingCartData();
+    }
+  });
+
+  const totalAmountPrice = shoppingCart.reduce((total, item) => {
+    const totalPriceOfItem = item.purchaseAmount * item.item.price;
+    return total + totalPriceOfItem;
+  }, 0);
 
   const checkOut = async () => {
     if (!userId) {
@@ -113,47 +142,75 @@ const Cart = () => {
 
     return (
       <>
-        <span>
-          <h1>
-            Shopping Cart <br />
-            <Button
-              variant="contained"
-              color="error"
-              onClick={clearShoppingCart}
+        {/* <Grid container spacing={1}>
+          <Grid item xs={8} sx={{ maxWidth: "100%" }}> */}
+            <Paper
+              sx={{
+                color: "black",
+                maxWidth: "100%",
+                overflowY: "auto",
+                maxHeight: "85vh",
+                backgroundColor: "white",
+              }}
             >
-              Clear shopping cart
-            </Button>
-          </h1>
-        </span>
-        <Grid container spacing={1}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid container item xs={8} spacing={2} columns={2}>
-              {shoppingCart.map((item, idx) => {
-                return (
-                  <Grid item xs={12} key={idx}>
-                    <CartItems
-                      item={item}
-                      // formData={formData}
-                      // setFormData={setFormData}
-                    />
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Box>
-          <Divider />
+              <h1>
+                Shopping Cart
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={clearShoppingCart}
+                  sx={{ float: "right", marginRight: "10px" }}
+                >
+                  Clear shopping cart
+                </Button>
+              </h1>
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={2} columns={2}>
+                  {shoppingCart.map((item, idx) => {
+                    return (
+                      <Grid item xs={12} key={idx}>
+                        <CartItems
+                          item={item}
+                          // formData={formData}
+                          // setFormData={setFormData}
+                        />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </Box>
+            </Paper>
+          {/* </Grid> */}
+          {/* <Divider />
           <Grid item xs={4}>
-            <Card>
-              <CardActions>
-                <Elements stripe={initializeStripe()}>
-                  <Button variant="contained" onClick={checkOut}>
-                    Checkout
-                  </Button>
-                </Elements>
-              </CardActions>
-            </Card>
-          </Grid>
-        </Grid>
+            <Paper
+              sx={{
+                color: "black",
+                maxWidth: "100%",
+                overflowY: "auto",
+                maxHeight: "85vh",
+                backgroundColor: "white",
+              }}
+            >
+              <h1>Checkout</h1>
+              {shoppingCart.map((item, idx) => {
+                const totalPriceOfItem = item.purchaseAmount*item.item.price
+                    return (
+                      <Paper elevation={2}>
+                        <h1>{item.item.name}</h1>
+                        <h2>${totalPriceOfItem}</h2>
+                      </Paper>
+                    );
+                  })}
+                  <h1>Total Amount: ${totalAmountPrice}</h1>
+              <Elements stripe={initializeStripe()}>
+                <Button variant="contained" onClick={checkOut}>
+                  Checkout
+                </Button>
+              </Elements>
+            </Paper>
+          </Grid> */}
+        {/* </Grid> */}
       </>
     );
   }

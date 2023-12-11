@@ -11,8 +11,10 @@ import {
   Typography,
   Button,
   Modal,
+  Alert,
+  AlertTitle,
 } from "@mui/material/";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 // component imports
 import ItemCards from "./ItemCards";
 import { Link, useNavigate } from "react-router-dom";
@@ -37,6 +39,9 @@ const Orders = () => {
   // const [allMessages, setAllMessages] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null); // New state variable
+  const [showWarning, setShowWarning] = useState(false); // New state variable
+  const [keyForRemount, setKeyForRemount] = useState(0);
+  const [selectedItemToDelete, setSelectedItemToDelete] = useState(null); // New state variable
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -82,7 +87,7 @@ const Orders = () => {
       getItems();
     }
     // console.log(allMessages);
-  }, [userId]);
+  }, [keyForRemount, userId]);
 
   const formatDate = (inputDate) => {
     const date = new Date(inputDate);
@@ -98,16 +103,40 @@ const Orders = () => {
   // }, [pathname, wishlist]);
 
   const removeFromOrderHistory = async (itemId) => {
+    // Show the warning before proceeding with deletion
+    setShowWarning(true);
+    setSelectedItemToDelete(itemId);
+  };
+
+  const handleDeleteConfirmation = async () => {
     try {
-      await axios.delete(`http://localhost:3000/items/deleteOrderHistoryItem/${itemId}`);
+      // Proceed with deletion
+      await axios.delete(
+        `http://localhost:3000/items/deleteOrderHistoryItem/${selectedItemToDelete}`
+      );
       // After successful deletion, update the state to remove the item
-      setItems((prevItems) => prevItems.filter((item) => item.item.id !== itemId));
-      console.log('Item removed from order history successfully');
+      setItems((prevItems) =>
+        prevItems.filter((item) => item.item.id !== selectedItemToDelete)
+      );
+      console.log("Item removed from order history successfully");
+
+      // Increment the key to trigger the useEffect hook
+      setKeyForRemount((prevKey) => prevKey + 1);
     } catch (error) {
       console.log(error);
       // Handle error, e.g., show a notification to the user
+    } finally {
+      // Reset the state variables
+      setShowWarning(false);
+      setSelectedItemToDelete(null);
     }
-  };  
+  };
+
+  const handleCancelDelete = () => {
+    // Cancel the deletion
+    setShowWarning(false);
+    setSelectedItemToDelete(null);
+  };
 
   if (!items) {
     return <h1>loading</h1>;
@@ -130,7 +159,10 @@ const Orders = () => {
                     <CardContent>
                       <Typography variant="64" component="div">
                         Date Ordered: {formatDate(item.dateOrdered)}
-                        <DeleteForeverIcon onClick={() => removeFromOrderHistory(item.id)}/>
+                        <DeleteForeverIcon
+                          sx={{ color: "red" }}
+                          onClick={() => removeFromOrderHistory(item.id)}
+                        />
                       </Typography>
                       <Typography variant="h7" component="div">
                         {item.item.name}
@@ -188,6 +220,28 @@ const Orders = () => {
             <ProductDetail selectedItem={selectedItem} />
           </div>
         </Modal>
+
+        {showWarning && (
+          <Alert
+            severity="warning"
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <AlertTitle>Warning</AlertTitle>
+            Are you sure you want to permanently delete this item? This cannot
+            be reverted.
+            <Button onClick={handleDeleteConfirmation} sx={{ color: "red" }}>
+              OK
+            </Button>
+            <Button onClick={handleCancelDelete} color="primary" autoFocus>
+              Cancel
+            </Button>
+          </Alert>
+        )}
       </Grid>
     );
   }

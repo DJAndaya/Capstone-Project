@@ -57,7 +57,6 @@ const Home = () => {
       // console.log("Current pathname:", pathname);
       try {
         let response;
-
         if (pathname === "/logout") {
           setItems(wishlist);
         } else if (pathname.startsWith("/results")) {
@@ -125,6 +124,7 @@ const Home = () => {
   if (!items) {
     return <h1>loading</h1>;
   } else {
+    console.log(outletContext)
     return (
       <Grid container>
         <Box sx={{ flexGrow: 1 }}>

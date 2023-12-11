@@ -221,6 +221,8 @@ app.patch("/login/update", async (req, res, next) => {
         },
       },
     });
+
+    // const updatedUserWithShoppingCart 
     console.log(updatedUser)
     res.json(updatedUser);
 })

@@ -91,7 +91,9 @@ function ProductDetail({ selectedItem }) {
         </Button>
       </p>
       <p>Price: ${selectedItem.price}</p>
-      <p>Amount: {selectedItem.amount}</p>
+      <p>Amount in Stock: {selectedItem.amount}</p>
+      {console.log(selectedItem.images)}
+      <img src={selectedItem.images} alt="item image"/>
       <p>Description: {selectedItem.description}</p>
       <p>Category: {selectedItem.category}</p>
       <p>Reviews:</p>
