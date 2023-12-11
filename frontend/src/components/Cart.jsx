@@ -144,44 +144,54 @@ const Cart = () => {
       <>
         {/* <Grid container spacing={1}>
           <Grid item xs={8} sx={{ maxWidth: "100%" }}> */}
-            <Paper
-              sx={{
-                color: "black",
-                maxWidth: "100%",
-                overflowY: "auto",
-                maxHeight: "85vh",
-                backgroundColor: "white",
-              }}
+        <Paper
+          sx={{
+            color: "black",
+            maxWidth: "100%",
+            overflowY: "auto",
+            maxHeight: "85vh",
+            backgroundColor: "white",
+          }}
+        >
+          <h1>
+            Shopping Cart
+            <Button
+              variant="contained"
+              color="error"
+              onClick={clearShoppingCart}
+              sx={{ float: "right", marginRight: "10px" }}
             >
-              <h1>
-                Shopping Cart
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={clearShoppingCart}
-                  sx={{ float: "right", marginRight: "10px" }}
-                >
-                  Clear shopping cart
-                </Button>
-              </h1>
-              <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={2} columns={2}>
-                  {shoppingCart.map((item, idx) => {
-                    return (
-                      <Grid item xs={12} key={idx}>
-                        <CartItems
-                          item={item}
-                          // formData={formData}
-                          // setFormData={setFormData}
-                        />
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              </Box>
-            </Paper>
-          {/* </Grid> */}
-          {/* <Divider />
+              Clear shopping cart
+            </Button>
+          </h1>
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={2} columns={2}>
+              {shoppingCart.map((item, idx) => {
+                return (
+                  <Grid item xs={12} key={idx}>
+                    <CartItems
+                      item={item}
+                      // formData={formData}
+                      // setFormData={setFormData}
+                    />
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </Box>
+          <h2>
+            Total Amount ${totalAmountPrice}
+          <Button
+            variant="contained"
+            onClick={checkOut}
+            sx={{ float: "right", marginRight: "10px" }}
+          >
+            Checkout
+          </Button></h2>
+
+        </Paper>
+        {/* </Grid> */}
+        {/* <Divider />
           <Grid item xs={4}>
             <Paper
               sx={{

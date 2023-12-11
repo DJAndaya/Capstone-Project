@@ -13,6 +13,7 @@ import {
   Modal,
   Select,
   MenuItem,
+  Tooltip,
 } from "@mui/material/";
 // component imports
 // import ItemCards from "./ItemCards";
@@ -124,37 +125,45 @@ const Home = () => {
   if (!items) {
     return <h1>loading</h1>;
   } else {
-    console.log(outletContext)
+    console.log(outletContext);
     return (
       <Grid container>
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
-            spacing={{ xs: 1, md: 1 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
+            spacing={2}
+            alignItems="center"
+            justifyContent="center"
           >
             <Grid item xs={12}>
+              <Typography variant="h4" sx={{ textAlign: "center" }}>
+                E-commerce
+              </Typography>
               {/* Select component for sorting options */}
-              <Select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-                sx={{ marginBottom: 2, backgroundColor: "white" }}
-              >
-                <MenuItem value="alphabeticalAsc">
-                  Alphabetical, A to Z
-                </MenuItem>
-                <MenuItem value="alphabeticalDesc">
-                  Alphabetical, Z to A
-                </MenuItem>
-                <MenuItem value="ratingDesc">
-                  Ratings, highest to lowest
-                </MenuItem>
-                <MenuItem value="ratingAsc">
-                  Ratings, lowest to highest
-                </MenuItem>
-                <MenuItem value="priceDesc">Price, highest to lowest</MenuItem>
-                <MenuItem value="priceAsc">Price, lowest to highest</MenuItem>
-              </Select>
+              <Typography sx={{ textAlign: "right" }}>
+                <Select
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  sx={{ backgroundColor: "white" }}
+                >
+                  <MenuItem value="alphabeticalAsc">
+                    Alphabetical, A to Z
+                  </MenuItem>
+                  <MenuItem value="alphabeticalDesc">
+                    Alphabetical, Z to A
+                  </MenuItem>
+                  <MenuItem value="ratingDesc">
+                    Ratings, highest to lowest
+                  </MenuItem>
+                  <MenuItem value="ratingAsc">
+                    Ratings, lowest to highest
+                  </MenuItem>
+                  <MenuItem value="priceDesc">
+                    Price, highest to lowest
+                  </MenuItem>
+                  <MenuItem value="priceAsc">Price, lowest to highest</MenuItem>
+                </Select>
+              </Typography>
             </Grid>
             {items &&
               items.map((item, idx) => {
@@ -163,9 +172,23 @@ const Home = () => {
                   <Grid item xs={12} sm={6} md={4} lg={4} key={idx}>
                     <Card>
                       <CardContent>
-                        <Typography variant="h5" component="div">
-                          {item.name}
-                          <AddToWishlistButton item={item} />
+                        <Typography
+                          variant="h5"
+                          component="div"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span style={{ float: "left" }}>{item.name}</span>
+                          <AddToWishlistButton
+                            item={item}
+                            sx={{
+                              float: "right",
+                              // marginRight: "10px",
+                            }}
+                          />
                         </Typography>
                         <Typography
                           variant="subtitle1"
@@ -189,8 +212,7 @@ const Home = () => {
                           alt="item image"
                           height="200px"
                         />
-                        <CardActions sx={{ justifyContent: "space-between" }}>
-                          <AddToCartButton item={item} />
+                        <CardActions sx={{ alignItems: "left" }}>
                           <Button
                             variant="contained"
                             color="primary"
@@ -203,8 +225,17 @@ const Home = () => {
                             View Details
                           </Button>
                         </CardActions>
-                        <Typography variant="h6" component="div">
-                          ${item.price}
+                        <Typography
+                          variant="h6"
+                          component="div"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span>${item.price}</span>
+                          <AddToCartButton item={item} />
                         </Typography>
                       </CardContent>
                     </Card>

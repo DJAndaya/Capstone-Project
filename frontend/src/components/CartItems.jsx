@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 import { useOutletContext } from "react-router-dom";
+
+import { useSelector } from "react-redux";
 
 import { Box, Grid, Paper } from "@mui/material/";
 import Card from "@mui/material/Card";
@@ -15,16 +18,87 @@ import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
+import ClearIcon from "@mui/icons-material/Clear";
+import Tooltip from "@mui/material/Tooltip";
 
 import AddToCartButton from "./AddToCartButton";
 
 const CartItems = ({ item }) => {
+  const userId = useSelector((state) => state.isAuth?.value?.id);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const [outletContext, setOutletContext] = useOutletContext();
+  const shoppingCart = outletContext.shoppingCart;
+  const currentItem = item.item;
+  let isItemInShoppingCart = shoppingCart.some(
+    (cartItem) => cartItem.item.id === currentItem.id
+  );
+
+  const addRemoveFromShoppingCart = async () => {
+    if (isItemInShoppingCart) {
+      const updatedShoppingCart = shoppingCart.filter((shoppingCartItem) => {
+        return shoppingCartItem.item.id !== currentItem.id;
+      });
+      setOutletContext({
+        ...outletContext,
+        shoppingCart: updatedShoppingCart,
+      });
+      // setShoppingCart(updatedShoppingCart);
+    } else {
+      setOutletContext({
+        ...outletContext,
+        shoppingCart: [
+          ...outletContext.shoppingCart,
+          {
+            item: item,
+            purchaseAmount: 1,
+          },
+        ],
+      });
+      // setShoppingCart([...shoppingCart, item]);
+    }
+    if (userId) {
+      try {
+        const item = currentItem;
+        await axios.patch(
+          "http://localhost:3000/items/addOrRemoveFromShoppingCart",
+          { item, userId }
+        );
+      } catch (error) {
+        console.log(error);
+        // Handle errors as needed
+      }
+    }
+  };
+
   return (
-    <Paper elevation={4}>
-      <h2>
+    <Paper sx={{maxHeigth: "110%"}}>
+      <h3>
         {item.item.name}
-        <AddToCartButton sx={{ float: "right", marginRight: "10px" }} item={item.item}/>
-      </h2>
+        <Tooltip title="Remove from cart">
+          <ClearIcon
+            onClick={addRemoveFromShoppingCart}
+            sx={{ float: "right", marginRight: "10px", marginTop: "7px" }}
+          />
+        </Tooltip>
+      </h3>
+      <div>Amount In Stock: {item.item.amount}</div>
+      <div>Price: ${item.item.price}</div>
+      <div>
+        <BasicTextField item={item} />
+        <span style={{ float: "right", marginRight: "10px", position: "center"}}>
+          ${item.purchaseAmount * item.item.price}
+        </span>
+      </div>
+      <br />
       {/* <CardContent>
         <Typography variant="h5" component="div">
           {item.item.name}
@@ -48,7 +122,9 @@ const BasicTextField = ({ item }) => {
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;
   const currentItem = item.item;
-  const initialPurchaseAmount = shoppingCart.find((cartItem) => cartItem.item.id === currentItem.id).purchaseAmount;
+  const initialPurchaseAmount = shoppingCart.find(
+    (cartItem) => cartItem.item.id === currentItem.id
+  ).purchaseAmount;
   const [customAmount, setCustomAmount] = useState(initialPurchaseAmount);
   const [showWarning, setShowWarning] = useState(false);
 
@@ -57,7 +133,7 @@ const BasicTextField = ({ item }) => {
 
     if (amount > currentItem.amount) {
       setShowWarning(true);
-      setCustomAmount(currentItem.amount)
+      setCustomAmount(currentItem.amount);
       setTimeout(() => {
         setShowWarning(false);
       }, 3000);
@@ -88,7 +164,7 @@ const BasicTextField = ({ item }) => {
         label="Amount"
         value={customAmount}
         onChange={handleInputChange}
-        sx={{ width: "130%" }}
+        sx={{ width: "20%" }}
         inputProps={{ min: 1, max: currentItem.amount }}
       />
       {showWarning && (

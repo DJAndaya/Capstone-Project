@@ -8,6 +8,8 @@ import { useOutletContext } from "react-router-dom";
 import { Button } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+// material UI
+import Tooltip from "@mui/material/Tooltip";
 
 const AddToWishlistButton = ({ item }) => {
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -53,13 +55,20 @@ const AddToWishlistButton = ({ item }) => {
   return (
     <>
       {!isItemInWishlist ? (
-        <FavoriteBorderIcon fontSize="small" onClick={addRemoveFromWishlist} />
+        <Tooltip title="Add to wishlist">
+          <FavoriteBorderIcon
+            fontSize="small"
+            onClick={addRemoveFromWishlist}
+          />
+        </Tooltip>
       ) : (
-        <FavoriteIcon
-          style={{ color: "#FF69B4" }}
-          fontSize="small"
-          onClick={addRemoveFromWishlist}
-        />
+        <Tooltip title="Remove from wishlist">
+          <FavoriteIcon
+            style={{ color: "#FF69B4" }}
+            fontSize="small"
+            onClick={addRemoveFromWishlist}
+          />
+        </Tooltip>
       )}
     </>
   );

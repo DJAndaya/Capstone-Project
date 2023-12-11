@@ -13,6 +13,7 @@ import {
   Modal,
   Alert,
   AlertTitle,
+  Tooltip
 } from "@mui/material/";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 // component imports
@@ -159,10 +160,12 @@ const Orders = () => {
                     <CardContent>
                       <Typography variant="64" component="div">
                         Date Ordered: {formatDate(item.dateOrdered)}
+                        <Tooltip title="Delete from order history">
                         <DeleteForeverIcon
                           sx={{ color: "red" }}
                           onClick={() => removeFromOrderHistory(item.id)}
                         />
+                        </Tooltip>
                       </Typography>
                       <Typography variant="h7" component="div">
                         {item.item.name}
