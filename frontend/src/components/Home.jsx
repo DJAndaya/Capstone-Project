@@ -44,7 +44,7 @@ const Home = () => {
   const [selectedItem, setSelectedItem] = useState(null); // New state variable
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
   const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
-  
+
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
@@ -137,7 +137,6 @@ const Home = () => {
     };
 
     getItems();
-
   }, [pathname, userId]);
 
   // Update items state when pathname is "/logout"
@@ -181,7 +180,7 @@ const Home = () => {
     // console.log(outletContext);
     return (
       <Grid container>
-      {/* <ShoppingCartButton /> */}
+        {/* <ShoppingCartButton /> */}
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -257,12 +256,13 @@ const Home = () => {
                             {item.seller[0].lastName[0]}.
                           </span>
                           <span>
-                            {item.averageRating} ? (Avg. Rating: {item.averageRating?.toFixed(2)}/5 ) : (No reviews)
+                            {item.averageRating} ? (Avg. Rating:{" "}
+                            {item.averageRating?.toFixed(2)}/5 ) : (No reviews)
                           </span>
                         </Typography>
                         <CardMedia
                           component="img"
-                          image={item.images[0].imageUrl}
+                          image={item.images ? item.images[0].imageUrl : ""}
                           alt="item image"
                           height="200px"
                         />
