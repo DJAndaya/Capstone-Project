@@ -13,6 +13,7 @@ export default function AllProducts() {
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [dropdownDisplay, setDropdownDisplay] = useState("Items per page");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [sortOption, setSortOption] = useState("alphabeticalAsc");
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -20,9 +21,49 @@ export default function AllProducts() {
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
-        const data = await response.json();
-        setProducts(data);
-        calculateTotalPages(data.length);
+        let data = await response.json();
+
+        let sortedProducts;
+        switch (sortOption) {
+          case "alphabeticalAsc":
+            sortedProducts = data.sort((a, b) => (a.name > b.name ? 1 : -1));
+            break;
+          case "alphabeticalDesc":
+            sortedProducts = data.sort((a, b) => (a.name < b.name ? 1 : -1));
+            break;
+          case "priceDesc":
+            sortedProducts = data.sort((a, b) => (a.price > b.price ? 1 : -1));
+            break;
+          case "priceAsc":
+            sortedProducts = data.sort((a, b) => (a.price < b.price ? 1 : -1));
+            break;
+          case "amountDesc":
+            sortedProducts = data.sort((a, b) =>
+              a.amount < b.amount ? 1 : -1
+            );
+            break;
+          case "amountAsc":
+            sortedProducts = data.sort((a, b) =>
+              a.amount > b.amount ? 1 : -1
+            );
+            break;
+            case "categoryDesc":
+              sortedProducts = data.sort((a, b) =>
+                a.category > b.category ? 1 : -1
+              );
+              break;
+            case "categoryAsc":
+              sortedProducts = data.sort((a, b) =>
+                a.category < b.category ? 1 : -1
+              );
+              break;
+          default:
+            sortedProducts = data;
+            break;
+        }
+
+        setProducts(sortedProducts);
+        calculateTotalPages(sortedProducts.length);
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -30,7 +71,7 @@ export default function AllProducts() {
       }
     };
     fetchProducts();
-  }, []);
+  }, [sortOption]);
   useEffect(() => {
     calculateTotalPages(products.length);
   }, [products, itemsPerPage]);
@@ -220,6 +261,7 @@ export default function AllProducts() {
       {error && <p>Error: {error}</p>}
 
       <button onClick={toggleDrawer}>Add new product</button>
+
       {isDrawerOpen && (
         <form className="product-form" onSubmit={handleFormSubmit}>
           <div className="inputFieldContainer">
@@ -425,6 +467,19 @@ export default function AllProducts() {
           <option value="50">50</option>
           <option value="100">100</option>
           <option value="All products">All products</option>
+        </select>
+        <select
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+        >
+          <option value="alphabeticalAsc">Alphabetical, A to Z</option>
+          <option value="alphabeticalDesc">Alphabetical, Z to A</option>
+          <option value="priceDesc">Price, highest to lowest</option>
+          <option value="priceAsc">Price, lowest to highest</option>
+          <option value="amountDesc">Amount, highest to lowest</option>
+          <option value="amountAsc">Amount, lowest to highest</option>
+          <option value="categoryDesc">Category, A to Z</option>
+          <option value="categoryAsc">Category, Z to A</option>
         </select>
       </div>
       <ul className="allProducts">

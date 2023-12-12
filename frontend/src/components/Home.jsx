@@ -262,11 +262,10 @@ const Home = () => {
                           }}
                         >
                           <span>
-                            {item.seller[0].firstName}{" "}
-                            {item.seller[0].lastName[0]}.
+                            {item.seller && item.seller[0] ? `${item.seller[0].firstName} ${item.seller[0].lastName[0]}.` : ''}
                           </span>
                           <span>
-                            Avg. Rating: {item.averageRating.toFixed(2)}/5
+                            Avg. Rating: {item.averageRating ? item.averageRating.toFixed(2) : 'N/A'}/5
                           </span>
                         </Typography>
                         <CardMedia
