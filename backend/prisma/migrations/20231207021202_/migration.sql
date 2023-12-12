@@ -22,30 +22,8 @@ CREATE TABLE "items" (
     "amount" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
     "category" TEXT NOT NULL,
-    "averageRating" DOUBLE PRECISION,
-    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
-    "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "items_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "images" (
-    "id" SERIAL NOT NULL,
-    "imageUrl" TEXT NOT NULL,
-    "itemId" INTEGER NOT NULL,
-
-    CONSTRAINT "images_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "orderHistory" (
-    "id" SERIAL NOT NULL,
-    "dateOrdered" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" INTEGER NOT NULL,
-    "itemId" INTEGER NOT NULL,
-
-    CONSTRAINT "orderHistory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -86,6 +64,12 @@ CREATE TABLE "_wishlist" (
 );
 
 -- CreateTable
+CREATE TABLE "_orderhistory" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "_shoppingcart" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
@@ -110,19 +94,16 @@ CREATE UNIQUE INDEX "_wishlist_AB_unique" ON "_wishlist"("A", "B");
 CREATE INDEX "_wishlist_B_index" ON "_wishlist"("B");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "_orderhistory_AB_unique" ON "_orderhistory"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_orderhistory_B_index" ON "_orderhistory"("B");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_shoppingcart_AB_unique" ON "_shoppingcart"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_shoppingcart_B_index" ON "_shoppingcart"("B");
-
--- AddForeignKey
-ALTER TABLE "images" ADD CONSTRAINT "images_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "orderHistory" ADD CONSTRAINT "orderHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "orderHistory" ADD CONSTRAINT "orderHistory_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "reviews" ADD CONSTRAINT "reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -141,6 +122,12 @@ ALTER TABLE "_wishlist" ADD CONSTRAINT "_wishlist_A_fkey" FOREIGN KEY ("A") REFE
 
 -- AddForeignKey
 ALTER TABLE "_wishlist" ADD CONSTRAINT "_wishlist_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_orderhistory" ADD CONSTRAINT "_orderhistory_A_fkey" FOREIGN KEY ("A") REFERENCES "items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_orderhistory" ADD CONSTRAINT "_orderhistory_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_shoppingcart" ADD CONSTRAINT "_shoppingcart_A_fkey" FOREIGN KEY ("A") REFERENCES "items"("id") ON DELETE CASCADE ON UPDATE CASCADE;
