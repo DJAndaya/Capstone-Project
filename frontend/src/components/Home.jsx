@@ -44,7 +44,7 @@ const Home = () => {
   const [selectedItem, setSelectedItem] = useState(null); // New state variable
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
   const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
-  
+
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
@@ -137,7 +137,6 @@ const Home = () => {
     };
 
     getItems();
-
   }, [pathname, userId]);
 
   // Update items state when pathname is "/logout"
@@ -162,26 +161,33 @@ const Home = () => {
     console.log(user.socketId);
   };
 
-  // const sendMessage = () => {
-  //   console.log(selectedUserToChatWith.socketId, "to");
-  //   console.log(user.socketId, "sender");
-  //   socket.emit("send_message", {
-  //     fromUser: user.id,
-  //     toUser: selectedUserToChatWith.id,
-  //     toFirstName: selectedUserToChatWith.firstName,
-  //     toLastName: selectedUserToChatWith.lastName,
-  //     toSocketId: selectedUserToChatWith.socketId,
-  //     message,
-  //   });
-  // };
+  const sendMessage = () => {
+    console.log(selectedUserToChatWith.socketId, "to");
+    console.log(user.socketId, "sender");
+    socket.emit("send_message", {
+      fromUser: user.id,
+      toUser: selectedUserToChatWith.id,
+      toFirstName: selectedUserToChatWith.firstName,
+      toLastName: selectedUserToChatWith.lastName,
+      toSocketId: selectedUserToChatWith.socketId,
+      message,
+    });
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
 
   if (!items) {
     return <h1>loading</h1>;
   } else {
     // console.log(outletContext);
     return (
-      <Grid container>
-      {/* <ShoppingCartButton /> */}
+      <Grid container style={{ marginBottom: "500px" }}>
+        <ShoppingCartButton />
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
