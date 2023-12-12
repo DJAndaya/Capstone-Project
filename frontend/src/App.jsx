@@ -26,6 +26,7 @@ import ProductDetail from "./components/ProductDetail";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "./redux/isAuthSlice";
 import socketio from "socket.io-client";
+import Wishlist from "./components/Wishlist";
 
 const socket = socketio("http://localhost:3000");
 
@@ -67,6 +68,10 @@ export default function App() {
         {
           path: "/user/chat",
           element: <Chat />,
+        },
+        {
+          path: "/user/wishlist",
+          element: <Wishlist />,
         },
         {
           path: "/admin",
