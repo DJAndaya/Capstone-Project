@@ -42,7 +42,7 @@ const Logout = () => {
         Log Out
       </Button>
       <Wishlist />
-    </>
+    </div>
   );
 };
 
