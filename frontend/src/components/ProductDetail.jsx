@@ -55,17 +55,20 @@ function ProductDetail({ selectedItem }) {
 
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
+      console.log(allMessages, "received");
     });
   }, [selectedItem.id, userId]);
 
   const startChat = async (toUser) => {
+    console.log(toUser);
+
     // console.log(toUser);
     // console.log(toUser.id);
     // console.log(allMessages);
     if (toUser.socketId === user.socketId) {
       return;
     }
-    setSelectedUserToChatWith(toUser);
+    setSelectedUserToChatWith(toUser, "setting");
     socket.emit("get_messages", {
       fromUser: user.id,
     });
@@ -78,14 +81,22 @@ function ProductDetail({ selectedItem }) {
     }
   };
 
+  const inputRef = useRef(null);
+
   const sendMessage = () => {
-    console.log(selectedUserToChatWith);
-    socket.emit("send_message", {
-      fromUser: user.id,
-      toUser: selectedUserToChatWith.id,
-      toSocketId: selectedUserToChatWith.socketId,
-      message,
-    });
+    if (message.trim() && selectedUserToChatWith) {
+      console.log(selectedUserToChatWith, "send");
+      socket.emit("send_message", {
+        fromUser: user.id,
+        toUser: selectedUserToChatWith.id,
+        toFirstName: selectedUserToChatWith.firstName,
+        toLastName: selectedUserToChatWith.lastName,
+        toSocketId: selectedUserToChatWith.socketId,
+        message,
+      });
+      setMessage("");
+      inputRef.current.focus();
+    }
   };
 
   if (!selectedItem) {
@@ -97,29 +108,20 @@ function ProductDetail({ selectedItem }) {
       <div>
         <h1>{selectedItem.name}</h1>
         <p>
-<<<<<<< HEAD
           {selectedItem.seller && selectedItem.seller[0]
             ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.`
             : ""}
-=======
-          {selectedItem.seller[0].firstName}{" "}
-          {selectedItem.seller[0].lastName[0]}.
->>>>>>> 8e5a94c5bb9e86d3b72f174e4b5990177c049630
           <Button
             variant="contained"
             color="secondary"
-            onClick={() => startChat(selectedItem.seller[0].firstName)}
+            onClick={() => startChat(selectedItem.seller[0])}
           >
             Chat with Seller
           </Button>
         </p>
         <p>Price: ${selectedItem.price}</p>
         <p>Amount in Stock: {selectedItem.amount}</p>
-<<<<<<< HEAD
         {console.log(selectedItem.images)}
-=======
-        {/* {console.log(selectedItem.images)} */}
->>>>>>> 8e5a94c5bb9e86d3b72f174e4b5990177c049630
         <img src={selectedItem.images} alt="item image" />
         <p>Description: {selectedItem.description}</p>
         <p>Category: {selectedItem.category}</p>
@@ -143,45 +145,62 @@ function ProductDetail({ selectedItem }) {
             position: "fixed",
             bottom: 16,
             right: 16,
-            overflowY: "auto",
-            maxHeight: "50vh",
-            width: 300,
-            backgroundColor: "rgba(0, 0, 0, 0.95)",
-            zIndex: 1000,
+            height: "40vh",
+            width: "40%",
+            maxWidth: "100%",
+            display: "flex",
+            flexDirection: "column",
+            outline: "5px solid black",
+            backgroundColor: "black",
           }}
         >
           <h3 style={{ color: "white" }}>
             You are chatting with {selectedUserToChatWith.socketId}
           </h3>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {allMessages.map((msg, index) => {
-              if (
-                msg.toUser === selectedUserToChatWith.id ||
-                msg.fromUser === selectedUserToChatWith.id
-              ) {
-                return (
+          <div
+            ref={messageContainerRef}
+            style={{
+              maxHeight: "calc(50vh - 40px)",
+              overflowY: "auto",
+              flexGrow: 1,
+              padding: "10px",
+            }}
+          >
+            {allMessages.map(
+              (msg, index) =>
+                (msg.fromUser === selectedUserToChatWith.id ||
+                  msg.toUser === selectedUserToChatWith.id) && (
                   <div
                     key={index}
                     style={{
                       textAlign: msg.toUser === user.id ? "left" : "right",
+                      margin: "8px 0",
+                      color: "white",
                     }}
                   >
                     <strong>
-                      {msg.fromUser === user.id ? user.id : msg.fromUser}
+                      {msg.fromUser === selectedUserToChatWith.id
+                        ? selectedUserToChatWith.firstName
+                        : user.firstName}
                       {" - "}
                     </strong>
                     {msg.message}
                   </div>
-                );
-              }
-              return null;
-            })}
+                )
+            )}
           </div>
 
           <div style={{ position: "absolute", bottom: 0, marginTop: "auto" }}>
             <input
               value={message}
               onChange={(ev) => setMessage(ev.target.value)}
+              onKeyDown={handleKeyDown}
+              ref={inputRef}
+              style={{
+                width: "100%",
+                padding: "8px",
+                boxSizing: "border-box",
+              }}
             />
             <button onClick={sendMessage}>Send message</button>
           </div>

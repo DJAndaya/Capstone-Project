@@ -65,6 +65,8 @@ export default function Chat() {
     }
   }, [allMessages, chattingWith]);
 
+  const inputRef = useRef(null)
+
   const sendMessage = () => {
     if (message.trim() && chattingWith) {
       socket.emit("send_message", {
@@ -76,6 +78,7 @@ export default function Chat() {
         message: message,
       });
       setMessage("");
+      inputRef.current.focus()
     }
   };
 
@@ -159,6 +162,7 @@ export default function Chat() {
             </div>
             <div style={{ padding: "15px", borderTop: "2px solid #333" }}>
               <input
+                ref={inputRef}
                 value={message}
                 onChange={(ev) => setMessage(ev.target.value)}
                 onKeyDown={handleKeyDown}
