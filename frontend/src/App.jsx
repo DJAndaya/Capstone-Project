@@ -22,7 +22,8 @@ import Confirmation from "./components/Confirmation";
 import CheckoutSuccess from "./components/CheckoutSuccess";
 import CheckoutCancel from "./components/CheckoutCancel";
 import ProductDetail from "./components/ProductDetail";
-
+import Wishlist
+ from "./components/Wishlist";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "./redux/isAuthSlice";
 import socketio from "socket.io-client";
@@ -67,6 +68,10 @@ export default function App() {
         {
           path: "/user/chat",
           element: <Chat />,
+        },
+        {
+          path: "/user/wishlist",
+          element: <Wishlist />,
         },
         {
           path: "/admin",

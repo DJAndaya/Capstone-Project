@@ -1,14 +1,21 @@
 import { Outlet, Link } from "react-router-dom";
 import { useState } from "react";
 
-import { Box, AppBar, Toolbar, InputBase, Menu, MenuItem, IconButton } from "@mui/material";
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  InputBase,
+  Menu,
+  MenuItem,
+  IconButton,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { AccountCircle } from '@mui/icons-material'
+import { AccountCircle } from "@mui/icons-material";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 import { useDispatch, useSelector } from "react-redux";
-
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -144,6 +151,14 @@ export default function Root() {
                   <MenuItem
                     onClick={() => {
                       setAnchorEl(null);
+                      navigate("/user/wishlist");
+                    }}
+                  >
+                    Wishlist
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
                       navigate("/user/orders");
                     }}
                   >
@@ -211,7 +226,7 @@ export default function Root() {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                                    <MenuItem
+                  <MenuItem
                     onClick={() => {
                       setAnchorEl(null);
                       navigate("/login");
