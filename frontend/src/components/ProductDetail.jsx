@@ -89,7 +89,7 @@ function ProductDetail({ selectedItem }) {
     <>
       <div>
         <h1>{selectedItem.name}</h1>
-        <p>
+        <div>
           {selectedItem.seller[0].firstName}{" "}
           {selectedItem.seller[0].lastName[0]}.
           <Button
@@ -99,20 +99,20 @@ function ProductDetail({ selectedItem }) {
           >
             Chat with Seller
           </Button>
-        </p>
-        <p>Price: ${selectedItem.price}</p>
-        <p>Amount in Stock: {selectedItem.amount}</p>
+        </div>
+        <div>Price: ${selectedItem.price}</div>
+        <div>Amount in Stock: {selectedItem.amount}</div>
         {console.log(selectedItem.images)}
         <img src={selectedItem.images} alt="item image" />
-        <p>Description: {selectedItem.description}</p>
-        <p>Category: {selectedItem.category}</p>
-        <p>Reviews:</p>
+        <div>Description: {selectedItem.description}</div>
+        <div>Category: {selectedItem.category}</div>
+        <div>Reviews:</div>
         {reviews.map((review, index) => (
           <ul key={index}>
             <li>
               <div>
-                <p>Rating: {review.rating}</p>
-                <p>Comment: {review.comment}</p>
+                <div>Rating: {review.rating}</div>
+                <div>Comment: {review.comment}</div>
               </div>
             </li>
           </ul>
@@ -122,144 +122,98 @@ function ProductDetail({ selectedItem }) {
       {selectedUserToChatWith && (
         <div
           style={{
-            border: "1px solid lightseagreen",
             position: "fixed",
             bottom: 16,
             right: 16,
-            overflowY: "auto", // Enable vertical scrolling
-            maxHeight: "50vh", // Set maximum height to 80% of the viewport height
-            width: 300,
-            backgroundColor: "rgba(0, 0, 0, 0.95)",
-            zIndex: 1000,
+            maxHeight: "50vh",
+            width: "40%",
+            maxWidth: "100%",
+            display: "flex",
+            flexDirection: "column",
+            outline: "5px solid black",
+            backgroundColor: "grey",
           }}
         >
-          <div
+          <h3
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              margin: "0",
               padding: "8px",
               backgroundColor: "black",
               color: "white",
             }}
           >
-            <h3 style={{ margin: "0" }}>
-              Chatting with {selectedUserToChatWith.firstName}{" "}
-              {selectedUserToChatWith.lastName}
-            </h3>
+            Chatting with {selectedUserToChatWith.firstName}{" "}
+            {selectedUserToChatWith.lastName}
             <button
               onClick={() => setSelectedUserToChatWith(null)}
               style={{
-                backgroundColor: "black",
+                position: "absolute",
+                right: "10px",
                 color: "white",
-                border: "none",
-                cursor: "pointer",
+                backgroundColor: "black",
               }}
             >
               X
-            </button>
+            </button>{" "}
+          </h3>
+          <div
+            ref={messageContainerRef}
+            style={{
+              maxHeight: "calc(50vh - 40px)",
+              overflowY: "auto",
+              flexGrow: 1,
+              padding: "10px",
+            }}
+          >
+            {allMessages.map((msg, index) => (
+              <div
+                key={index}
+                style={{
+                  textAlign: msg.toUser === user.id ? "left" : "right",
+                  margin: "8px 0",
+                }}
+              >
+                <strong>
+                  {msg.fromUser === user.id
+                    ? user.firstName
+                    : selectedUserToChatWith.firstName}
+                  {" - "}
+                </strong>
+                {msg.message}
+              </div>
+            ))}
           </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {allMessages.map((msg, index) => {
-              if (
-                msg.toUser === selectedUserToChatWith.id ||
-                msg.fromUser === selectedUserToChatWith.id
-              ) {
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      textAlign: msg.toUser === user.id ? "left" : "right",
-                    }}
-                  >
-                    <strong>
-                      {msg.fromUser === user.id ? user.id : msg.fromUser}
-                      {" - "}
-                    </strong>
-                    {msg.message}
-                  </div>
-                );
-              }
-              return null; // Return null if the condition is not met
-            })}
-          </div>
-    <div>
-      <h1>{selectedItem.name}</h1>
-      <p>
-        {selectedItem.seller[0].firstName} {selectedItem.seller[0].lastName[0]}.
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => startChat(selectedItem.seller[0].firstName)}
-        >
-          Chat with Seller
-        </Button>
-      </p>
-      <p>Price: ${selectedItem.price}</p>
-      <p>Amount in Stock: {selectedItem.amount}</p>
-      {/* {console.log(selectedItem.images)} */}
-      <img src={selectedItem.images} alt="item image"/>
-      <p>Description: {selectedItem.description}</p>
-      <p>Category: {selectedItem.category}</p>
-      <p>Reviews:</p>
-      {reviews.map((review, index) => (
-        <ul key={index}>
-          <li>
-            <div>
-              <p>Rating: {review.rating}</p>
-              <p>Comment: {review.comment}</p>
-            </div>
-          </li>
-        </ul>
-      ))}
-    </div>
-    
-    {selectedUserToChatWith && (
-      <div
-        style={{
-          border: "1px solid lightseagreen",
-          position: "fixed",
-          bottom: 16,
-          right: 16,
-          overflowY: "auto", // Enable vertical scrolling
-          maxHeight: "50vh", // Set maximum height to 80% of the viewport height
-          width: 300,
-          backgroundColor: "rgba(0, 0, 0, 0.95)",
-          zIndex: 1000,
-        }}
-      >
-        <h3 style={{color: "white"}}>You are chatting with {selectedUserToChatWith.socketId}</h3>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          {allMessages.map((msg, index) => {
-            if (
-              msg.toUser === selectedUserToChatWith.id ||
-              msg.fromUser === selectedUserToChatWith.id
-            ) {
-              return (
-                <div
-                  key={index}
-                  style={{
-                    textAlign: msg.toUser === user.id ? "left" : "right",
-                  }}
-                >
-                  <strong>
-                    {msg.fromUser === user.id ? user.id : msg.fromUser}
-                    {" - "}
-                  </strong>
-                  {msg.message}
-                </div>
-              );
-            }
-            return null; // Return null if the condition is not met
-          })}
-        </div>
-
-          <div style={{ position: "absolute", bottom: 0, marginTop: "auto" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              padding: "8px",
+              alignItems: "flex-end",
+            }}
+          >
             <input
               value={message}
               onChange={(ev) => setMessage(ev.target.value)}
+              onKeyDown={handleKeyDown}
+              style={{
+                width: "100%",
+                padding: "8px",
+                boxSizing: "border-box",
+              }}
             />
-            <button onClick={sendMessage}>Send message</button>
+            <button
+              onClick={sendMessage}
+              style={{
+                width: "100%",
+                padding: "8px",
+                backgroundColor: "black",
+                color: "white",
+                cursor: "pointer",
+                marginTop: "8px",
+              }}
+            >
+              Send message
+            </button>
           </div>
         </div>
       )}

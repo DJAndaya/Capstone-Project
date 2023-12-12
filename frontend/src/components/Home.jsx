@@ -44,7 +44,7 @@ const Home = () => {
   const [selectedItem, setSelectedItem] = useState(null); // New state variable
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
   const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
-
+  
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
@@ -137,6 +137,7 @@ const Home = () => {
     };
 
     getItems();
+
   }, [pathname, userId]);
 
   // Update items state when pathname is "/logout"
@@ -174,6 +175,7 @@ const Home = () => {
   //   });
   // };
 
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -186,8 +188,8 @@ const Home = () => {
   } else {
     // console.log(outletContext);
     return (
-      <Grid container style={{ marginBottom: "500px" }}>
-        <ShoppingCartButton />
+      <Grid container>
+      {/* <ShoppingCartButton /> */}
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
