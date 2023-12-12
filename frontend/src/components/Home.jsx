@@ -184,7 +184,7 @@ const Home = () => {
   if (!items) {
     return <h1>loading</h1>;
   } else {
-    console.log(outletContext);
+    // console.log(outletContext);
     return (
       <Grid container style={{ marginBottom: "500px" }}>
         <ShoppingCartButton />
@@ -192,8 +192,8 @@ const Home = () => {
           <Grid
             container
             spacing={2}
-            alignItems="center"
-            justifyContent="center"
+            // alignItems="center"
+            // justifyContent="center"
           >
             <Grid item xs={12}>
               <Typography variant="h4" sx={{ textAlign: "center" }}>
@@ -263,7 +263,7 @@ const Home = () => {
                             {item.seller[0].lastName[0]}.
                           </span>
                           <span>
-                            Avg. Rating: {item.averageRating.toFixed(2)}/5
+                            {item.averageRating} ? (Avg. Rating: {item.averageRating?.toFixed(2)}/5 ) : (No reviews)
                           </span>
                         </Typography>
                         <CardMedia
