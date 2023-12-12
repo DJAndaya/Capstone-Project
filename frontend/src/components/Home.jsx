@@ -257,7 +257,7 @@ const Home = () => {
                             {item.seller[0].lastName[0]}.
                           </span>
                           <span>
-                            Avg. Rating: {item.averageRating.toFixed(2)}/5
+                            {item.averageRating} ? (Avg. Rating: {item.averageRating?.toFixed(2)}/5 ) : (No reviews)
                           </span>
                         </Typography>
                         <CardMedia
