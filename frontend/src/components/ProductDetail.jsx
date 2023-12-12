@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
@@ -17,6 +17,9 @@ function ProductDetail({ selectedItem }) {
   const [selectedUserToChatWith, setSelectedUserToChatWith] = useState(null);
   const [message, setMessage] = useState("");
   const [allMessages, setAllMessages] = useState([]);
+ 
+  const messageContainerRef = useRef(null);
+
   
   const user = useSelector(selectIsAuth);
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -32,6 +35,13 @@ function ProductDetail({ selectedItem }) {
 
   //   fetchProduct();
   // }, [id]);
+
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [allMessages, selectedUserToChatWith]);
 
   useEffect(() => {
     const fetchReviews = async () => {

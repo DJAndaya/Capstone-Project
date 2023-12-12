@@ -147,17 +147,6 @@ const Home = () => {
   //   }
   // }, [pathname, wishlist]);
 
-  const [selectedUserToChatWith, setSelectedUserToChatWith] = useState(null);
-  const [message, setMessage] = useState("");
-  const messageContainerRef = useRef(null);
-
-  useEffect(() => {
-    if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop =
-        messageContainerRef.current.scrollHeight;
-    }
-  }, [allMessages, selectedUserToChatWith]);
-
   const startChat = async (toUser) => {
     // console.log(toUser);
     // console.log(toUser.id);
