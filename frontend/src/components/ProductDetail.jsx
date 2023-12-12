@@ -71,6 +71,13 @@ function ProductDetail({ selectedItem }) {
     });
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
   const sendMessage = () => {
     console.log(selectedUserToChatWith);
     socket.emit("send_message", {

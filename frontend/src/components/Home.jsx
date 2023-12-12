@@ -175,14 +175,6 @@ const Home = () => {
   //   });
   // };
 
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendMessage();
-    }
-  };
-
   if (!items) {
     return <h1>loading</h1>;
   } else {
