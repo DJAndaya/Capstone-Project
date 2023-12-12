@@ -112,7 +112,6 @@ const Login = () => {
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        marginTop: "-80px",
       }}
     >
       <h1>Login</h1>
