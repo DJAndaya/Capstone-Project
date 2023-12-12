@@ -260,7 +260,7 @@ export default function AllProducts() {
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
 
-      <button onClick={toggleDrawer}>Add new product</button>
+      <button onClick={toggleDrawer}>Add New Product</button>
 
       {isDrawerOpen && (
         <form className="product-form" onSubmit={handleFormSubmit}>

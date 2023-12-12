@@ -44,7 +44,7 @@ const Home = () => {
   const [selectedItem, setSelectedItem] = useState(null); // New state variable
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
   const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
-  
+
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
@@ -91,6 +91,7 @@ const Home = () => {
         const alphabeticalOrderData = response.data.sort((a, b) =>
           a.name > b.name ? 1 : -1
         );
+        console.log(alphabeticalOrderData);
         setItems(alphabeticalOrderData);
 
         let sortedItems;
@@ -137,7 +138,6 @@ const Home = () => {
     };
 
     getItems();
-
   }, [pathname, userId]);
 
   // Update items state when pathname is "/logout"
@@ -175,7 +175,6 @@ const Home = () => {
     });
   };
 
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -189,7 +188,7 @@ const Home = () => {
     console.log(outletContext);
     return (
       <Grid container>
-      <ShoppingCartButton />
+        <ShoppingCartButton />
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
@@ -261,15 +260,25 @@ const Home = () => {
                           }}
                         >
                           <span>
-                            {item.seller && item.seller[0] ? `${item.seller[0].firstName} ${item.seller[0].lastName[0]}.` : ''}
+                            {item.seller && item.seller[0]
+                              ? `${item.seller[0].firstName} ${item.seller[0].lastName[0]}.`
+                              : ""}
                           </span>
                           <span>
-                            Avg. Rating: {item.averageRating ? item.averageRating.toFixed(2) : 'N/A'}/5
+                            Avg. Rating:{" "}
+                            {item.averageRating
+                              ? item.averageRating.toFixed(2)
+                              : "N/A"}
+                            /5
                           </span>
                         </Typography>
                         <CardMedia
                           component="img"
-                          image={item.images[0].imageUrl}
+                          image={
+                            item.images && item.images[0]
+                              ? item.images[0].imageUrl
+                              : "defaultImage.jpg"
+                          }
                           alt="item image"
                           height="200px"
                         />
