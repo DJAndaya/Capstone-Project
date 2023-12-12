@@ -96,7 +96,7 @@ function ProductDetail({ selectedItem }) {
     <>
       <div>
         <h1>{selectedItem.name}</h1>
-        <div>
+        <p>
           {selectedItem.seller[0].firstName}{" "}
           {selectedItem.seller[0].lastName[0]}.
           <Button
@@ -106,20 +106,20 @@ function ProductDetail({ selectedItem }) {
           >
             Chat with Seller
           </Button>
-        </div>
-        <div>Price: ${selectedItem.price}</div>
-        <div>Amount in Stock: {selectedItem.amount}</div>
+        </p>
+        <p>Price: ${selectedItem.price}</p>
+        <p>Amount in Stock: {selectedItem.amount}</p>
         {console.log(selectedItem.images)}
         <img src={selectedItem.images} alt="item image" />
-        <div>Description: {selectedItem.description}</div>
-        <div>Category: {selectedItem.category}</div>
-        <div>Reviews:</div>
+        <p>Description: {selectedItem.description}</p>
+        <p>Category: {selectedItem.category}</p>
+        <p>Reviews:</p>
         {reviews.map((review, index) => (
           <ul key={index}>
             <li>
               <div>
-                <div>Rating: {review.rating}</div>
-                <div>Comment: {review.comment}</div>
+                <p>Rating: {review.rating}</p>
+                <p>Comment: {review.comment}</p>
               </div>
             </li>
           </ul>
