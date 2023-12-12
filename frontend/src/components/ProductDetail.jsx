@@ -59,13 +59,15 @@ function ProductDetail({ selectedItem }) {
   }, [selectedItem.id, userId]);
 
   const startChat = async (toUser) => {
+    console.log(toUser)
+
     // console.log(toUser);
     // console.log(toUser.id);
     // console.log(allMessages);
     if (toUser.socketId === user.socketId) {
       return;
     }
-    setSelectedUserToChatWith(toUser);
+    setSelectedUserToChatWith(toUser, "setting");
     socket.emit("get_messages", {
       fromUser: user.id,
     });
@@ -79,10 +81,12 @@ function ProductDetail({ selectedItem }) {
   };
 
   const sendMessage = () => {
-    console.log(selectedUserToChatWith);
+    console.log(selectedUserToChatWith, "send");
     socket.emit("send_message", {
       fromUser: user.id,
       toUser: selectedUserToChatWith.id,
+      toFirstName: selectedUserToChatWith.firstName,
+      toLastName: selectedUserToChatWith.lastName,
       toSocketId: selectedUserToChatWith.socketId,
       message,
     });
@@ -102,7 +106,7 @@ function ProductDetail({ selectedItem }) {
           <Button
             variant="contained"
             color="secondary"
-            onClick={() => startChat(selectedItem.seller[0].firstName)}
+            onClick={() => startChat(selectedItem.seller[0])}
           >
             Chat with Seller
           </Button>
@@ -132,13 +136,13 @@ function ProductDetail({ selectedItem }) {
             position: "fixed",
             bottom: 16,
             right: 16,
-            maxHeight: "50vh",
+            height: "40vh",
             width: "40%",
             maxWidth: "100%",
             display: "flex",
             flexDirection: "column",
             outline: "5px solid black",
-            backgroundColor: "grey",
+            backgroundColor: "black",
           }}
         >
           <h3
@@ -178,6 +182,7 @@ function ProductDetail({ selectedItem }) {
                 style={{
                   textAlign: msg.toUser === user.id ? "left" : "right",
                   margin: "8px 0",
+                  color: "white"
                 }}
               >
                 <strong>
