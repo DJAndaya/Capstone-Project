@@ -90,8 +90,7 @@ export default function Chat() {
     <div style={{ display: "flex", height: "90vh" }}>
       <div
         style={{
-          flex: "0 0 12%",
-          minWidth: "200px", 
+          flex: "0 0 13%",
           padding: "15px",
           outline: "2px solid #333",
           marginRight: "20px",
