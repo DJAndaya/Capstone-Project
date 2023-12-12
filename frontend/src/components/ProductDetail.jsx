@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
+import ImageCarousel from "./ImageCarousel";
+
 import { Button } from "@mui/material";
 
 import socketio from "socket.io-client";
@@ -96,24 +98,25 @@ function ProductDetail({ selectedItem }) {
     <>
       <div>
         <h1>{selectedItem.name}</h1>
-        <p>
+        <div>
           {selectedItem.seller[0].firstName}{" "}
           {selectedItem.seller[0].lastName[0]}.
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => startChat(selectedItem.seller[0].firstName)}
-          >
-            Chat with Seller
-          </Button>
-        </p>
-        <p>Price: ${selectedItem.price}</p>
-        <p>Amount in Stock: {selectedItem.amount}</p>
+        </div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => startChat(selectedItem.seller[0].firstName)}
+        >
+          Chat with Seller
+        </Button>
+        <div>Price: ${selectedItem.price}</div>
+        <div>Amount in Stock: {selectedItem.amount}</div>
         {/* {console.log(selectedItem.images)} */}
-        <img src={selectedItem.images} alt="item image" />
-        <p>Description: {selectedItem.description}</p>
-        <p>Category: {selectedItem.category}</p>
-        <p>Reviews:</p>
+        {/* <img src={selectedItem.images[0] ? selectedItem.images[0].imageUrl : ""} alt="item image" /> */}
+        <ImageCarousel item={selectedItem} />
+        <div>Description: {selectedItem.description}</div>
+        <div>Category: {selectedItem.category}</div>
+        <div>Reviews:</div>
         {reviews.map((review, index) => (
           <ul key={index}>
             <li>

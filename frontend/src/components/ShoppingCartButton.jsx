@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useOutletContext } from 'react-router-dom';
-import { Fab, Modal } from '@mui/material';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Cart from './Cart';
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { useOutletContext } from "react-router-dom";
+import { Fab, Modal } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Cart from "./Cart";
 
 const ShoppingCartButton = () => {
   const user = useSelector((state) => state.isAuth?.value);
@@ -21,12 +21,19 @@ const ShoppingCartButton = () => {
 
   return (
     <>
-      <Fab color="primary" aria-label="add" style={{ position: 'fixed', bottom: '20px', right: '20px' }} onClick={handleOpen}>
+      <Fab
+        color="primary"
+        aria-label="add"
+        style={{ position: "fixed", bottom: "20px", right: "20px" }}
+        onClick={handleOpen}
+      >
         <ShoppingCartIcon />
         {shoppingCart.length}
       </Fab>
       <Modal open={open} onClose={handleClose}>
-        <Cart />
+        <>
+          <Cart />
+        </>
       </Modal>
     </>
   );

@@ -25,15 +25,6 @@ import AddToCartButton from "./AddToCartButton";
 
 const CartItems = ({ item }) => {
   const userId = useSelector((state) => state.isAuth?.value?.id);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
 
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;

@@ -58,7 +58,7 @@ const Cart = () => {
       };
       getUserShoppingCartData();
     }
-  });
+  }, []);
 
   const totalAmountPrice = shoppingCart.reduce((total, item) => {
     const totalPriceOfItem = item.purchaseAmount * item.item.price;
@@ -147,7 +147,7 @@ const Cart = () => {
         <Paper
           sx={{
             color: "black",
-            maxWidth: "100%",
+            maxWidth: "70%",
             overflowY: "auto",
             maxHeight: "85vh",
             backgroundColor: "white",
