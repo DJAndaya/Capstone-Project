@@ -270,7 +270,7 @@ const Home = () => {
                         </Typography>
                         <CardMedia
                           component="img"
-                          image={item.images ? item.images[0].imageUrl : ""}
+                          image={item.images[0] ? item.images[0].imageUrl : ""}
                           alt="item image"
                           height="200px"
                         />
