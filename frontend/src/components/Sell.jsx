@@ -125,6 +125,7 @@ export default function Sell() {
       <div
         style={{
           width: "12%",
+          minWidth: "220px",
           display: "flex",
           flexDirection: "column",
           border: "5px solid black",
