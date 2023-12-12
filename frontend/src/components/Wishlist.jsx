@@ -122,7 +122,7 @@ const Wishlist = () => {
       };
       getUserWishlistData();
     }
-  }, [])
+  }, )
 
   if (wishlist.length === 0) {
     return <h1>wishlist is empty</h1>;
