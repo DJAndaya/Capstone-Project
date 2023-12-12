@@ -189,8 +189,7 @@ const Home = () => {
     console.log(outletContext);
     return (
       <Grid container>
-      
-       <ShoppingCartButton />
+      <ShoppingCartButton />
         <Box sx={{ flexGrow: 1 }}>
           <Grid
             container
