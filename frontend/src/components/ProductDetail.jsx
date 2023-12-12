@@ -108,8 +108,9 @@ function ProductDetail({ selectedItem }) {
       <div>
         <h1>{selectedItem.name}</h1>
         <p>
-          {selectedItem.seller[0].firstName}{" "}
-          {selectedItem.seller[0].lastName[0]}.
+          {selectedItem.seller && selectedItem.seller[0]
+            ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.`
+            : ""}
           <Button
             variant="contained"
             color="secondary"
@@ -120,7 +121,7 @@ function ProductDetail({ selectedItem }) {
         </p>
         <p>Price: ${selectedItem.price}</p>
         <p>Amount in Stock: {selectedItem.amount}</p>
-        {/* {console.log(selectedItem.images)} */}
+        {console.log(selectedItem.images)}
         <img src={selectedItem.images} alt="item image" />
         <p>Description: {selectedItem.description}</p>
         <p>Category: {selectedItem.category}</p>
@@ -140,6 +141,7 @@ function ProductDetail({ selectedItem }) {
       {selectedUserToChatWith && (
         <div
           style={{
+            border: "1px solid lightseagreen",
             position: "fixed",
             bottom: 16,
             right: 16,
@@ -152,27 +154,8 @@ function ProductDetail({ selectedItem }) {
             backgroundColor: "black",
           }}
         >
-          <h3
-            style={{
-              margin: "0",
-              padding: "8px",
-              backgroundColor: "black",
-              color: "white",
-            }}
-          >
-            Chatting with {selectedUserToChatWith.firstName}{" "}
-            {selectedUserToChatWith.lastName}
-            <button
-              onClick={() => setSelectedUserToChatWith(null)}
-              style={{
-                position: "absolute",
-                right: "10px",
-                color: "white",
-                backgroundColor: "black",
-              }}
-            >
-              X
-            </button>{" "}
+          <h3 style={{ color: "white" }}>
+            You are chatting with {selectedUserToChatWith.socketId}
           </h3>
           <div
             ref={messageContainerRef}
@@ -206,14 +189,8 @@ function ProductDetail({ selectedItem }) {
                 )
             )}
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "8px",
-              alignItems: "flex-end",
-            }}
-          >
+
+          <div style={{ position: "absolute", bottom: 0, marginTop: "auto" }}>
             <input
               value={message}
               onChange={(ev) => setMessage(ev.target.value)}
@@ -225,19 +202,7 @@ function ProductDetail({ selectedItem }) {
                 boxSizing: "border-box",
               }}
             />
-            <button
-              onClick={sendMessage}
-              style={{
-                width: "100%",
-                padding: "8px",
-                backgroundColor: "black",
-                color: "white",
-                cursor: "pointer",
-                marginTop: "8px",
-              }}
-            >
-              Send message
-            </button>
+            <button onClick={sendMessage}>Send message</button>
           </div>
         </div>
       )}

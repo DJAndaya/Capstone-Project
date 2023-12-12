@@ -53,7 +53,7 @@ app.get("/allusers", async (req, res) => {
 });
 
 app.post("/addproduct", async (req, res) => {
-  const { name, price, amount, description, category } = req.body;
+  const { name, price, amount, description, category, sellerId } = req.body;
 
   try {
     const newItem = await prisma.items.create({
@@ -63,6 +63,9 @@ app.post("/addproduct", async (req, res) => {
         amount,
         description,
         category,
+        seller: {
+          connect: { id: sellerId}
+        }
       },
     });
 
