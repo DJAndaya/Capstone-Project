@@ -55,11 +55,12 @@ function ProductDetail({ selectedItem }) {
 
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
+      console.log(allMessages, "received");
     });
   }, [selectedItem.id, userId]);
 
   const startChat = async (toUser) => {
-    console.log(toUser)
+    console.log(toUser);
 
     // console.log(toUser);
     // console.log(toUser.id);
@@ -80,16 +81,22 @@ function ProductDetail({ selectedItem }) {
     }
   };
 
+  const inputRef = useRef(null);
+
   const sendMessage = () => {
-    console.log(selectedUserToChatWith, "send");
-    socket.emit("send_message", {
-      fromUser: user.id,
-      toUser: selectedUserToChatWith.id,
-      toFirstName: selectedUserToChatWith.firstName,
-      toLastName: selectedUserToChatWith.lastName,
-      toSocketId: selectedUserToChatWith.socketId,
-      message,
-    });
+    if (message.trim() && selectedUserToChatWith) {
+      console.log(selectedUserToChatWith, "send");
+      socket.emit("send_message", {
+        fromUser: user.id,
+        toUser: selectedUserToChatWith.id,
+        toFirstName: selectedUserToChatWith.firstName,
+        toLastName: selectedUserToChatWith.lastName,
+        toSocketId: selectedUserToChatWith.socketId,
+        message,
+      });
+      setMessage("");
+      inputRef.current.focus();
+    }
   };
 
   if (!selectedItem) {
@@ -176,24 +183,28 @@ function ProductDetail({ selectedItem }) {
               padding: "10px",
             }}
           >
-            {allMessages.map((msg, index) => (
-              <div
-                key={index}
-                style={{
-                  textAlign: msg.toUser === user.id ? "left" : "right",
-                  margin: "8px 0",
-                  color: "white"
-                }}
-              >
-                <strong>
-                  {msg.fromUser === user.id
-                    ? user.firstName
-                    : selectedUserToChatWith.firstName}
-                  {" - "}
-                </strong>
-                {msg.message}
-              </div>
-            ))}
+            {allMessages.map(
+              (msg, index) =>
+                (msg.fromUser === selectedUserToChatWith.id ||
+                  msg.toUser === selectedUserToChatWith.id) && (
+                  <div
+                    key={index}
+                    style={{
+                      textAlign: msg.toUser === user.id ? "left" : "right",
+                      margin: "8px 0",
+                      color: "white",
+                    }}
+                  >
+                    <strong>
+                      {msg.fromUser === selectedUserToChatWith.id
+                        ? selectedUserToChatWith.firstName
+                        : user.firstName}
+                      {" - "}
+                    </strong>
+                    {msg.message}
+                  </div>
+                )
+            )}
           </div>
           <div
             style={{
@@ -207,6 +218,7 @@ function ProductDetail({ selectedItem }) {
               value={message}
               onChange={(ev) => setMessage(ev.target.value)}
               onKeyDown={handleKeyDown}
+              ref={inputRef}
               style={{
                 width: "100%",
                 padding: "8px",

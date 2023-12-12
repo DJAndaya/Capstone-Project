@@ -71,6 +71,7 @@ io.on("connection", (socket) => {
         });
         console.log(toSocketId, "receiver");
         console.log(socket.id, "sender");
+        console.log(allMessages)
         io.to(toSocketId).emit("receive_message", allMessages);
 
         io.to(socket.id).emit("receive_message", allMessages);
