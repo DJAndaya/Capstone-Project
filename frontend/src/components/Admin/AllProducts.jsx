@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectIsAuth } from "../../redux/isAuthSlice";
 import { Link } from "react-router-dom";
 import "../cssFiles/Admin.css";
 
@@ -14,6 +16,7 @@ export default function AllProducts() {
   const [dropdownDisplay, setDropdownDisplay] = useState("Items per page");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
+  const user = useSelector(selectIsAuth);
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -47,16 +50,16 @@ export default function AllProducts() {
               a.amount > b.amount ? 1 : -1
             );
             break;
-            case "categoryDesc":
-              sortedProducts = data.sort((a, b) =>
-                a.category > b.category ? 1 : -1
-              );
-              break;
-            case "categoryAsc":
-              sortedProducts = data.sort((a, b) =>
-                a.category < b.category ? 1 : -1
-              );
-              break;
+          case "categoryDesc":
+            sortedProducts = data.sort((a, b) =>
+              a.category > b.category ? 1 : -1
+            );
+            break;
+          case "categoryAsc":
+            sortedProducts = data.sort((a, b) =>
+              a.category < b.category ? 1 : -1
+            );
+            break;
           default:
             sortedProducts = data;
             break;
@@ -126,6 +129,7 @@ export default function AllProducts() {
   const handleAddProduct = async () => {
     try {
       const amountAsInt = parseInt(newProduct.amount, 10);
+      const sellerId = user?.id;
 
       const response = await fetch("http://localhost:3000/admin/addproduct", {
         method: "POST",
@@ -135,6 +139,7 @@ export default function AllProducts() {
         body: JSON.stringify({
           ...newProduct,
           amount: amountAsInt,
+          sellerId,
         }),
       });
 
@@ -142,13 +147,10 @@ export default function AllProducts() {
         throw new Error("Failed to add product");
       }
 
-      // Assuming the server responds with the added product
       const addedProduct = await response.json();
 
-      // Update the local state to include the new product
       setProducts((prevProducts) => [...prevProducts, addedProduct]);
 
-      // Use the functional form of setState to ensure the latest state
       setNewProduct((prevNewProduct) => ({
         ...prevNewProduct,
         name: "",
@@ -158,9 +160,8 @@ export default function AllProducts() {
         category: "",
       }));
 
-      // Use the functional form of setState to ensure the latest state
       setProducts((prevProducts) => {
-        calculateTotalPages(prevProducts.length + 1); // +1 for the newly added product
+        calculateTotalPages(prevProducts.length + 1);
         return prevProducts;
       });
     } catch (error) {
@@ -191,7 +192,6 @@ export default function AllProducts() {
       if (!response.ok) {
         throw new Error("Failed to delete product");
       }
-      // Filter out the deleted product from the local state
       setProducts((prevProducts) =>
         prevProducts.filter((product) => product.id !== productId)
       );

@@ -185,7 +185,7 @@ const Home = () => {
   if (!items) {
     return <h1>loading</h1>;
   } else {
-    console.log(outletContext);
+    // console.log(outletContext);
     return (
       <Grid container>
         <ShoppingCartButton />
@@ -193,8 +193,8 @@ const Home = () => {
           <Grid
             container
             spacing={2}
-            alignItems="center"
-            justifyContent="center"
+            // alignItems="center"
+            // justifyContent="center"
           >
             <Grid item xs={12}>
               <Typography variant="h4" sx={{ textAlign: "center" }}>

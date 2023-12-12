@@ -84,7 +84,7 @@ const Login = () => {
   useEffect(() => {
     if (userId) {
       // console.log("before navigate in useEffect");
-      console.log(outletContext)
+      // console.log(outletContext)
       navigate("/");
       // console.log("after navigate in useEffect");
     }

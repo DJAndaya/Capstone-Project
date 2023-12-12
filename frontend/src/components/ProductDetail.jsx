@@ -71,6 +71,13 @@ function ProductDetail({ selectedItem }) {
     });
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
   const sendMessage = () => {
     console.log(selectedUserToChatWith);
     socket.emit("send_message", {
@@ -127,8 +134,8 @@ function ProductDetail({ selectedItem }) {
             position: "fixed",
             bottom: 16,
             right: 16,
-            overflowY: "auto", // Enable vertical scrolling
-            maxHeight: "50vh", // Set maximum height to 80% of the viewport height
+            overflowY: "auto",
+            maxHeight: "50vh",
             width: 300,
             backgroundColor: "rgba(0, 0, 0, 0.95)",
             zIndex: 1000,
@@ -158,7 +165,7 @@ function ProductDetail({ selectedItem }) {
                   </div>
                 );
               }
-              return null; // Return null if the condition is not met
+              return null;
             })}
           </div>
 

@@ -122,8 +122,8 @@ export default function App() {
       socket.on("update_socket", (updatedUserData) => {
         // console.log("updatedUserData:", updatedUserData) // not showing up
         dispatch(setIsAuth(updatedUserData));
-        console.log(updatedUserData);
-        console.log(user, "App")
+        // console.log(updatedUserData);
+        // console.log(user, "App")
         // console.log("user info after dispatch:", user) // not showing up
       });
       // console.log("user has joined with socket")
