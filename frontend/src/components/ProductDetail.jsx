@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
 import { Button } from "@mui/material";
@@ -10,6 +10,7 @@ import socketio from "socket.io-client";
 const socket = socketio("http://localhost:3000");
 
 function ProductDetail({ selectedItem }) {
+  const dispatch = useDispatch();
   const { productId: routeProductId } = useParams();
   // const id = propProductId || routeProductId;
   // const [product, setProduct] = useState(null);
@@ -36,6 +37,22 @@ function ProductDetail({ selectedItem }) {
   // }, [id]);
 
   useEffect(() => {
+    if (user) {
+      socket.emit("user_joined", user);
+      socket.on("update_socket", (updatedUserData) => {
+        console.log("productupdateuserdetails:", updatedUserData); // not showing up
+        dispatch(setIsAuth(updatedUserData));
+
+        // console.log(updatedUserData);
+        // console.log(user, "App")
+        // console.log("user info after dispatch:", user) // not showing up
+        socket.emit("myId", {});
+      });
+    }
+
+    socket.emit("myId", {});
+    console.log(user, "mounting");
+    socket.emit("myId", {});
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop =
         messageContainerRef.current.scrollHeight;
@@ -84,8 +101,11 @@ function ProductDetail({ selectedItem }) {
   const inputRef = useRef(null);
 
   const sendMessage = () => {
+    socket.emit("myId", {});
     if (message.trim() && selectedUserToChatWith) {
+      socket.emit("myId", {});
       console.log(selectedUserToChatWith, "send");
+      console.log(user, "sendUserInfo");
       socket.emit("send_message", {
         fromUser: user.id,
         toUser: selectedUserToChatWith.id,
@@ -96,6 +116,7 @@ function ProductDetail({ selectedItem }) {
       });
       setMessage("");
       inputRef.current.focus();
+      socket.emit("myId", {});
     }
   };
 
@@ -196,7 +217,8 @@ function ProductDetail({ selectedItem }) {
                     }}
                   >
                     <strong>
-                      {msg.fromUser === selectedUserToChatWith.id
+                      {msg.fromUser === selectedUserToChatWith.id &&
+                      (msg.toUser = user.id)
                         ? selectedUserToChatWith.firstName
                         : user.firstName}
                       {" - "}

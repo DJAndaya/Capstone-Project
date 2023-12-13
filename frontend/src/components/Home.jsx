@@ -28,23 +28,22 @@ import ReviewButton from "./ReviewButton";
 
 import ProductDetail from "./ProductDetail";
 
-// import socketio from "socket.io-client";
+import socketio from "socket.io-client";
 
-// const socket = socketio("http://localhost:3000");
+const socket = socketio("http://localhost:3000");
 // redux
 // router
 import { useLocation, useOutletContext } from "react-router-dom";
 
 const Home = () => {
   // const dispatch = useDispatch();
-  // const user = useSelector(selectIsAuth);
+  const user = useSelector(selectIsAuth);
   const [items, setItems] = useState(null);
   // const [allMessages, setAllMessages] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null); // New state variable
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
   const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
-
 
   const location = useLocation();
   const { pathname } = location;
@@ -58,6 +57,12 @@ const Home = () => {
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
+    if (user) {
+      socket.emit("myId", {})
+      console.log(user, "homeUseEffect");
+      socket.emit("myId", {})
+    }
+
     const getItems = async () => {
       // console.log("Current pathname:", pathname);
       try {
@@ -146,41 +151,6 @@ const Home = () => {
   //     setItems(wishlist);
   //   }
   // }, [pathname, wishlist]);
-
-  const startChat = async (toUser) => {
-    // console.log(toUser);
-    // console.log(toUser.id);
-    // console.log(allMessages);
-    if (toUser.id === user.id) {
-      return;
-    }
-    console.log(toUser);
-    setSelectedUserToChatWith(toUser);
-    socket.emit("get_messages", {
-      fromUser: user.id,
-    });
-    console.log(user.socketId);
-  };
-
-  const sendMessage = () => {
-    console.log(selectedUserToChatWith.socketId, "to");
-    console.log(user.socketId, "sender");
-    socket.emit("send_message", {
-      fromUser: user.id,
-      toUser: selectedUserToChatWith.id,
-      toFirstName: selectedUserToChatWith.firstName,
-      toLastName: selectedUserToChatWith.lastName,
-      toSocketId: selectedUserToChatWith.socketId,
-      message,
-    });
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendMessage();
-    }
-  };
 
   if (!items) {
     return <h1>loading</h1>;

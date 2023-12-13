@@ -58,7 +58,7 @@ const Cart = () => {
       };
       getUserShoppingCartData();
     }
-  });
+  }, []);
 
   const totalAmountPrice = shoppingCart.reduce((total, item) => {
     const totalPriceOfItem = item.purchaseAmount * item.item.price;

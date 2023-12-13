@@ -144,17 +144,22 @@ export default function App() {
     };
 
     possiblyLogin();
-    if (user) {
-      socket.emit("user_joined", user);
-      socket.on("update_socket", (updatedUserData) => {
-        // console.log("updatedUserData:", updatedUserData) // not showing up
-        dispatch(setIsAuth(updatedUserData));
-        // console.log(updatedUserData);
-        // console.log(user, "App")
-        // console.log("user info after dispatch:", user) // not showing up
-      });
-      // console.log("user has joined with socket")
-    }
+    // if (user) {
+    //   socket.emit("user_joined", user);
+    //   socket.on("update_socket", (updatedUserData) => {
+    //     console.log("updatedUserData:", updatedUserData); // not showing up
+    //     dispatch(setIsAuth(updatedUserData));
+    //     // console.log(updatedUserData);
+    //     // console.log(user, "App")
+    //     // console.log("user info after dispatch:", user) // not showing up
+    //     socket.emit("myId", {});
+    //   });
+    //   console.log("user has joined with socket", user);
+    //   socket.emit("myId", {});
+    //   socket.on("disconnect", () => {
+    //     console.log("Disconnected from server");
+    //   });
+    // }
   }, [userId]);
 
   return <RouterProvider router={router} />;
