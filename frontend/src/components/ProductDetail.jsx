@@ -57,17 +57,20 @@ function ProductDetail({ selectedItem }) {
 
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
+      console.log(allMessages, "received");
     });
   }, [selectedItem.id, userId]);
 
   const startChat = async (toUser) => {
+    console.log(toUser);
+
     // console.log(toUser);
     // console.log(toUser.id);
     // console.log(allMessages);
     if (toUser.socketId === user.socketId) {
       return;
     }
-    setSelectedUserToChatWith(toUser);
+    setSelectedUserToChatWith(toUser, "setting");
     socket.emit("get_messages", {
       fromUser: user.id,
     });
@@ -80,14 +83,22 @@ function ProductDetail({ selectedItem }) {
     }
   };
 
+  const inputRef = useRef(null);
+
   const sendMessage = () => {
-    console.log(selectedUserToChatWith);
-    socket.emit("send_message", {
-      fromUser: user.id,
-      toUser: selectedUserToChatWith.id,
-      toSocketId: selectedUserToChatWith.socketId,
-      message,
-    });
+    if (message.trim() && selectedUserToChatWith) {
+      console.log(selectedUserToChatWith, "send");
+      socket.emit("send_message", {
+        fromUser: user.id,
+        toUser: selectedUserToChatWith.id,
+        toFirstName: selectedUserToChatWith.firstName,
+        toLastName: selectedUserToChatWith.lastName,
+        toSocketId: selectedUserToChatWith.socketId,
+        message,
+      });
+      setMessage("");
+      inputRef.current.focus();
+    }
   };
 
   if (!selectedItem) {
@@ -132,39 +143,21 @@ function ProductDetail({ selectedItem }) {
       {selectedUserToChatWith && (
         <div
           style={{
+            border: "1px solid lightseagreen",
             position: "fixed",
             bottom: 16,
             right: 16,
-            maxHeight: "50vh",
+            height: "40vh",
             width: "40%",
             maxWidth: "100%",
             display: "flex",
             flexDirection: "column",
             outline: "5px solid black",
-            backgroundColor: "grey",
+            backgroundColor: "black",
           }}
         >
-          <h3
-            style={{
-              margin: "0",
-              padding: "8px",
-              backgroundColor: "black",
-              color: "white",
-            }}
-          >
-            Chatting with {selectedUserToChatWith.firstName}{" "}
-            {selectedUserToChatWith.lastName}
-            <button
-              onClick={() => setSelectedUserToChatWith(null)}
-              style={{
-                position: "absolute",
-                right: "10px",
-                color: "white",
-                backgroundColor: "black",
-              }}
-            >
-              X
-            </button>{" "}
+          <h3 style={{ color: "white" }}>
+            You are chatting with {selectedUserToChatWith.socketId}
           </h3>
           <div
             ref={messageContainerRef}
@@ -175,55 +168,43 @@ function ProductDetail({ selectedItem }) {
               padding: "10px",
             }}
           >
-            {allMessages.map((msg, index) => (
-              <div
-                key={index}
-                style={{
-                  textAlign: msg.toUser === user.id ? "left" : "right",
-                  margin: "8px 0",
-                }}
-              >
-                <strong>
-                  {msg.fromUser === user.id
-                    ? user.firstName
-                    : selectedUserToChatWith.firstName}
-                  {" - "}
-                </strong>
-                {msg.message}
-              </div>
-            ))}
+            {allMessages.map(
+              (msg, index) =>
+                (msg.fromUser === selectedUserToChatWith.id ||
+                  msg.toUser === selectedUserToChatWith.id) && (
+                  <div
+                    key={index}
+                    style={{
+                      textAlign: msg.toUser === user.id ? "left" : "right",
+                      margin: "8px 0",
+                      color: "white",
+                    }}
+                  >
+                    <strong>
+                      {msg.fromUser === selectedUserToChatWith.id
+                        ? selectedUserToChatWith.firstName
+                        : user.firstName}
+                      {" - "}
+                    </strong>
+                    {msg.message}
+                  </div>
+                )
+            )}
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "8px",
-              alignItems: "flex-end",
-            }}
-          >
+
+          <div style={{ position: "absolute", bottom: 0, marginTop: "auto" }}>
             <input
               value={message}
               onChange={(ev) => setMessage(ev.target.value)}
               onKeyDown={handleKeyDown}
+              ref={inputRef}
               style={{
                 width: "100%",
                 padding: "8px",
                 boxSizing: "border-box",
               }}
             />
-            <button
-              onClick={sendMessage}
-              style={{
-                width: "100%",
-                padding: "8px",
-                backgroundColor: "black",
-                color: "white",
-                cursor: "pointer",
-                marginTop: "8px",
-              }}
-            >
-              Send message
-            </button>
+            <button onClick={sendMessage}>Send message</button>
           </div>
         </div>
       )}

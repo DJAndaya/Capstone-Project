@@ -181,14 +181,14 @@ const Cart = () => {
           </Box>
           <h2>
             Total Amount ${totalAmountPrice}
-          <Button
-            variant="contained"
-            onClick={checkOut}
-            sx={{ float: "right", marginRight: "10px" }}
-          >
-            Checkout
-          </Button></h2>
-
+            <Button
+              variant="contained"
+              onClick={checkOut}
+              sx={{ float: "right", marginRight: "10px" }}
+            >
+              Checkout
+            </Button>
+          </h2>
         </Paper>
         {/* </Grid> */}
         {/* <Divider />
