@@ -45,10 +45,6 @@ const Home = () => {
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
   const [selectedItemId, setSelectedItemId] = useState(null); // New state variable
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 8e5a94c5bb9e86d3b72f174e4b5990177c049630
   const location = useLocation();
   const { pathname } = location;
   const [outletContext] = useOutletContext();
@@ -191,11 +187,7 @@ const Home = () => {
   } else {
     // console.log(outletContext);
     return (
-<<<<<<< HEAD
-      <Grid container>
-=======
       <Grid container style={{ marginBottom: "500px" }}>
->>>>>>> 8e5a94c5bb9e86d3b72f174e4b5990177c049630
         <ShoppingCartButton />
         <Box sx={{ flexGrow: 1 }}>
           <Grid
@@ -273,29 +265,13 @@ const Home = () => {
                               : ""}
                           </span>
                           <span>
-<<<<<<< HEAD
-                            Avg. Rating:{" "}
-                            {item.averageRating
-                              ? item.averageRating.toFixed(2)
-                              : "N/A"}
-                            /5
-=======
                             {item.averageRating} ? (Avg. Rating:{" "}
-                            {item.averageRating?.toFixed(2)}/5 ) : (No reviews)
->>>>>>> 8e5a94c5bb9e86d3b72f174e4b5990177c049630
+                            {item.averageRating?.toFixed(2)}/5 : (No reviews)
                           </span>
                         </Typography>
                         <CardMedia
                           component="img"
-<<<<<<< HEAD
-                          image={
-                            item.images && item.images[0]
-                              ? item.images[0].imageUrl
-                              : "defaultImage.jpg"
-                          }
-=======
                           image={item.images[0] ? item.images[0].imageUrl : ""}
->>>>>>> 8e5a94c5bb9e86d3b72f174e4b5990177c049630
                           alt="item image"
                           height="200px"
                         />
@@ -306,7 +282,6 @@ const Home = () => {
                             onClick={() => {
                               handleOpen();
                               setSelectedItem(item);
-                              // console.log("item for viewDetails", selectedItem )
                             }}
                           >
                             View Details

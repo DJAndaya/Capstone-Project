@@ -22,6 +22,7 @@ import Confirmation from "./components/Confirmation";
 import CheckoutSuccess from "./components/CheckoutSuccess";
 import CheckoutCancel from "./components/CheckoutCancel";
 import ProductDetail from "./components/ProductDetail";
+import DeletedProducts from './components/Admin/DeletedProducts';
 import Wishlist
  from "./components/Wishlist";
 import { useDispatch, useSelector } from "react-redux";
@@ -80,6 +81,10 @@ export default function App() {
         {
           path: "/admin/allproducts",
           element: <AllProducts />,
+        },
+        {
+          path: "/admin/deletedproducts",
+          element: <DeletedProducts />,
         },
         {
           path: "/admin/allusers",

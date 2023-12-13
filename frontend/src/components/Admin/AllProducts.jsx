@@ -4,6 +4,14 @@ import { selectIsAuth } from "../../redux/isAuthSlice";
 import { Link } from "react-router-dom";
 import "../cssFiles/Admin.css";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
+import { Button, Modal, CardActions } from "@mui/material";
+
+import DeletedProducts from "./DeletedProducts";
+import ProductDetail from "../ProductDetail";
+
 export default function AllProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +24,14 @@ export default function AllProducts() {
   const [dropdownDisplay, setDropdownDisplay] = useState("Items per page");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
+  const [selectedItem, setSelectedItem] = useState(null);
   const user = useSelector(selectIsAuth);
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -25,6 +40,8 @@ export default function AllProducts() {
           throw new Error("Failed to fetch products");
         }
         let data = await response.json();
+
+        data = data.filter((product) => !product.isDeleted);
 
         let sortedProducts;
         switch (sortOption) {
@@ -260,7 +277,14 @@ export default function AllProducts() {
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
 
-      <button onClick={toggleDrawer}>Add New Product</button>
+      <Button variant="contained" color="primary" onClick={toggleDrawer}>
+        Add New Product
+      </Button>
+      <Link to="/admin/deletedproducts">
+        <Button variant="contained" color="primary">
+          <FontAwesomeIcon icon={faTrash} /> Deleted Products
+        </Button>
+      </Link>
 
       {isDrawerOpen && (
         <form className="product-form" onSubmit={handleFormSubmit}>
@@ -409,18 +433,27 @@ export default function AllProducts() {
         <p>
           Page {currentPage} of {totalPages}
         </p>
-        <button
+        <Button
+          variant="contained"
+          color="primary"
           onClick={() => handlePageChange(1)}
-          disabled={currentPage === 1}
+          style={{ color: currentPage === 1 ? "grey" : "white" }}
         >
           First Page
-        </button>
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            if (currentPage > 1) {
+              handlePageChange(currentPage - 1);
+            }
+          }}
+          style={{ color: currentPage === 1 ? "grey" : "white" }}
+          
         >
           Previous Page
-        </button>
+        </Button>
         <span>
           Go to Page:{" "}
           <input
@@ -435,20 +468,33 @@ export default function AllProducts() {
             min="1"
             max={totalPages}
           />
-          <button onClick={handleManualPageChange}>Go</button>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleManualPageChange}
+          >
+            Go
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"  onClick={() => {
+              if (currentPage < totalPages) {
+                handlePageChange(currentPage + 1);
+              }
+            }}
+            style={{ color: currentPage === totalPages ? "grey" : "white" }}
           >
             Next Page
-          </button>
+          </Button>
         </span>
-        <button
+        <Button
+          variant="contained"
+          color="primary"
           onClick={() => handlePageChange(totalPages)}
-          disabled={currentPage === totalPages}
+          style={{ color: currentPage === totalPages ? "grey" : "white" }}
         >
           Last Page
-        </button>
+        </Button>
         <select
           value={dropdownDisplay}
           onChange={(e) => {
@@ -499,26 +545,64 @@ export default function AllProducts() {
               </span>{" "}
               left
             </p>
-            <style jsx>{`
-              .description {
-                text-decoration: underline;
-              }
-            `}</style>
             <p>
               <span className="description">Description</span>:<br />
               {product.description}
             </p>
             <p>Category: {product.category}</p>
             <div className="button-container">
-              <button onClick={() => handleEditClick(product.id)}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleEditClick(product.id)}
+              >
                 Edit Product
-              </button>
-              <button onClick={() => handleDeleteProduct(product.id)}>
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleDeleteProduct(product.id)}
+              >
                 Delete Product
-              </button>
-              <Link to={`/product/${product.id}`}>
-                <button>View Details</button>
-              </Link>
+              </Button>
+              {/* <Link to={`/product/${product.id}`}>
+                <Button variant="contained" color="primary">
+                  View Details
+                </Button>
+              </Link> */}
+              <CardActions sx={{ alignItems: "left" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    handleOpen();
+                    setSelectedItem(product);
+                  }}
+                >
+                  View Details
+                </Button>
+              </CardActions>
+
+              <Modal open={open} onClose={handleClose}>
+                <div
+                  style={{
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflowY: "auto",
+                    maxHeight: "80vh",
+                    width: "60vw",
+                    position: "fixed",
+                    top: "10vh",
+                    left: "25vw",
+                    backgroundColor: "white",
+                    opacity: 0.95,
+                  }}
+                >
+                  <ProductDetail selectedItem={selectedItem} />
+                </div>
+              </Modal>
             </div>
           </li>
         ))}

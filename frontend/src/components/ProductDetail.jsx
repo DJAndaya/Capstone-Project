@@ -44,11 +44,13 @@ function ProductDetail({ selectedItem }) {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      const response = await fetch(
-        `http://localhost:3000/reviews/itemReviews/${selectedItem.id}`
-      );
-      const data = await response.json();
-      setReviews(data);
+      if (selectedItem) {
+        const response = await fetch(
+          `http://localhost:3000/reviews/itemReviews/${selectedItem.id}`
+        );
+        const data = await response.json();
+        setReviews(data);
+      }
     };
 
     fetchReviews();
@@ -56,7 +58,7 @@ function ProductDetail({ selectedItem }) {
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
     });
-  }, [selectedItem.id, userId]);
+  }, [selectedItem?.id, userId]);
 
   const startChat = async (toUser) => {
     // console.log(toUser);
@@ -97,14 +99,11 @@ function ProductDetail({ selectedItem }) {
       <div>
         <h1>{selectedItem.name}</h1>
         <p>
-<<<<<<< HEAD
           {selectedItem.seller && selectedItem.seller[0]
             ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.`
             : ""}
-=======
-          {selectedItem.seller[0].firstName}{" "}
-          {selectedItem.seller[0].lastName[0]}.
->>>>>>> 8e5a94c5bb9e86d3b72f174e4b5990177c049630
+          {/* {selectedItem.seller[0].firstName}{" "} */}
+          {/* {selectedItem.seller[0].lastName[0]}. */}
           <Button
             variant="contained"
             color="secondary"
@@ -115,11 +114,7 @@ function ProductDetail({ selectedItem }) {
         </p>
         <p>Price: ${selectedItem.price}</p>
         <p>Amount in Stock: {selectedItem.amount}</p>
-<<<<<<< HEAD
-        {console.log(selectedItem.images)}
-=======
         {/* {console.log(selectedItem.images)} */}
->>>>>>> 8e5a94c5bb9e86d3b72f174e4b5990177c049630
         <img src={selectedItem.images} alt="item image" />
         <p>Description: {selectedItem.description}</p>
         <p>Category: {selectedItem.category}</p>
