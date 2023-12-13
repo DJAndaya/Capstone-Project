@@ -5,7 +5,7 @@ import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
 import ImageCarousel from "./ImageCarousel";
 
-import { Button } from "@mui/material";
+import { Button, Divider, Paper } from "@mui/material";
 
 import socketio from "socket.io-client";
 
@@ -107,7 +107,7 @@ function ProductDetail({ selectedItem }) {
 
   return (
     <>
-      <div>
+      <Paper sx={{width: "98%", margin: "auto",}} elevation={4}>
         <h1>{selectedItem.name}</h1>
         <div>
           {selectedItem.seller[0].firstName}{" "}
@@ -126,19 +126,30 @@ function ProductDetail({ selectedItem }) {
         {/* <img src={selectedItem.images[0] ? selectedItem.images[0].imageUrl : ""} alt="item image" /> */}
         <ImageCarousel item={selectedItem} />
         <div>Description: {selectedItem.description}</div>
-        <div>Category: {selectedItem.category}</div>
+        {/* <div>Category: {selectedItem.category}</div> */}
+        <br />
         <div>Reviews:</div>
+        <br />
         {reviews.map((review, index) => (
-          <ul key={index}>
-            <li>
-              <div>
-                <p>Rating: {review.rating}</p>
-                <p>Comment: {review.comment}</p>
-              </div>
-            </li>
-          </ul>
+          <Paper sx={{width: "98%", margin: "auto", padding: "0.5%", marginBottom: "10px"}} elevation={4}>
+            {console.log(review)}
+            <div style={{fontSize: "15px", fontWeight: "bold"}}>Rating: {review.rating}/5</div>
+            <Paper sx={{width: "98%", margin: "auto", padding: "0.75%"}} elevation={3}>
+            <div>{review.comment}</div>
+            </Paper>
+            <Divider />
+          </Paper>
+          // <ul key={index}>
+          //   <li>
+          //     <div>
+          //       <p>Rating: {review.rating}</p>
+          //       <p>Comment: {review.comment}</p>
+          //     </div>
+          //   </li>
+          // </ul>
         ))}
-      </div>
+        <br />
+      </Paper>
 
       {selectedUserToChatWith && (
         <div

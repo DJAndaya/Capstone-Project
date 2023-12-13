@@ -57,7 +57,7 @@ export default function DeletedProducts() {
             <p>Price: ${parseFloat(product.price).toFixed(2)}</p>
             <p>Amount: {product.amount} left</p>
             <p>Description: {product.description}</p>
-            <p>Category: {product.category}</p>
+            {/* <p>Category: {product.category}</p> */}
             <button onClick={() => handleUndoDelete(product.id)}>
               Undo Delete
             </button>

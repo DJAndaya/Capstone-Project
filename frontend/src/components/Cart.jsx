@@ -141,29 +141,52 @@ const Cart = () => {
     // console.log(shoppingCart);
 
     return (
-      <>
+      <div
+        style={{
+          position: "relative",
+          top: "-65px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          width: "90%",
+          margin: "auto",
+        }}
+      >
+        
         {/* <Grid container spacing={1}>
           <Grid item xs={8} sx={{ maxWidth: "100%" }}> */}
         <Paper
           sx={{
             color: "black",
-            maxWidth: "70%",
+            width: "100%",
             overflowY: "auto",
             maxHeight: "85vh",
             backgroundColor: "white",
+            
           }}
         >
-          <h1>
-            Shopping Cart
-            <Button
-              variant="contained"
-              color="error"
-              onClick={clearShoppingCart}
-              sx={{ float: "right", marginRight: "10px" }}
-            >
-              Clear shopping cart
-            </Button>
-          </h1>
+          <Paper
+            sx={{
+              width: "99%",
+              margin: "auto",
+              // display: "flex",
+              // alignItems: "center",
+              // justifyContent: "center",
+            }}
+          >
+            <h1>
+              Shopping Cart
+              <Button
+                variant="contained"
+                color="error"
+                onClick={clearShoppingCart}
+                sx={{ float: "right", marginRight: "10px" }}
+              >
+                Clear shopping cart
+              </Button>
+            </h1>
+          </Paper>
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={2} columns={2}>
               {shoppingCart.map((item, idx) => {
@@ -179,15 +202,22 @@ const Cart = () => {
               })}
             </Grid>
           </Box>
-          <h2>
-            Total Amount ${totalAmountPrice}
+          <h2
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              margin: "10px", // Add margin for spacing
+            }}
+          >
             <Button
               variant="contained"
               onClick={checkOut}
-              sx={{ float: "right", marginRight: "10px" }}
+              sx={{ float: "left", marginLeft: "10px" }}
             >
               Checkout
             </Button>
+            Total Amount: ${totalAmountPrice}
           </h2>
         </Paper>
         {/* </Grid> */}
@@ -221,7 +251,7 @@ const Cart = () => {
             </Paper>
           </Grid> */}
         {/* </Grid> */}
-      </>
+      </div>
     );
   }
 };

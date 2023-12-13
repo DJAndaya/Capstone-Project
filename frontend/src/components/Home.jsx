@@ -91,7 +91,7 @@ const Home = () => {
         const alphabeticalOrderData = response.data.sort((a, b) =>
           a.name > b.name ? 1 : -1
         );
-        console.log(alphabeticalOrderData);
+        // console.log(alphabeticalOrderData);
         setItems(alphabeticalOrderData);
 
         let sortedItems;
@@ -229,7 +229,11 @@ const Home = () => {
                               : ""}
                           </span>
                           <span>
-                          {item.averageRating ? `Avg. Rating: ${item.averageRating.toFixed(2)}/5` : 'No reviews'}
+                            {item.averageRating
+                              ? `Avg. Rating: ${item.averageRating.toFixed(
+                                  2
+                                )}/5`
+                              : "No reviews"}
                           </span>
                         </Typography>
                         <CardMedia
@@ -241,6 +245,7 @@ const Home = () => {
                           }
                           alt="item image"
                           height="200px"
+                          style={{objectFit: "contain"}}
                         />
                         <CardActions sx={{ alignItems: "left" }}>
                           <Button
@@ -275,7 +280,7 @@ const Home = () => {
           </Grid>
         </Box>
 
-        <Modal open={open} onClose={handleClose} >
+        <Modal open={open} onClose={handleClose}>
           <div
             style={{
               color: "black",

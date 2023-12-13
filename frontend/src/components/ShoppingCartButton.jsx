@@ -30,7 +30,25 @@ const ShoppingCartButton = () => {
         <ShoppingCartIcon />
         {shoppingCart.length}
       </Fab>
-      <Modal open={open} onClose={handleClose}>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        style={{
+          color: "black",
+          display: "center",
+          // alignItems: "center",
+          // justifyContent: "center",
+          // overflowY: "auto",
+          maxHeight: "80vh",
+          width: "100vw",
+          position: "fixed",
+          margin: "5% auto auto",
+          // left: "8%",
+          // marginRight: "0",
+          // backgroundColor: "white",
+          // opacity: 0.95,
+        }}
+      >
         <>
           <Cart />
         </>

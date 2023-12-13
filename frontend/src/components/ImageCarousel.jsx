@@ -11,12 +11,12 @@ const ImageCarousel = ({ item }) => {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const images = item.images
+  const images = item.images;
   const maxSteps = images.length;
 
-  console.log(item)
-//   const images = item.images
-  console.log(images)
+  console.log(item);
+  //   const images = item.images
+  console.log(images);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) =>
@@ -31,7 +31,16 @@ const ImageCarousel = ({ item }) => {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
+    <Box
+      sx={{
+        maxWidth: 400,
+        flexGrow: 1,
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <Paper
         square
         elevation={0}
@@ -49,7 +58,7 @@ const ImageCarousel = ({ item }) => {
         style={{
           width: "100%",
           maxHeight: 255,
-          objectFit: "cover",
+          objectFit: "contain",
         }}
       />
       <MobileStepper
@@ -76,6 +85,7 @@ const ImageCarousel = ({ item }) => {
             Back
           </Button>
         }
+        // sx={{ mx: "auto" }}
       />
     </Box>
   );

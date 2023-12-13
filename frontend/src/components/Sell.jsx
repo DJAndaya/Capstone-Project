@@ -19,6 +19,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { yellow } from "@mui/material/colors";
 import { NavLink, useNavigate } from "react-router-dom";
+import ImageCarousel from "./ImageCarousel";
 
 export default function Sell() {
   const navigate = useNavigate();
@@ -28,7 +29,8 @@ export default function Sell() {
     price: "",
     amount: "",
     description: "",
-    category: "",
+    images: [],
+    // category: "",
   });
 
   const isAuth = useSelector(selectIsAuth);
@@ -55,6 +57,15 @@ export default function Sell() {
     });
   };
 
+  const handleImageInputChange = (index, value) => {
+    const updatedImages = [...formData.images];
+    updatedImages[index] = value;
+    setFormData({
+      ...formData,
+      images: updatedImages,
+    });
+  };
+
   const onSubmit = (event) => {
     event.preventDefault();
 
@@ -64,7 +75,8 @@ export default function Sell() {
       price: "",
       amount: "",
       description: "",
-      category: "",
+      images: [],
+      // category: "",
     });
   };
 
@@ -95,6 +107,7 @@ export default function Sell() {
   }, []);
 
   const removeItem = async (itemId) => {
+    console.log(`itemId: ${itemId}, userID, ${isAuth.id}`);
     try {
       const response = await axios.delete(
         `http://localhost:3000/items/deleteItemSelling/${itemId}`,
@@ -135,12 +148,7 @@ export default function Sell() {
           textAlign: "center",
         }}
       >
-        <h1
-          style={{
-          }}
-        >
-          Sell Item
-        </h1>
+        <h1 style={{}}>Sell Item</h1>
         <form
           onSubmit={onSubmit}
           style={{
@@ -156,33 +164,64 @@ export default function Sell() {
             onChange={handleInputChange}
             name="name"
             style={{ padding: "8px" }}
+            required
           />
           <input
             placeholder="Price (Enter Number)"
             value={formData.price}
             onChange={handleInputChange}
             name="price"
+            min="1"
+            pattern="\d+"
+            step="1"
             style={{ padding: "8px" }}
+            type="number"
+            required
           />
           <input
             placeholder="Amount (Enter Number)"
             value={formData.amount}
             onChange={handleInputChange}
             name="amount"
+            min="1"
+            pattern="\d+"
+            step="1"
             style={{ padding: "8px" }}
+            type="number"
+            required
           />
-          <input
+          {/* <input
             placeholder="Category"
             value={formData.category}
             onChange={handleInputChange}
             name="category"
             style={{ padding: "8px" }}
-          />
+          /> */}
           <input
             placeholder="Desciption"
             value={formData.description}
             onChange={handleInputChange}
             name="description"
+            style={{ padding: "8px" }}
+            required
+          />
+          <input
+            placeholder="First Image URL"
+            value={formData.images[0] || ""}
+            onChange={(e) => handleImageInputChange(0, e.target.value)}
+            style={{ padding: "8px" }}
+            required
+          />
+          <input
+            placeholder="Optional Second Image URL"
+            value={formData.images[1] || ""}
+            onChange={(e) => handleImageInputChange(1, e.target.value)}
+            style={{ padding: "8px" }}
+          />
+          <input
+            placeholder="Optional Third Image URL"
+            value={formData.images[2] || ""}
+            onChange={(e) => handleImageInputChange(2, e.target.value)}
             style={{ padding: "8px" }}
           />
           <button type="submit">Sell</button>
@@ -218,12 +257,15 @@ export default function Sell() {
                     <Typography align={"center"} sx={{ fontSize: 14 }}>
                       Amount: {item.amount}
                     </Typography>
-                    <Typography align={"center"} sx={{ fontSize: 14 }}>
+                    {/* <Typography align={"center"} sx={{ fontSize: 14 }}>
                       Category: {item.category}
-                    </Typography>
+                    </Typography> */}
                     <Typography align={"center"} sx={{ fontSize: 14 }}>
                       Description: {item.description}
                     </Typography>
+                    <div style={{ width: "60%", margin: "auto"}}>
+                        <ImageCarousel item={item} />
+                      </div>
                     <CardActions style={{ justifyContent: "center" }}>
                       <Button
                         variant="contained"
