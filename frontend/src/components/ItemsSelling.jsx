@@ -20,7 +20,7 @@ import AddToCartButton from "./AddToCartButton";
 export default function ItemsSelling() {
   const [itemsSelling, setItemsSelling] = useState([]);
   const isAuth = useSelector(selectIsAuth);
-  console.log(itemsSelling);
+  // console.log(itemsSelling);
   useEffect(() => {
     const getItemsSelling = async () => {
       try {
@@ -34,7 +34,7 @@ export default function ItemsSelling() {
         );
         setItemsSelling(response.data.sellingItems);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
@@ -59,7 +59,7 @@ export default function ItemsSelling() {
         setItemsSelling(updatedItemsSelling);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

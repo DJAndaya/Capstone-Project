@@ -42,7 +42,7 @@ const Login = () => {
       );
 
       const user = userResponse.data;
-      console.log("user info after login:",user)
+      // console.log("user info after login:",user)
       dispatch(setIsAuth(user));
 
       // putting DB wishlist and shopping cart into local respectively
@@ -77,7 +77,7 @@ const Login = () => {
       // console.log("before updatedUserData is put onto local")
       dispatch(setIsAuth(updatedUser));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

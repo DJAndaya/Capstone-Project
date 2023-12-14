@@ -6,7 +6,7 @@ const getStripePublicKey = async () => {
     const response = await axios.get('http://localhost:3000/items/stripeKey');
     return response.data.publicKey;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };
 

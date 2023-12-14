@@ -46,7 +46,7 @@ const AddToWishlistButton = ({ item }) => {
 
         // console.log("item added to wishlist DB")
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         // Handle errors as needed
       }
     }

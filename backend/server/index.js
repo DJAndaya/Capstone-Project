@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const app = require("./app");
 
 const server = app.listen(3000, () => {
-  console.log(`Listening on port 3000...`);
+  // console.log(`Listening on port 3000...`);
 });
 
 const io = new socketio.Server(server, {
@@ -25,12 +25,12 @@ io.on("connection", (socket) => {
         socketId: socket.id,
       },
     });
-    console.log("updateduserData:", updatedUserData);
+    // console.log("updateduserData:", updatedUserData);
     io.to(socket.id).emit("update_socket", updatedUserData);
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    // console.log("user disconnected");
   });
 
   socket.on("get_messages", async ({ fromUser }) => {
@@ -43,15 +43,15 @@ io.on("connection", (socket) => {
 
       io.to(socket.id).emit("receive_message", allMessages);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   });
 
   let emits = 0;
   socket.on("myId", async () => {
     emits++;
-    console.log(emits);
-    console.log(socket.id, "socketId");
+    // console.log(emits);
+    // console.log(socket.id, "socketId");
   });
 
   socket.on(
@@ -80,14 +80,14 @@ io.on("connection", (socket) => {
             OR: [{ fromUser: fromUser }, { toUser: fromUser }],
           },
         });
-        console.log(toSocketId, "receiver");
-        console.log(socket.id, "sender");
+        // console.log(toSocketId, "receiver");
+        // console.log(socket.id, "sender");
         // console.log(allMessages)
         io.to(toSocketId).emit("receive_message", allMessages);
 
         io.to(socket.id).emit("receive_message", allMessages);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   );

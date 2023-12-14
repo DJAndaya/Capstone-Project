@@ -269,7 +269,7 @@ export default function AllProducts() {
         }
       );
       if (!response.ok) {
-        console.log("did not work admin stuff")
+        // console.log("did not work admin stuff")
         throw new Error("Failed to edit product");
       }
       const editedProduct = await response.json();

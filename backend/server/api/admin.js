@@ -85,20 +85,18 @@ app.post("/addAdmin", async (req, res) => {
     });
     res.send(newUser);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 });
 
 app.delete("/deleteUser", async (req, res) => {
-  const { userId } = req.query;
+  const { userId } = req.body;
   try {
-
     await prisma.reviews.deleteMany({
       where: {
         userId: Number(userId),
       },
     });
-    
     const deletedUser = await prisma.users.delete({
       where: {
         id: Number(userId),
@@ -106,7 +104,7 @@ app.delete("/deleteUser", async (req, res) => {
     });
     res.send(deletedUser);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 });
 
@@ -141,7 +139,7 @@ app.patch("/editproduct/:productId", async (req, res) => {
 
   const images = [image1, image2, image3].filter((img) => img !== undefined);
 
-  console.log(images);
+  // console.log(images);
   try {
     const existingImages = await prisma.images.findMany({
       where: {

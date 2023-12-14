@@ -46,14 +46,14 @@ const AddToCartButton = ({ item }) => {
           { item, userId }
         );
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         // Handle errors as needed
       }
     }
   };
 
   // useEffect(() => {
-  //   console.log(outletContext.shoppingCart);
+  //   // console.log(outletContext.shoppingCart);
   // }, [outletContext.shoppingCart]);
 
   return (

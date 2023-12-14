@@ -23,7 +23,7 @@ const Cart = () => {
   // const [formData, setFormData] = useState(null);
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;
-  console.log(shoppingCart);
+  // console.log(shoppingCart);
 
   const navigate = useNavigate();
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -107,9 +107,9 @@ const Cart = () => {
       });
       // setShoppingCart([]);
       navigate("/");
-      console.log("checkout");
+      // console.log("checkout");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -132,7 +132,7 @@ const Cart = () => {
       });
       // setShoppingCart([]);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
   if (shoppingCart.length === 0) {

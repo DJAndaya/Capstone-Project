@@ -40,10 +40,10 @@ function ProductDetail({ selectedItem }) {
 
   useEffect(() => {
     if (user) {
-      console.log("testingInIfUser");
+      // console.log("testingInIfUser");
       socket.emit("user_joined", user);
       socket.on("update_socket", (updatedUserData) => {
-        console.log("productupdateuserdetails:", updatedUserData); // not showing up
+        // console.log("productupdateuserdetails:", updatedUserData); // not showing up
         dispatch(setIsAuth(updatedUserData));
 
         // console.log(updatedUserData);
@@ -52,9 +52,9 @@ function ProductDetail({ selectedItem }) {
         socket.emit("myId", {});
       });
     }
-    console.log("testing");
+    // console.log("testing");
     socket.emit("myId", {});
-    console.log(user, "mounting");
+    // console.log(user, "mounting");
     socket.emit("myId", {});
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop =
@@ -77,12 +77,12 @@ function ProductDetail({ selectedItem }) {
     // console.log("do i run alot")
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
-      console.log(allMessages, "received");
+      // console.log(allMessages, "received");
     });
   }, [selectedItem?.id, userId]);
 
   const startChat = async (toUser) => {
-    console.log("touser:", toUser);
+    // console.log("touser:", toUser);
 
     // console.log(toUser);
     // console.log(toUser.id);
@@ -109,8 +109,8 @@ function ProductDetail({ selectedItem }) {
     socket.emit("myId", {});
     if (message.trim() && selectedUserToChatWith) {
       socket.emit("myId", {});
-      console.log(selectedUserToChatWith, "send");
-      console.log(user, "sendUserInfo");
+      // console.log(selectedUserToChatWith, "send");
+      // console.log(user, "sendUserInfo");
       socket.emit("send_message", {
         fromUser: user.id,
         toUser: selectedUserToChatWith.id,
@@ -149,7 +149,7 @@ function ProductDetail({ selectedItem }) {
         )}
         <div>Price: ${selectedItem.price}</div>
         <div>Amount in Stock: {selectedItem.amount}</div>
-        {/* {console.log(selectedItem.images)} */}
+        {/* {// console.log(selectedItem.images)} */}
         {/* <img src={selectedItem.images[0] ? selectedItem.images[0].imageUrl : ""} alt="item image" /> */}
         <ImageCarousel item={selectedItem} />
         <div>Description: {selectedItem.description}</div>
@@ -167,7 +167,7 @@ function ProductDetail({ selectedItem }) {
             }}
             elevation={4}
           >
-            {console.log("review:", review)}
+            {// console.log("review:", review)}
             <div style={{ fontSize: "15px", fontWeight: "bold" }}>
               Rating: {review.rating}/5
             </div>

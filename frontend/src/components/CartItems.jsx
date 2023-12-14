@@ -64,7 +64,7 @@ const CartItems = ({ item }) => {
           { item, userId }
         );
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         // Handle errors as needed
       }
     }
