@@ -258,6 +258,8 @@ app.get("/deletedproducts", async (req, res) => {
           gte: new Date(new Date() - days * 24 * 60 * 60 * 1000),
         },
       },
+      include: {images: true}
+
     });
     res.json(deletedProducts);
   } catch (error) {

@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Modal } from "@mui/material";
 import "../cssFiles/Admin.css";
+import ProductDetail from "../ProductDetail";
 
 export default function DeletedProducts() {
   const [deletedProducts, setDeletedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
   const [sortOption, setSortOption] = useState("alphabeticalAsc");
+  const [selectedItem, setSelectedItem] = useState(null); // New state variable
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const fetchDeletedProducts = async () => {
@@ -110,6 +116,9 @@ export default function DeletedProducts() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  if (!deletedProducts) {
+    return <h1>No past deleted products</h1>;
+  }
   return (
     <div>
       <h1>Deleted Products</h1>
@@ -158,9 +167,36 @@ export default function DeletedProducts() {
             <p>Deleted on: {new Date(product.deletedAt).toLocaleString()}</p>
 
             <div className="button-container">
-              <Link to={`/product/${product.id}`}>
-                <button>View Details</button>
-              </Link>
+              {/* <Link to={`/product/${product.id}`}> */}
+              <button
+                onClick={() => {
+                  handleOpen();
+                  setSelectedItem(product);
+                }}
+              >
+                View Details
+              </button>
+              {/* </Link> */}
+              <Modal open={open} onClose={handleClose}>
+                <div
+                  style={{
+                    color: "black",
+                    display: "flex",
+                    // alignItems: "center",
+                    // justifyContent: "center",
+                    overflowY: "auto",
+                    maxHeight: "80vh",
+                    width: "60vw",
+                    position: "fixed",
+                    top: "10vh",
+                    left: "25vw",
+                    backgroundColor: "white",
+                    opacity: 0.95,
+                  }}
+                >
+                  <ProductDetail selectedItem={selectedItem} />
+                </div>
+              </Modal>
               <button onClick={() => handleUndoDelete(product.id)}>
                 Undo Delete
               </button>

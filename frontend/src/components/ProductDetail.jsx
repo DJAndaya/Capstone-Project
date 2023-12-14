@@ -40,7 +40,7 @@ function ProductDetail({ selectedItem }) {
 
   useEffect(() => {
     if (user) {
-      console.log("testingInIfUser")
+      console.log("testingInIfUser");
       socket.emit("user_joined", user);
       socket.on("update_socket", (updatedUserData) => {
         console.log("productupdateuserdetails:", updatedUserData); // not showing up
@@ -52,7 +52,7 @@ function ProductDetail({ selectedItem }) {
         socket.emit("myId", {});
       });
     }
-    console.log("testing")
+    console.log("testing");
     socket.emit("myId", {});
     console.log(user, "mounting");
     socket.emit("myId", {});
@@ -61,7 +61,7 @@ function ProductDetail({ selectedItem }) {
         messageContainerRef.current.scrollHeight;
     }
   }, [allMessages, selectedUserToChatWith]);
-  
+
   useEffect(() => {
     const fetchReviews = async () => {
       if (selectedItem) {
@@ -131,19 +131,22 @@ function ProductDetail({ selectedItem }) {
 
   return (
     <>
-      <Paper sx={{width: "98%", margin: "auto",}} elevation={4}>
+      <Paper sx={{ width: "98%", margin: "auto" }} elevation={4}>
         <h1>{selectedItem.name}</h1>
         <div>
           {selectedItem.seller && selectedItem.seller[0]
-            ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.` : "" }
+            ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.`
+            : ""}
         </div>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => startChat(selectedItem.seller[0])}
-        >
-          Chat with Seller
-        </Button>
+        {user.admin ? null : (
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => startChat(selectedItem.seller[0])}
+          >
+            Chat with Seller
+          </Button>
+        )}
         <div>Price: ${selectedItem.price}</div>
         <div>Amount in Stock: {selectedItem.amount}</div>
         {/* {console.log(selectedItem.images)} */}
@@ -155,11 +158,24 @@ function ProductDetail({ selectedItem }) {
         <div>Reviews:</div>
         <br />
         {reviews.map((review, index) => (
-          <Paper sx={{width: "98%", margin: "auto", padding: "0.5%", marginBottom: "10px"}} elevation={4}>
+          <Paper
+            sx={{
+              width: "98%",
+              margin: "auto",
+              padding: "0.5%",
+              marginBottom: "10px",
+            }}
+            elevation={4}
+          >
             {console.log("review:", review)}
-            <div style={{fontSize: "15px", fontWeight: "bold"}}>Rating: {review.rating}/5</div>
-            <Paper sx={{width: "98%", margin: "auto", padding: "0.75%"}} elevation={3}>
-            <div>{review.comment}</div>
+            <div style={{ fontSize: "15px", fontWeight: "bold" }}>
+              Rating: {review.rating}/5
+            </div>
+            <Paper
+              sx={{ width: "98%", margin: "auto", padding: "0.75%" }}
+              elevation={3}
+            >
+              <div>{review.comment}</div>
             </Paper>
             <Divider />
           </Paper>
