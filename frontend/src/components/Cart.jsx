@@ -136,7 +136,33 @@ const Cart = () => {
     }
   };
   if (shoppingCart.length === 0) {
-    return <h1>Cart is empty or loading</h1>;
+    return (
+      <div
+        style={{
+          position: "relative",
+          top: "-65px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          width: "90%",
+          margin: "auto",
+        }}
+      >
+        <Paper
+          sx={{
+            color: "black",
+            width: "100%",
+            overflowY: "auto",
+            maxHeight: "85vh",
+            backgroundColor: "white",
+            alignItems: "center"
+          }}
+        >
+          <h1 style={{textAlign: "center"}}>Cart is empty</h1>;
+        </Paper>
+      </div>
+    );
   } else {
     // console.log(shoppingCart);
 
@@ -153,7 +179,6 @@ const Cart = () => {
           margin: "auto",
         }}
       >
-        
         {/* <Grid container spacing={1}>
           <Grid item xs={8} sx={{ maxWidth: "100%" }}> */}
         <Paper
@@ -163,7 +188,6 @@ const Cart = () => {
             overflowY: "auto",
             maxHeight: "85vh",
             backgroundColor: "white",
-            
           }}
         >
           <Paper
