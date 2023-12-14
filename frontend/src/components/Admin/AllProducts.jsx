@@ -600,7 +600,7 @@ export default function AllProducts() {
                     opacity: 0.95,
                   }}
                 >
-                  <ProductDetail selectedItem={selectedItem} />
+                  <ProductDetail items={selectedItem} />
                 </div>
               </Modal>
             </div>

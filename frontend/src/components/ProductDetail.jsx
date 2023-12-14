@@ -113,7 +113,7 @@ function ProductDetail({ selectedItem }) {
         <h1>{selectedItem.name}</h1>
         <div>
           {selectedItem.seller && selectedItem.seller[0]
-            ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.`
+            ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.` : "" }
         </div>
         <Button
           variant="contained"
