@@ -32,7 +32,7 @@ CREATE TABLE "items" (
 -- CreateTable
 CREATE TABLE "images" (
     "id" SERIAL NOT NULL,
-    "imageUrl" TEXT NOT NULL,
+    "imageUrl" TEXT,
     "itemId" INTEGER NOT NULL,
 
     CONSTRAINT "images_pkey" PRIMARY KEY ("id")

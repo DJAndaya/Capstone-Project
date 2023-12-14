@@ -53,7 +53,7 @@ const ImageCarousel = ({ item }) => {
         }}
       ></Paper>
       <img
-        src={images[activeStep].images}
+        src={images[activeStep].imageUrl}
         alt={`Step ${activeStep}`}
         style={{
           width: "100%",

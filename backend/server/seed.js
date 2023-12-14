@@ -8,13 +8,14 @@ const axios = require("axios");
 
 const getRandomImageUrl = async () => {
   try {
-    const response = await axios.get("https://picsum.photos/200/300?random");
+    const response = await axios.get("https://picsum.photos/200/300");
     return response.request.res.responseUrl;
   } catch (error) {
     console.log(error);
     return null;
   }
 };
+
 const seed = async () => {
   try {
     const users = [];

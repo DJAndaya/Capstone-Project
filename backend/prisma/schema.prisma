@@ -48,7 +48,7 @@ model items {
 
 model images {
   id       Int    @id @default(autoincrement())
-  imageUrl String
+  imageUrl String?
   itemId   Int
   item     items  @relation(fields: [itemId], references: [id])
 }

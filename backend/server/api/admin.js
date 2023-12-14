@@ -78,7 +78,7 @@ app.post("/addproduct", async (req, res) => {
   }
 });
 
-app.put("/editproduct/:productId", async (req, res) => {
+app.patch("/editproduct/:productId", async (req, res) => {
   const productId = parseInt(req.params.productId);
   const { name, price, amount, description, category } = req.body;
 
@@ -92,6 +92,7 @@ app.put("/editproduct/:productId", async (req, res) => {
         price,
         amount,
         description,
+        images,
         category,
       },
     });
