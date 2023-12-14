@@ -12,7 +12,7 @@ export default function Confirmation() {
 
   useEffect(() => {
     const confirmationToken = window.location.pathname.split("/").pop();
-    console.log(confirmationToken);
+    // console.log(confirmationToken);
     const confirmEmail = async () => {
       try {
         const response = await axios.get(
@@ -21,7 +21,7 @@ export default function Confirmation() {
 
         if ((response.status === 200)) {
           const token = response.data;
-          console.log(token);
+          // console.log(token);
           window.localStorage.setItem("token", token);
           setConfirmation("Email confirmed successfully.");
 

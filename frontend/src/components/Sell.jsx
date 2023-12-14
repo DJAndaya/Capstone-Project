@@ -41,11 +41,11 @@ export default function Sell() {
         formData,
         id: isAuth.id,
       });
-      console.log("data from when item is sent:", response.data)
+      // console.log("data from when item is sent:", response.data)
       const itemAddedToItemSelling = [...itemsSelling, response.data];
       setItemsSelling(itemAddedToItemSelling);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -99,7 +99,7 @@ export default function Sell() {
         );
         setItemsSelling(response.data.sellingItems);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
@@ -107,7 +107,7 @@ export default function Sell() {
   }, []);
 
   const removeItem = async (itemId) => {
-    console.log(`itemId: ${itemId}, userID, ${isAuth.id}`);
+    // console.log(`itemId: ${itemId}, userID, ${isAuth.id}`);
     try {
       const response = await axios.delete(
         `http://localhost:3000/items/deleteItemSelling/${itemId}`,
@@ -125,7 +125,7 @@ export default function Sell() {
         setItemsSelling(updatedItemsSelling);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

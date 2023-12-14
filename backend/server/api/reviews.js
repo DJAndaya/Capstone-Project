@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 
 app.get("/itemReviews/:itemId", async (req, res) => {
   const itemId = parseInt(req.params.itemId);
-  console.log("Received request for item:", itemId); // Added this line
+  // console.log("Received request for item:", itemId); // Added this line
   try {
     const reviews = await prisma.reviews.findMany({
       where: {
@@ -47,7 +47,7 @@ app.get("/itemReviews/:itemId", async (req, res) => {
 app.post("/submitReview", async (req, res) => {
   try {
     const { rating, comment, userId, itemId } = req.body;
-    console.log(req.body)
+    // console.log(req.body)
 
     const parsedUserId = parseInt(userId);
     const parsedItemId = parseInt(itemId);
@@ -65,7 +65,7 @@ app.post("/submitReview", async (req, res) => {
         comment,
       },
     });
-    console.log(newReview)
+    // console.log(newReview)
     await updateItemAverageRating(parsedItemId)
 
     res.json(newReview);

@@ -12,7 +12,7 @@ export default function AllUsers() {
   const [currentProductId, setCurrentProductId] = useState(null);
   const [pageInput, setPageInput] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [keyForRemount, setKeyForRemount] = useState(0)
+  const [keyForRemount, setKeyForRemount] = useState(0);
 
   const [usersPerPage, setUsersPerPage] = useState(20);
   const [dropdownDisplay, setDropdownDisplay] = useState("users per page");
@@ -92,20 +92,22 @@ export default function AllUsers() {
 
   const deleteUser = async (userId) => {
     try {
-      const response = await axios.delete("http://localhost:3000/admin/deleteUser",
-      {
-        params: {userId: userId}
-      })
-      console.log(response)
+      const response = await axios.delete(
+        "http://localhost:3000/admin/deleteUser",
+        { data: { userId: userId } }
+      );
+      console.log(response);
       const newUserList = users.filter((user) => {
-        return user.id !== response.data.id
-      })
+        return user.id !== response.data.id;
+      });
       setUsers(newUserList);
-    } catch (error) {console.log(error)}
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleAddUser = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const response = await fetch("http://localhost:3000/admin/addAdmin", {
         method: "POST",
@@ -116,19 +118,19 @@ export default function AllUsers() {
       });
 
       if (!response.ok) {
-        console.log("did not work")
+        console.log("did not work");
         throw new Error("Failed to add user");
       }
 
       const addedUser = await response.json();
-      console.log(addedUser)
+      console.log(addedUser);
       setUsers((prevUsers) => [...prevUsers, addedUser]);
       setNewUser({
         firstName: "",
         lastName: "",
         email: "",
         address: "",
-        password: ""
+        password: "",
         // Reset other user fields as needed
       });
     } catch (error) {
@@ -240,7 +242,6 @@ export default function AllUsers() {
             }
           }}
           style={{ color: currentPage === 1 ? "grey" : "white" }}
-          
         >
           Previous Page
         </Button>
@@ -262,10 +263,13 @@ export default function AllUsers() {
             variant="contained"
             color="primary"
             onClick={handleManualPageChange}
-          >Go</Button>
- <Button
+          >
+            Go
+          </Button>
+          <Button
             variant="contained"
-            color="primary"  onClick={() => {
+            color="primary"
+            onClick={() => {
               if (currentPage < totalPages) {
                 handlePageChange(currentPage + 1);
               }
@@ -275,11 +279,11 @@ export default function AllUsers() {
             Next Page
           </Button>
           <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handlePageChange(totalPages)}
-          style={{ color: currentPage === totalPages ? "grey" : "white" }}
-        >
+            variant="contained"
+            color="primary"
+            onClick={() => handlePageChange(totalPages)}
+            style={{ color: currentPage === totalPages ? "grey" : "white" }}
+          >
             Last Page
           </Button>
           <select
@@ -325,9 +329,15 @@ export default function AllUsers() {
               >
                 {user.admin ? "Yes" : "No"}
               </span>
-              <Button onClick={() => deleteUser(user.id)}>
-                Delete User
-              </Button>
+              <p>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => deleteUser(user.id)}
+                >
+                  Delete User
+                </Button>
+              </p>
             </p>
           </li>
         ))}

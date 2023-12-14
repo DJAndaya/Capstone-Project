@@ -28,7 +28,7 @@ export default function Chat() {
 
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
-      console.log(allMessages, "allmessages");
+      // console.log(allMessages, "allmessages");
       // Move the logic that depends on the updated state here
       const updatedChatMessages = [];
 
@@ -42,7 +42,7 @@ export default function Chat() {
           ]);
         }
       }
-      console.log(updatedChatMessages, "up");
+      // console.log(updatedChatMessages, "up");
       for (const user of updatedChatMessages) {
         for (const msg of msgs) {
           // console.log(user)
@@ -54,7 +54,7 @@ export default function Chat() {
       }
 
       setChatMessages(updatedChatMessages);
-      console.log(chatMessages, "a");
+      // console.log(chatMessages, "a");
     });
 
     const fetchMessages = () => {
@@ -66,7 +66,7 @@ export default function Chat() {
     const intervalId = setInterval(() => {
       fetchMessages();
     }, 1000);
-    console.log("hi")
+    // console.log("hi")
 
     return () => clearInterval(intervalId)
   

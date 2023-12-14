@@ -11,7 +11,7 @@ const getRandomImageUrl = async () => {
     const response = await axios.get("https://picsum.photos/200/300");
     return response.request.res.responseUrl;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return null;
   }
 };
@@ -125,7 +125,7 @@ const seed = async () => {
       }
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   } finally {
     await prisma.$disconnect(); // disconnect from Prisma client after seeding
   }

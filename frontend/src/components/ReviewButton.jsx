@@ -72,7 +72,7 @@ const ReviewButton = ({ itemId }) => {
 
     if (itemId) {
       fetchItemReviews(itemId);
-      console.log(reviews);
+      // console.log(reviews);
     }
   }, [keyForRemount]);
 
@@ -94,7 +94,7 @@ const ReviewButton = ({ itemId }) => {
       }
 
       const newReview = response.data;
-      console.log(newReview);
+      // console.log(newReview);
       setReviews((prevReviews) => [...prevReviews, newReview]);
       setHasReview(true)
       setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
@@ -127,7 +127,7 @@ const ReviewButton = ({ itemId }) => {
       setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
       handleClose();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -150,7 +150,7 @@ const ReviewButton = ({ itemId }) => {
       setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
       handleClose();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

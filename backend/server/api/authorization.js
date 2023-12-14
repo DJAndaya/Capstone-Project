@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
 // registering users
 app.post("/register", async (req, res, next) => {
   const { email, password, firstName, lastName, address } = req.body;
-  console.log(email);
+  // console.log(email);
   try {
     const emailAlreadyUsed = await prisma.users.findUnique({
       where: {
@@ -68,7 +68,7 @@ app.post("/register", async (req, res, next) => {
 
 app.get("/confirm/:token", async (req, res, next) => {
   const confirmationToken = req.params.token;
-  console.log(confirmationToken);
+  // console.log(confirmationToken);
   try {
     const user = await prisma.users.findUnique({
       where: { confirmationToken: confirmationToken },
@@ -95,10 +95,10 @@ app.get("/confirm/:token", async (req, res, next) => {
       email: user.email,
       admin: user.admin
     };
-    console.log(payload);
+    // console.log(payload);
 
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
-    console.log(token);
+    // console.log(token);
     res.status(200).send(token);
   } catch (error) {
     console.error(error);
@@ -134,7 +134,7 @@ app.post("/login", async (req, res, next) => {
       res.status(401).send({ message: "Incorrect password" });
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ error: "unable to login" });
   }
 });
@@ -228,7 +228,7 @@ app.patch("/login/update", async (req, res, next) => {
     });
 
     // const updatedUserWithShoppingCart 
-    console.log(updatedUser)
+    // console.log(updatedUser)
     res.json(updatedUser);
 })
 

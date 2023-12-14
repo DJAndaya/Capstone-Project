@@ -59,7 +59,7 @@ const Home = () => {
   useEffect(() => {
     if (user) {
       socket.emit("myId", {})
-      console.log(user, "homeUseEffect");
+      // console.log(user, "homeUseEffect");
       socket.emit("myId", {})
     }
 
@@ -145,7 +145,7 @@ const Home = () => {
 
         setItems(sortedItems);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
