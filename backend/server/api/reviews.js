@@ -78,6 +78,7 @@ app.post("/submitReview", async (req, res) => {
 app.patch("/editReview/:reviewId", async (req, res) => {
   const reviewId = parseInt(req.params.reviewId);
   const { rating, comment } = req.body;
+  console.log("reviewId", reviewId)
   try {
     const updatedReview = await prisma.reviews.update({
       where: {

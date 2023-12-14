@@ -138,7 +138,7 @@ function ProductDetail({ selectedItem }) {
             ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.`
             : ""}
         </div>
-        {!user || (user && user.admin) ? null : (
+        {!user ? null : (
           <Button
             variant="contained"
             color="secondary"

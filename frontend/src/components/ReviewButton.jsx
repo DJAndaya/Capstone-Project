@@ -17,6 +17,7 @@ const ReviewButton = ({ itemId }) => {
   const [reviews, setReviews] = useState([]);
   const [hasReview, setHasReview] = useState(false);
   const [reviewId, setReviewId] = useState(null);
+  const [keyForRemount, setKeyForRemount] = useState(0)
 
   const isAuth = useSelector((state) => state.isAuth?.value);
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -45,12 +46,16 @@ const ReviewButton = ({ itemId }) => {
 
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
-          const reviews = await response.json();
-          setReviews(reviews);
+          const dataReviews = await response.json();
+          setReviews(dataReviews);
+          // console.log("reviews:", reviews)
+          console.log("userid:", userId)
           reviews.forEach((review) => {
             if (review.userId === userId) {
+              setReviewId(review.id);
+              console.log("reviewid:", reviewId)
               // Match found
-              console.log("hi");
+              // console.log("hi");
               setHasReview(true);
               setReviewText(review.comment);
               setRating(review.rating);
@@ -69,9 +74,10 @@ const ReviewButton = ({ itemId }) => {
       fetchItemReviews(itemId);
       console.log(reviews);
     }
-  }, []);
+  }, [keyForRemount]);
 
   const handleReviewSubmit = async () => {
+    
     try {
       const response = await axios.post(
         "http://localhost:3000/reviews/submitReview",
@@ -91,6 +97,7 @@ const ReviewButton = ({ itemId }) => {
       console.log(newReview);
       setReviews((prevReviews) => [...prevReviews, newReview]);
       setHasReview(true)
+      setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
       handleClose();
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -98,6 +105,17 @@ const ReviewButton = ({ itemId }) => {
   };
 
   const handleReviewUpdate = async () => {
+    reviews.forEach((review) => {
+      if (review.userId === userId) {
+        // Match found
+        // console.log("hi");
+        setHasReview(true);
+        setReviewText(review.comment);
+        setRating(review.rating);
+        setReviewId(review.id);
+      }
+    });
+    console.log(reviewId)
     try {
       const response = await axios.patch(
         `http://localhost:3000/reviews/editReview/${reviewId}`,
@@ -106,6 +124,7 @@ const ReviewButton = ({ itemId }) => {
           comment: reviewText,
         }
       );
+      setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
       handleClose();
     } catch (error) {
       console.log(error);
@@ -113,11 +132,22 @@ const ReviewButton = ({ itemId }) => {
   };
 
   const handleReviewDelete = async () => {
+    reviews.forEach((review) => {
+      if (review.userId === userId) {
+        // Match found
+        // console.log("hi");
+        setHasReview(true);
+        setReviewText(review.comment);
+        setRating(review.rating);
+        setReviewId(review.id);
+      }
+    });
     try {
       const response = await axios.delete(
         `http://localhost:3000/reviews/deleteReview/${reviewId}`
       );
       setHasReview(false)
+      setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
       handleClose();
     } catch (error) {
       console.log(error);
