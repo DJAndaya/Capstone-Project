@@ -146,108 +146,109 @@ const Orders = () => {
   } else {
     // console.log(items);
     return (
-      <Grid container>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 1, md: 1 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {items.map((item, idx) => {
-              return (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="64" component="div">
-                        Date Ordered: {formatDate(item.dateOrdered)}
-                        <Tooltip
-                          title="Delete from order history"
-                        >
-                          <DeleteForeverIcon
-                            sx={{ color: "red", cursor: "pointer" }}
-                            onClick={() => removeFromOrderHistory(item.id)}
-                          />
-                        </Tooltip>
-                      </Typography>
-                      <Typography variant="h7" component="div">
-                        {item.item.name}
-                      </Typography>
-                      {/* <CardMedia
+      <>
+        <h1>Order History</h1>
+        <Grid container>
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid
+              container
+              spacing={{ xs: 1, md: 1 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+              {items.map((item, idx) => {
+                return (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="64" component="div">
+                          Date Ordered: {formatDate(item.dateOrdered)}
+                          <Tooltip title="Delete from order history">
+                            <DeleteForeverIcon
+                              sx={{ color: "red", cursor: "pointer" }}
+                              onClick={() => removeFromOrderHistory(item.id)}
+                            />
+                          </Tooltip>
+                        </Typography>
+                        <Typography variant="h7" component="div">
+                          {item.item.name}
+                        </Typography>
+                        {/* <CardMedia
                         component="img"
                         image={item.item.images[0].imageUrl}
                         alt="item image"
                         height="200px"
                         width="50px"
                       /> */}
-                      <CardActions sx={{ justifyContent: "space-between" }}>
-                        <ReviewButton item={item.item} itemId={item.itemId} />
-                        <AddToCartButton item={item} />
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            handleOpen();
-                            setSelectedItem(item.item);
-                            // console.log("item for viewDetails", selectedItem )
-                          }}
-                        >
-                          View Details
-                        </Button>
-                      </CardActions>
-                      <Typography variant="h6" component="div">
-                        ${item.item.price}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              );
-            })}
-          </Grid>
-        </Box>
+                        <CardActions sx={{ justifyContent: "space-between" }}>
+                          <ReviewButton item={item.item} itemId={item.itemId} />
+                          <AddToCartButton item={item} />
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                              handleOpen();
+                              setSelectedItem(item.item);
+                              // console.log("item for viewDetails", selectedItem )
+                            }}
+                          >
+                            View Details
+                          </Button>
+                        </CardActions>
+                        <Typography variant="h6" component="div">
+                          ${item.item.price}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </Box>
 
-        <Modal open={open} onClose={handleClose}>
-          <div
-            style={{
-              color: "black",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflowY: "auto",
-              maxHeight: "80vh",
-              width: "60vw",
-              position: "fixed",
-              top: "10vh",
-              left: "25vw",
-              backgroundColor: "white",
-              opacity: 0.95,
-            }}
-          >
-            <ProductDetail selectedItem={selectedItem} />
-          </div>
-        </Modal>
+          <Modal open={open} onClose={handleClose}>
+            <div
+              style={{
+                color: "black",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflowY: "auto",
+                maxHeight: "80vh",
+                width: "60vw",
+                position: "fixed",
+                top: "10vh",
+                left: "25vw",
+                backgroundColor: "white",
+                opacity: 0.95,
+              }}
+            >
+              <ProductDetail selectedItem={selectedItem} />
+            </div>
+          </Modal>
 
-        {showWarning && (
-          <Alert
-            severity="warning"
-            style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          >
-            <AlertTitle>Warning</AlertTitle>
-            Are you sure you want to permanently delete this item? This cannot
-            be reverted.
-            <Button onClick={handleDeleteConfirmation} sx={{ color: "red" }}>
-              OK
-            </Button>
-            <Button onClick={handleCancelDelete} color="primary" autoFocus>
-              Cancel
-            </Button>
-          </Alert>
-        )}
-      </Grid>
+          {showWarning && (
+            <Alert
+              severity="warning"
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <AlertTitle>Warning</AlertTitle>
+              Are you sure you want to permanently delete this item? This cannot
+              be reverted.
+              <Button onClick={handleDeleteConfirmation} sx={{ color: "red" }}>
+                OK
+              </Button>
+              <Button onClick={handleCancelDelete} color="primary" autoFocus>
+                Cancel
+              </Button>
+            </Alert>
+          )}
+        </Grid>
+      </>
     );
   }
 };
