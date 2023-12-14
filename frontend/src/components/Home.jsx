@@ -28,16 +28,16 @@ import ReviewButton from "./ReviewButton";
 
 import ProductDetail from "./ProductDetail";
 
-// import socketio from "socket.io-client";
+import socketio from "socket.io-client";
 
-// const socket = socketio("http://localhost:3000");
+const socket = socketio("http://localhost:3000");
 // redux
 // router
 import { useLocation, useOutletContext } from "react-router-dom";
 
 const Home = () => {
   // const dispatch = useDispatch();
-  // const user = useSelector(selectIsAuth);
+  const user = useSelector(selectIsAuth);
   const [items, setItems] = useState(null);
   // const [allMessages, setAllMessages] = useState([]);
   const [open, setOpen] = useState(false);
@@ -57,6 +57,12 @@ const Home = () => {
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
+    if (user) {
+      socket.emit("myId", {})
+      console.log(user, "homeUseEffect");
+      socket.emit("myId", {})
+    }
+
     const getItems = async () => {
       // console.log("Current pathname:", pathname);
       try {

@@ -56,6 +56,19 @@ export default function Chat() {
       setChatMessages(updatedChatMessages);
       console.log(chatMessages, "a");
     });
+
+    const fetchMessages = () => {
+      socket.emit("get_messages", {
+        fromUser: user.id,
+      });
+    };
+
+    const intervalId = setInterval(() => {
+      fetchMessages();
+    }, 1000);
+
+    return () => clearInterval(intervalId)
+  
   }, [userId]);
 
   useEffect(() => {
