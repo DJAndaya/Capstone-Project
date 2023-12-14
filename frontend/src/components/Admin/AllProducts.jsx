@@ -230,6 +230,8 @@ export default function AllProducts() {
     setIsEditFormOpen(true);
   };
   const handleEditProduct = async () => {
+
+    // console.log("error occured editing product")
     try {
       const response = await fetch(
         `http://localhost:3000/admin/editproduct/${editingProduct.id}`,
@@ -243,6 +245,7 @@ export default function AllProducts() {
         }
       );
       if (!response.ok) {
+        console.log("did not work admin stuff")
         throw new Error("Failed to edit product");
       }
       const editedProduct = await response.json();
