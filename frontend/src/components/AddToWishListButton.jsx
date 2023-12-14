@@ -55,14 +55,14 @@ const AddToWishlistButton = ({ item }) => {
   return (
     <>
       {!isItemInWishlist ? (
-        <Tooltip title="Add to wishlist">
+        <Tooltip title="Add to wishlist" sx={{cursor: "pointer"}}>
           <FavoriteBorderIcon
             fontSize="small"
             onClick={addRemoveFromWishlist}
           />
         </Tooltip>
       ) : (
-        <Tooltip title="Remove from wishlist">
+        <Tooltip title="Remove from wishlist" sx={{cursor: "pointer"}}>
           <FavoriteIcon
             style={{ color: "#FF69B4" }}
             fontSize="small"

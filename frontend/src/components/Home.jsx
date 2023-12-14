@@ -97,36 +97,43 @@ const Home = () => {
         const alphabeticalOrderData = response.data.sort((a, b) =>
           a.name > b.name ? 1 : -1
         );
+        // console.log(alphabeticalOrderData);
         setItems(alphabeticalOrderData);
 
         let sortedItems;
         switch (sortOption) {
           case "alphabeticalAsc":
+            // console.log("alphabeticalAsc")
             sortedItems = response.data.sort((a, b) =>
               a.name > b.name ? 1 : -1
             );
             break;
           case "alphabeticalDesc":
+            // console.log("alphabeticalDesc")
             sortedItems = response.data.sort((a, b) =>
               a.name < b.name ? 1 : -1
             );
             break;
           case "ratingDesc":
+            // console.log("ratingDesc")
             sortedItems = response.data.sort((a, b) =>
               a.averageRating < b.averageRating ? 1 : -1
             );
             break;
           case "ratingAsc":
+            // console.log("ratingAsc")
             sortedItems = response.data.sort((a, b) =>
               a.averageRating > b.averageRating ? 1 : -1
             );
             break;
           case "priceDesc":
+            // console.log("priceDesc")
             sortedItems = response.data.sort((a, b) =>
               a.price < b.price ? 1 : -1
             );
             break;
           case "priceAsc":
+            // console.log("priceAsc")
             sortedItems = response.data.sort((a, b) =>
               a.price > b.price ? 1 : -1
             );
@@ -143,14 +150,7 @@ const Home = () => {
     };
 
     getItems();
-  }, [pathname, userId]);
-
-  // Update items state when pathname is "/logout"
-  // useEffect(() => {
-  //   if (pathname === "/logout") {
-  //     setItems(wishlist);
-  //   }
-  // }, [pathname, wishlist]);
+  }, [pathname, userId, sortOption]);
 
   if (!items) {
     return <h1>loading</h1>;
@@ -230,19 +230,29 @@ const Home = () => {
                           }}
                         >
                           <span>
-                            {item.seller[0].firstName}{" "}
-                            {item.seller[0].lastName[0]}.
+                            {item.seller && item.seller[0]
+                              ? `${item.seller[0].firstName} ${item.seller[0].lastName[0]}.`
+                              : ""}
                           </span>
                           <span>
-                            {item.averageRating} ? (Avg. Rating:{" "}
-                            {item.averageRating?.toFixed(2)}/5 ) : (No reviews)
+
+                            {item.averageRating
+                              ? `Avg. Rating: ${item.averageRating.toFixed(
+                                  2
+                                )}/5`
+                              : "No reviews"}
                           </span>
                         </Typography>
                         <CardMedia
                           component="img"
-                          image={item.images[0] ? item.images[0].imageUrl : ""}
+                          image={
+                            item.images && item.images[0]
+                              ? item.images[0].imageUrl
+                              : "defaultImage.jpg"
+                          }
                           alt="item image"
                           height="200px"
+                          style={{objectFit: "contain"}}
                         />
                         <CardActions sx={{ alignItems: "left" }}>
                           <Button
@@ -251,7 +261,6 @@ const Home = () => {
                             onClick={() => {
                               handleOpen();
                               setSelectedItem(item);
-                              // console.log("item for viewDetails", selectedItem )
                             }}
                           >
                             View Details
@@ -282,8 +291,8 @@ const Home = () => {
             style={{
               color: "black",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              // alignItems: "center",
+              // justifyContent: "center",
               overflowY: "auto",
               maxHeight: "80vh",
               width: "60vw",

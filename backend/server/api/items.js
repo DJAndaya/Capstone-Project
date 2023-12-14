@@ -80,7 +80,11 @@ app.get("/getItemsSelling", async (req, res, next) => {
         id: Number(userId),
       },
       include: {
-        sellingItems: true,
+        sellingItems: {
+          include: {
+            images: true
+          }
+        },
       },
     });
     res.send(response);
@@ -92,8 +96,15 @@ app.get("/getItemsSelling", async (req, res, next) => {
 app.delete("/deleteItemSelling/:itemId", async (req, res, next) => {
   const { itemId } = req.params;
   const { userId } = req.query;
-
+  console.log(`itemID: ${itemId}, userID: ${userId}`)
   try {
+
+    await prisma.images.deleteMany({
+      where: {
+        itemId: Number(itemId),
+      },
+    });
+
     const removedItem = await prisma.items.delete({
       where: {
         id: Number(itemId),
@@ -108,9 +119,13 @@ app.delete("/deleteItemSelling/:itemId", async (req, res, next) => {
 
 app.post("/sell", async (req, res, next) => {
   try {
-    const { name, price, amount, description, category } = req.body.formData;
+    const { name, price, amount, description, images } = req.body.formData;
     const { id } = req.body;
+    const category = "category"
+    
+    console.log(images)
 
+    // Create a new item directly without checking for existence
     const newItem = await prisma.items.create({
       data: {
         name,
@@ -121,8 +136,12 @@ app.post("/sell", async (req, res, next) => {
         seller: {
           connect: { id: id },
         },
+        images: {
+          create: images.map((img) => ({ imageUrl: img })),
+        },
       },
     });
+
     res.send(newItem);
   } catch (error) {
     console.log(error);

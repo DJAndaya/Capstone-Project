@@ -3,7 +3,9 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "../redux/isAuthSlice";
 
-import { Button } from "@mui/material";
+import ImageCarousel from "./ImageCarousel";
+
+import { Button, Divider, Paper } from "@mui/material";
 
 import socketio from "socket.io-client";
 
@@ -61,11 +63,13 @@ function ProductDetail({ selectedItem }) {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      const response = await fetch(
-        `http://localhost:3000/reviews/itemReviews/${selectedItem.id}`
-      );
-      const data = await response.json();
-      setReviews(data);
+      if (selectedItem) {
+        const response = await fetch(
+          `http://localhost:3000/reviews/itemReviews/${selectedItem.id}`
+        );
+        const data = await response.json();
+        setReviews(data);
+      }
     };
 
     fetchReviews();
@@ -74,7 +78,7 @@ function ProductDetail({ selectedItem }) {
       setAllMessages(msgs);
       console.log(allMessages, "received");
     });
-  }, [selectedItem.id, userId]);
+  }, [selectedItem?.id, userId]);
 
   const startChat = async (toUser) => {
     console.log(toUser);
@@ -126,41 +130,54 @@ function ProductDetail({ selectedItem }) {
 
   return (
     <>
-      <div>
+      <Paper sx={{width: "98%", margin: "auto",}} elevation={4}>
         <h1>{selectedItem.name}</h1>
-        <p>
-          {selectedItem.seller[0].firstName}{" "}
-          {selectedItem.seller[0].lastName[0]}.
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => startChat(selectedItem.seller[0])}
-          >
-            Chat with Seller
-          </Button>
-        </p>
-        <p>Price: ${selectedItem.price}</p>
-        <p>Amount in Stock: {selectedItem.amount}</p>
+        <div>
+          {selectedItem.seller && selectedItem.seller[0]
+            ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.` : "" }
+        </div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => startChat(selectedItem.seller[0].firstName)}
+        >
+          Chat with Seller
+        </Button>
+        <div>Price: ${selectedItem.price}</div>
+        <div>Amount in Stock: {selectedItem.amount}</div>
         {/* {console.log(selectedItem.images)} */}
-        <img src={selectedItem.images} alt="item image" />
-        <p>Description: {selectedItem.description}</p>
-        <p>Category: {selectedItem.category}</p>
-        <p>Reviews:</p>
+        {/* <img src={selectedItem.images[0] ? selectedItem.images[0].imageUrl : ""} alt="item image" /> */}
+        <ImageCarousel item={selectedItem} />
+        <div>Description: {selectedItem.description}</div>
+        {/* <div>Category: {selectedItem.category}</div> */}
+        <br />
+        <div>Reviews:</div>
+        <br />
         {reviews.map((review, index) => (
-          <ul key={index}>
-            <li>
-              <div>
-                <p>Rating: {review.rating}</p>
-                <p>Comment: {review.comment}</p>
-              </div>
-            </li>
-          </ul>
+          <Paper sx={{width: "98%", margin: "auto", padding: "0.5%", marginBottom: "10px"}} elevation={4}>
+            {console.log(review)}
+            <div style={{fontSize: "15px", fontWeight: "bold"}}>Rating: {review.rating}/5</div>
+            <Paper sx={{width: "98%", margin: "auto", padding: "0.75%"}} elevation={3}>
+            <div>{review.comment}</div>
+            </Paper>
+            <Divider />
+          </Paper>
+          // <ul key={index}>
+          //   <li>
+          //     <div>
+          //       <p>Rating: {review.rating}</p>
+          //       <p>Comment: {review.comment}</p>
+          //     </div>
+          //   </li>
+          // </ul>
         ))}
-      </div>
+        <br />
+      </Paper>
 
       {selectedUserToChatWith && (
         <div
           style={{
+            border: "1px solid lightseagreen",
             position: "fixed",
             bottom: 16,
             right: 16,
@@ -173,27 +190,8 @@ function ProductDetail({ selectedItem }) {
             backgroundColor: "black",
           }}
         >
-          <h3
-            style={{
-              margin: "0",
-              padding: "8px",
-              backgroundColor: "black",
-              color: "white",
-            }}
-          >
-            Chatting with {selectedUserToChatWith.firstName}{" "}
-            {selectedUserToChatWith.lastName}
-            <button
-              onClick={() => setSelectedUserToChatWith(null)}
-              style={{
-                position: "absolute",
-                right: "10px",
-                color: "white",
-                backgroundColor: "black",
-              }}
-            >
-              X
-            </button>{" "}
+          <h3 style={{ color: "white" }}>
+            You are chatting with {selectedUserToChatWith.socketId}
           </h3>
           <div
             ref={messageContainerRef}
@@ -228,14 +226,8 @@ function ProductDetail({ selectedItem }) {
                 )
             )}
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "8px",
-              alignItems: "flex-end",
-            }}
-          >
+
+          <div style={{ position: "absolute", bottom: 0, marginTop: "auto" }}>
             <input
               value={message}
               onChange={(ev) => setMessage(ev.target.value)}
@@ -247,19 +239,7 @@ function ProductDetail({ selectedItem }) {
                 boxSizing: "border-box",
               }}
             />
-            <button
-              onClick={sendMessage}
-              style={{
-                width: "100%",
-                padding: "8px",
-                backgroundColor: "black",
-                color: "white",
-                cursor: "pointer",
-                marginTop: "8px",
-              }}
-            >
-              Send message
-            </button>
+            <button onClick={sendMessage}>Send message</button>
           </div>
         </div>
       )}

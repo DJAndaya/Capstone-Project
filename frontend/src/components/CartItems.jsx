@@ -25,15 +25,6 @@ import AddToCartButton from "./AddToCartButton";
 
 const CartItems = ({ item }) => {
   const userId = useSelector((state) => state.isAuth?.value?.id);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
 
   const [outletContext, setOutletContext] = useOutletContext();
   const shoppingCart = outletContext.shoppingCart;
@@ -80,13 +71,13 @@ const CartItems = ({ item }) => {
   };
 
   return (
-    <Paper sx={{maxHeigth: "110%"}}>
+    <Paper sx={{maxHeigth: "110%", width: "99%", margin: "auto"}}>
       <h3>
         {item.item.name}
-        <Tooltip title="Remove from cart">
+        <Tooltip title="Remove from cart" >
           <ClearIcon
             onClick={addRemoveFromShoppingCart}
-            sx={{ float: "right", marginRight: "10px", marginTop: "7px" }}
+            sx={{ float: "right", marginRight: "10px", marginTop: "7px", cursor: "pointer"}}
           />
         </Tooltip>
       </h3>
@@ -94,7 +85,7 @@ const CartItems = ({ item }) => {
       <div>Price: ${item.item.price}</div>
       <div>
         <BasicTextField item={item} />
-        <span style={{ float: "right", marginRight: "10px", position: "center"}}>
+        <span style={{ float: "right", marginRight: "10px", marginTop: "-12px", position: "center", fontSize: "1.4em", fontWeigth: "bold"}}>
           ${item.purchaseAmount * item.item.price}
         </span>
       </div>
@@ -131,7 +122,11 @@ const BasicTextField = ({ item }) => {
   const handleInputChange = (event) => {
     const amount = parseInt(event.target.value);
 
-    if (amount > currentItem.amount) {
+    if (isNaN(amount) || amount <= 0) {
+      // If the value is NaN or less than or equal to 0, default to 1
+      setCustomAmount(1);
+      addPurchaseAmountToShoppingCart(currentItem, 1);
+    } else if (amount > currentItem.amount) {
       setShowWarning(true);
       setCustomAmount(currentItem.amount);
       setTimeout(() => {
@@ -158,7 +153,7 @@ const BasicTextField = ({ item }) => {
   };
 
   return (
-    <Box sx={{ minWidth: 20 }}>
+    <Box sx={{ display: "flex", alignItems: "center", minWidth: 20 }}>
       <TextField
         type="number"
         label="Amount"
@@ -168,8 +163,8 @@ const BasicTextField = ({ item }) => {
         inputProps={{ min: 1, max: currentItem.amount }}
       />
       {showWarning && (
-        <Alert severity="error" sx={{ marginTop: 1 }}>
-          The entered amount exceeds the current stock.
+        <Alert severity="error" sx={{ marginLeft: 1 }}>
+          Attempted amount exceeds the current stock.
         </Alert>
       )}
     </Box>

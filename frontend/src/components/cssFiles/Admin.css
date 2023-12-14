@@ -47,15 +47,21 @@ body.admin-page {
   list-style-type: none;
   flex-wrap: wrap;
   background-color: white;
-  width: 300px;
-  color: green;
+  width: 350px;
+  color: black;
   margin: 10px;
 }
 
 .button-container {
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: 10px;
+}
+
+.button-container button, .button-container .MuiCardActions-root button {
+  width: 100px;
+  height: 60px;
 }
 
 .product-item {
@@ -65,11 +71,15 @@ body.admin-page {
 }
 
 .productName {
-    font-weight: bold;
-    font-size:larger;
-    text-align: center;
+  font-weight: bold;
+  font-size: x-large;
+  text-align: center;
 }
 
 .inputFieldContainer {
   border-color: white;
+}
+
+.description {
+  text-decoration: underline;
 }

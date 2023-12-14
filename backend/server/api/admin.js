@@ -18,7 +18,9 @@ app.get("/", (req, res) => {
 app.get("/allproducts", async (req, res) => {
   try {
     const items = await prisma.items.findMany({
-      
+      where: {
+        isDeleted: false,
+      },
     }); // add query to filter out deleted products! (SELECT * FROM items WHERE...)
     res.json(items);
   } catch (error) {
@@ -53,7 +55,7 @@ app.get("/allusers", async (req, res) => {
 });
 
 app.post("/addproduct", async (req, res) => {
-  const { name, price, amount, description, category } = req.body;
+  const { name, price, amount, description, category, sellerId } = req.body;
 
   try {
     const newItem = await prisma.items.create({
@@ -63,6 +65,9 @@ app.post("/addproduct", async (req, res) => {
         amount,
         description,
         category,
+        seller: {
+          connect: { id: sellerId },
+        },
       },
     });
 
@@ -73,7 +78,7 @@ app.post("/addproduct", async (req, res) => {
   }
 });
 
-app.put("/editproduct/:productId", async (req, res) => {
+app.patch("/editproduct/:productId", async (req, res) => {
   const productId = parseInt(req.params.productId);
   const { name, price, amount, description, category } = req.body;
 
@@ -87,6 +92,7 @@ app.put("/editproduct/:productId", async (req, res) => {
         price,
         amount,
         description,
+        images,
         category,
       },
     });
@@ -124,6 +130,42 @@ app.delete("/deleteproduct/:productId", async (req, res) => {
   } catch (error) {
     console.error("Error deleting product from the database:", error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+app.delete("/deleteproducthard/:productId", async (req, res) => {
+  const productId = parseInt(req.params.productId);
+
+  try {
+    await prisma.images.deleteMany({
+      where: {
+        itemId: productId,
+      },
+    });
+
+    await prisma.reviews.deleteMany({
+      where: {
+        itemId: productId,
+      },
+    });
+
+    const deletedItem = await prisma.items.delete({
+      where: {
+        id: productId,
+      },
+    });
+
+    if (!deletedItem) {
+      res.status(404).send("Product not found");
+    } else {
+      res.json(deletedItem);
+    }
+  } catch (error) {
+    console.error(
+      "Error permanently deleting product from the database:",
+      error
+    );
+    res.status(500).send(error.message);
   }
 });
 
