@@ -156,7 +156,7 @@ export default function AllUsers() {
       {error && <p>Error: {error}</p>}
 
       <Button variant="contained" color="primary" onClick={toggleDrawer}>
-        Add new user
+        Add Admin
       </Button>
       {isDrawerOpen && (
         <form className="product-form" onSubmit={(e) => handleAddUser(e)}>

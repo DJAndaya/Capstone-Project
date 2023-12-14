@@ -128,7 +128,7 @@ export default function AllProducts() {
     amount: "",
     description: "",
     images: ["", "", ""],
-    category: "",
+    // category: "",
   });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -359,7 +359,7 @@ export default function AllProducts() {
               />
             </label>
           </div>
-          <div>
+          {/* <div>
             <label>
               <input
                 type="text"
@@ -369,7 +369,7 @@ export default function AllProducts() {
                 onChange={handleInputChange}
               />
             </label>
-          </div>
+          </div> */}
            <div>
             <label>
               <input
@@ -472,7 +472,7 @@ export default function AllProducts() {
               <input
                 type="text"
                 name="image1"
-                placeholder="First Image URL"
+                placeholder="Add image"
                 value= {editingProduct.image1}
                 onChange={(e) => handleInputChange(e)}
                 style={{ padding: "8px" }}
@@ -485,7 +485,7 @@ export default function AllProducts() {
               <input
                 type="text"
                 name="image2"
-                placeholder="Optional Second Image URL"
+                placeholder="Add image"
                 value={editingProduct.image2}
                 onChange={(e) => handleInputChange(e)}
                 style={{ padding: "8px" }}
@@ -497,14 +497,14 @@ export default function AllProducts() {
               <input
                 type="text"
                 name="image3"
-                placeholder="Optional Third Image URL"
+                placeholder="Add image"
                 value={editingProduct.image3}
                 onChange={(e) => handleInputChange(e)}
                 style={{ padding: "8px" }}
               />
             </label>
           </div>
-          <div>
+          {/* <div>
             <label>
               <input
                 type="text"
@@ -514,7 +514,7 @@ export default function AllProducts() {
                 onChange={(e) => handleInputChange(e)}
               />
             </label>
-          </div>
+          </div> */}
           <button type="submit">Update Product</button>
           <button onClick={() => setIsEditFormOpen(false)}>Cancel</button>
         </form>
@@ -639,7 +639,7 @@ export default function AllProducts() {
               <span className="description">Description</span>:<br />
               {product.description}
             </p>
-            <p>Category: {product.category}</p>
+            {/* <p>Category: {product.category}</p> */}
             <div className="button-container">
               <Button
                 variant="contained"
@@ -674,7 +674,11 @@ export default function AllProducts() {
                 </Button>
               </CardActions>
 
-              <Modal open={open} onClose={handleClose}>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <Modal open={open} onClose={handleClose}>
           <div
             style={{
               color: "black",
@@ -694,10 +698,6 @@ export default function AllProducts() {
             <ProductDetail selectedItem={selectedItem} />
           </div>
         </Modal>
-            </div>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

@@ -171,12 +171,7 @@ function ProductDetail({ selectedItem }) {
             <div style={{ fontSize: "15px", fontWeight: "bold" }}>
               Rating: {review.rating}/5
             </div>
-            <Paper
-              sx={{ width: "98%", margin: "auto", padding: "0.75%" }}
-              elevation={3}
-            >
               <div>{review.comment}</div>
-            </Paper>
             <Divider />
           </Paper>
           // <ul key={index}>

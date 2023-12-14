@@ -58,7 +58,7 @@ app.get("/allusers", async (req, res) => {
 
 app.post("/addAdmin", async (req, res) => {
   const { email, password, firstName, lastName, address } = req.body;
-  
+
   // console.log(email);
   try {
     const emailAlreadyUsed = await prisma.users.findUnique({
@@ -83,27 +83,36 @@ app.post("/addAdmin", async (req, res) => {
         admin: true,
       },
     });
-    res.send(newUser)
-  } catch (error) {console.log(error)}
-})
+    res.send(newUser);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 app.delete("/deleteUser", async (req, res) => {
-  const {userId} = req.query
+  const { userId } = req.query;
   try {
+
+    await prisma.reviews.deleteMany({
+      where: {
+        userId: Number(userId),
+      },
+    });
+    
     const deletedUser = await prisma.users.delete({
       where: {
-        id: Number(userId)
-      }
-    })
-    res.send(deletedUser)
+        id: Number(userId),
+      },
+    });
+    res.send(deletedUser);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 app.post("/addproduct", async (req, res) => {
-  const { name, price, amount, description, category, sellerId } = req.body;
-
+  const { name, price, amount, description, sellerId } = req.body;
+  const category = "category";
   try {
     const newItem = await prisma.items.create({
       data: {
@@ -127,28 +136,58 @@ app.post("/addproduct", async (req, res) => {
 
 app.patch("/editproduct/:productId", async (req, res) => {
   const productId = parseInt(req.params.productId);
-  const { name, price, amount, description, category, image1, image2, image3 } =
-    req.body;
+  const { name, price, amount, description, image1, image2, image3 } = req.body;
   // console.log(req.body)
 
-  const images = [image1, image2, image3];
+  const images = [image1, image2, image3].filter((img) => img !== undefined);
 
+  console.log(images);
   try {
-    const updatedItem = await prisma.items.update({
+    const existingImages = await prisma.images.findMany({
       where: {
-        id: productId,
-      },
-      data: {
-        name,
-        price: Number(price),
-        amount: Number(amount),
-        description,
-        category,
-        images: {
-          create: images.map((img) => ({ imageUrl: img })),
+        itemId: productId,
+        imageUrl: {
+          in: images,
         },
       },
     });
+
+    const newImages = images.filter(
+      (img) => !existingImages.some((exImg) => exImg.imageUrl === img)
+    );
+
+    let updatedItem;
+    if (newImages.length > 0) {
+      updatedItem = await prisma.items.update({
+        where: {
+          id: productId,
+        },
+        data: {
+          name,
+          price: Number(price),
+          amount: Number(amount),
+          description,
+          // category,
+          images: {
+            create: images.map((img) => ({ imageUrl: img })),
+          },
+        },
+        include: { images: true },
+      });
+    } else {
+      updatedItem = await prisma.items.update({
+        where: {
+          id: productId,
+        },
+        data: {
+          name,
+          price: Number(price),
+          amount: Number(amount),
+          description,
+        },
+        include: { images: true },
+      });
+    }
 
     if (!updatedItem) {
       res.status(404).send("Product not found");
@@ -258,8 +297,7 @@ app.get("/deletedproducts", async (req, res) => {
           gte: new Date(new Date() - days * 24 * 60 * 60 * 1000),
         },
       },
-      include: {images: true}
-
+      include: { images: true },
     });
     res.json(deletedProducts);
   } catch (error) {
