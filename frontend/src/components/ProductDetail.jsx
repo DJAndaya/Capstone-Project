@@ -46,11 +46,13 @@ function ProductDetail({ selectedItem }) {
 
   useEffect(() => {
     const fetchReviews = async () => {
-      const response = await fetch(
-        `http://localhost:3000/reviews/itemReviews/${selectedItem.id}`
-      );
-      const data = await response.json();
-      setReviews(data);
+      if (selectedItem) {
+        const response = await fetch(
+          `http://localhost:3000/reviews/itemReviews/${selectedItem.id}`
+        );
+        const data = await response.json();
+        setReviews(data);
+      }
     };
 
     fetchReviews();
@@ -59,7 +61,7 @@ function ProductDetail({ selectedItem }) {
       setAllMessages(msgs);
       console.log(allMessages, "received");
     });
-  }, [selectedItem.id, userId]);
+  }, [selectedItem?.id, userId]);
 
   const startChat = async (toUser) => {
     console.log(toUser);
@@ -110,8 +112,8 @@ function ProductDetail({ selectedItem }) {
       <Paper sx={{width: "98%", margin: "auto",}} elevation={4}>
         <h1>{selectedItem.name}</h1>
         <div>
-          {selectedItem.seller[0].firstName}{" "}
-          {selectedItem.seller[0].lastName[0]}.
+          {selectedItem.seller && selectedItem.seller[0]
+            ? `${selectedItem.seller[0].firstName} ${selectedItem.seller[0].lastName[0]}.`
         </div>
         <Button
           variant="contained"

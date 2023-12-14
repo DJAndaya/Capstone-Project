@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Button } from "@mui/material";
 import "../cssFiles/Admin.css";
 
 export default function AllUsers() {
@@ -133,7 +134,9 @@ export default function AllUsers() {
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
 
-      <button onClick={toggleDrawer}>Add new user</button>
+      <Button variant="contained" color="primary" onClick={toggleDrawer}>
+        Add new user
+      </Button>
       {isDrawerOpen && (
         <form className="product-form" onSubmit={handleFormSubmit}>
           <div>
@@ -177,18 +180,27 @@ export default function AllUsers() {
         <p>
           Page {currentPage} of {totalPages}
         </p>
-        <button
+        <Button
+          variant="contained"
+          color="primary"
           onClick={() => handlePageChange(1)}
-          disabled={currentPage === 1}
+          style={{ color: currentPage === 1 ? "grey" : "white" }}
         >
           First Page
-        </button>
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            if (currentPage > 1) {
+              handlePageChange(currentPage - 1);
+            }
+          }}
+          style={{ color: currentPage === 1 ? "grey" : "white" }}
+          
         >
           Previous Page
-        </button>
+        </Button>
         <span>
           Go to Page:{" "}
           <input
@@ -203,19 +215,30 @@ export default function AllUsers() {
             min="1"
             max={totalPages}
           />
-          <button onClick={handleManualPageChange}>Go</button>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleManualPageChange}
+          >Go</Button>
+ <Button
+            variant="contained"
+            color="primary"  onClick={() => {
+              if (currentPage < totalPages) {
+                handlePageChange(currentPage + 1);
+              }
+            }}
+            style={{ color: currentPage === totalPages ? "grey" : "white" }}
           >
             Next Page
-          </button>
-          <button
-            onClick={() => handlePageChange(totalPages)}
-            disabled={currentPage === totalPages}
-          >
+          </Button>
+          <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handlePageChange(totalPages)}
+          style={{ color: currentPage === totalPages ? "grey" : "white" }}
+        >
             Last Page
-          </button>
+          </Button>
           <select
             value={dropdownDisplay}
             onChange={(e) => {
@@ -238,13 +261,28 @@ export default function AllUsers() {
         </span>
       </div>
 
-      <ul>
+      <ul className="allProducts">
         {renderUsersForCurrentPage().map((user) => (
-          <li key={user.id}>
-            <p>First name: {user.firstName}</p>
-            <p>Last name: {user.lastName}</p>
+          <li key={user.id} className="listOfProducts product-item">
+            <p>
+              Name:{" "}
+              <strong style={{ fontSize: "1.5em" }}>
+                {user.firstName} {user.lastName}
+              </strong>
+            </p>
             <p>Email: {user.email} left</p>
-            {/* <p>Is Admin? {user.admin}</p> */}
+            <p>Address: {user.address} left</p>
+            <p>
+              Admin:
+              <span
+                style={{
+                  color: user.admin ? "green" : "red",
+                  fontWeight: user.admin ? "bold" : "normal",
+                }}
+              >
+                {user.admin ? "Yes" : "No"}
+              </span>
+            </p>
           </li>
         ))}
       </ul>

@@ -229,6 +229,7 @@ const Home = () => {
                               : ""}
                           </span>
                           <span>
+
                             {item.averageRating
                               ? `Avg. Rating: ${item.averageRating.toFixed(
                                   2
@@ -254,7 +255,6 @@ const Home = () => {
                             onClick={() => {
                               handleOpen();
                               setSelectedItem(item);
-                              // console.log("item for viewDetails", selectedItem )
                             }}
                           >
                             View Details
