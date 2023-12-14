@@ -40,6 +40,7 @@ function ProductDetail({ selectedItem }) {
 
   useEffect(() => {
     if (user) {
+      console.log("testingInIfUser")
       socket.emit("user_joined", user);
       socket.on("update_socket", (updatedUserData) => {
         console.log("productupdateuserdetails:", updatedUserData); // not showing up
@@ -51,7 +52,7 @@ function ProductDetail({ selectedItem }) {
         socket.emit("myId", {});
       });
     }
-    console.log("test")
+    console.log("testing")
     socket.emit("myId", {});
     console.log(user, "mounting");
     socket.emit("myId", {});
@@ -73,7 +74,7 @@ function ProductDetail({ selectedItem }) {
     };
 
     fetchReviews();
-
+    // console.log("do i run alot")
     socket.on("receive_message", (msgs) => {
       setAllMessages(msgs);
       console.log(allMessages, "received");
@@ -81,7 +82,7 @@ function ProductDetail({ selectedItem }) {
   }, [selectedItem?.id, userId]);
 
   const startChat = async (toUser) => {
-    console.log(toUser);
+    console.log("touser:", toUser);
 
     // console.log(toUser);
     // console.log(toUser.id);

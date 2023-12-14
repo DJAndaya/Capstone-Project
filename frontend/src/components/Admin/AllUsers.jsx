@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
+import axios from "axios";
 import "../cssFiles/Admin.css";
 
 export default function AllUsers() {
@@ -11,6 +12,7 @@ export default function AllUsers() {
   const [currentProductId, setCurrentProductId] = useState(null);
   const [pageInput, setPageInput] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [keyForRemount, setKeyForRemount] = useState(0)
 
   const [usersPerPage, setUsersPerPage] = useState(20);
   const [dropdownDisplay, setDropdownDisplay] = useState("users per page");
@@ -33,7 +35,7 @@ export default function AllUsers() {
     };
 
     fetchUsers();
-  }, []);
+  }, [keyForRemount]);
 
   useEffect(() => {
     calculateTotalPages(users.length);
@@ -88,9 +90,24 @@ export default function AllUsers() {
     }));
   };
 
-  const handleAddUser = async () => {
+  const deleteUser = async (userId) => {
     try {
-      const response = await fetch("http://localhost:3000/admin/adduser", {
+      const response = await axios.delete("http://localhost:3000/admin/deleteUser",
+      {
+        params: {userId: userId}
+      })
+      console.log(response)
+      const newUserList = users.filter((user) => {
+        return user.id !== response.data.id
+      })
+      setUsers(newUserList);
+    } catch (error) {console.log(error)}
+  }
+
+  const handleAddUser = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await fetch("http://localhost:3000/admin/addAdmin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,15 +116,19 @@ export default function AllUsers() {
       });
 
       if (!response.ok) {
+        console.log("did not work")
         throw new Error("Failed to add user");
       }
 
       const addedUser = await response.json();
+      console.log(addedUser)
       setUsers((prevUsers) => [...prevUsers, addedUser]);
       setNewUser({
         firstName: "",
         lastName: "",
         email: "",
+        address: "",
+        password: ""
         // Reset other user fields as needed
       });
     } catch (error) {
@@ -118,7 +139,7 @@ export default function AllUsers() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      await handleAddProduct();
+      await handleAddUser();
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -138,7 +159,7 @@ export default function AllUsers() {
         Add new user
       </Button>
       {isDrawerOpen && (
-        <form className="product-form" onSubmit={handleFormSubmit}>
+        <form className="product-form" onSubmit={(e) => handleAddUser(e)}>
           <div>
             <label>
               <input
@@ -146,7 +167,7 @@ export default function AllUsers() {
                 placeholder="First Name"
                 name="firstName"
                 value={newUser.firstName}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
               />
             </label>
           </div>
@@ -157,7 +178,18 @@ export default function AllUsers() {
                 placeholder="Last Name"
                 name="lastName"
                 value={newUser.lastName}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="text"
+                placeholder="Address"
+                name="address"
+                value={newUser.address}
+                onChange={(e) => handleInputChange(e)}
               />
             </label>
           </div>
@@ -168,7 +200,18 @@ export default function AllUsers() {
                 placeholder="Email"
                 name="email"
                 value={newUser.email}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="text"
+                placeholder="Password"
+                name="password"
+                value={newUser.password}
+                onChange={(e) => handleInputChange(e)}
               />
             </label>
           </div>
@@ -270,8 +313,8 @@ export default function AllUsers() {
                 {user.firstName} {user.lastName}
               </strong>
             </p>
-            <p>Email: {user.email} left</p>
-            <p>Address: {user.address} left</p>
+            <p>Email: {user.email} </p>
+            <p>Address: {user.address} </p>
             <p>
               Admin:
               <span
@@ -282,6 +325,9 @@ export default function AllUsers() {
               >
                 {user.admin ? "Yes" : "No"}
               </span>
+              <Button onClick={() => deleteUser(user.id)}>
+                Delete User
+              </Button>
             </p>
           </li>
         ))}

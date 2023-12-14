@@ -30,7 +30,7 @@ export default function Admin() {
   return (
     <div className="admin-container">
       <div>
-        <TemporaryDrawer />
+        {/* <TemporaryDrawer /> */}
 
         <h1 className="admin-header">ADMIN PAGE</h1>
         <div className="admin-description">

@@ -21,7 +21,9 @@ app.get("/allproducts", async (req, res) => {
       where: {
         isDeleted: false,
       },
+      include: { images: true },
     }); // add query to filter out deleted products! (SELECT * FROM items WHERE...)
+
     res.json(items);
   } catch (error) {
     console.error("Error fetching items from database:", error);
@@ -54,6 +56,51 @@ app.get("/allusers", async (req, res) => {
   }
 });
 
+app.post("/addAdmin", async (req, res) => {
+  const { email, password, firstName, lastName, address } = req.body;
+  
+  // console.log(email);
+  try {
+    const emailAlreadyUsed = await prisma.users.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (emailAlreadyUsed) {
+      return res.status(409).send({ message: "Email already used" });
+    }
+
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const newUser = await prisma.users.create({
+      data: {
+        email,
+        password: hashedPassword,
+        firstName,
+        lastName,
+        address,
+        isConfirmed: true,
+        admin: true,
+      },
+    });
+    res.send(newUser)
+  } catch (error) {console.log(error)}
+})
+
+app.delete("/deleteUser", async (req, res) => {
+  const {userId} = req.query
+  try {
+    const deletedUser = await prisma.users.delete({
+      where: {
+        id: Number(userId)
+      }
+    })
+    res.send(deletedUser)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 app.post("/addproduct", async (req, res) => {
   const { name, price, amount, description, category, sellerId } = req.body;
 
@@ -80,7 +127,11 @@ app.post("/addproduct", async (req, res) => {
 
 app.patch("/editproduct/:productId", async (req, res) => {
   const productId = parseInt(req.params.productId);
-  const { name, price, amount, description, category } = req.body;
+  const { name, price, amount, description, category, image1, image2, image3 } =
+    req.body;
+  // console.log(req.body)
+
+  const images = [image1, image2, image3];
 
   try {
     const updatedItem = await prisma.items.update({
@@ -89,11 +140,13 @@ app.patch("/editproduct/:productId", async (req, res) => {
       },
       data: {
         name,
-        price,
-        amount,
+        price: Number(price),
+        amount: Number(amount),
         description,
-        images,
         category,
+        images: {
+          create: images.map((img) => ({ imageUrl: img })),
+        },
       },
     });
 

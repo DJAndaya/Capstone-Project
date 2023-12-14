@@ -80,10 +80,10 @@ export default function App() {
           path: "/admin",
           element: <Admin />,
         },
-        {
-          path: "/admin/allproducts",
-          element: <AllProducts />,
-        },
+        // {
+        //   path: "/admin/allproducts",
+        //   element: <AllProducts />,
+        // },
         {
           path: "/admin/deletedproducts",
           element: <DeletedProducts />,

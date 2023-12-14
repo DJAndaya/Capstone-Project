@@ -207,7 +207,7 @@ export default function AllProducts() {
     }
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async () => {
     e.preventDefault();
     try {
       await handleAddProduct();
@@ -254,7 +254,7 @@ export default function AllProducts() {
     setIsEditFormOpen(true);
   };
 
-  const handleEditProduct = async () => {
+  const handleEditProduct = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch(
@@ -430,7 +430,7 @@ export default function AllProducts() {
                 placeholder="Name"
                 name="name"
                 value={editingProduct.name}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
               />
             </label>
           </div>
@@ -441,7 +441,7 @@ export default function AllProducts() {
                 placeholder="Price"
                 name="price"
                 value={editingProduct.price}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
               />
             </label>
           </div>
@@ -452,7 +452,7 @@ export default function AllProducts() {
                 placeholder="Amount"
                 name="amount"
                 value={editingProduct.amount}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
               />
             </label>
           </div>
@@ -463,7 +463,7 @@ export default function AllProducts() {
                 placeholder="Description"
                 name="description"
                 value={editingProduct.description}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
               />
             </label>
           </div>
@@ -473,8 +473,8 @@ export default function AllProducts() {
                 type="text"
                 name="image1"
                 placeholder="First Image URL"
-                value={editingProduct.images[0] || ""}
-                onChange={(e) => handleImageInputChange(0, e.target.value)}
+                value= {editingProduct.image1}
+                onChange={(e) => handleInputChange(e)}
                 style={{ padding: "8px" }}
                 // required
               />
@@ -486,8 +486,8 @@ export default function AllProducts() {
                 type="text"
                 name="image2"
                 placeholder="Optional Second Image URL"
-                value={editingProduct.images[1] || ""}
-                onChange={(e) => handleImageInputChange(1, e.target.value)}
+                value={editingProduct.image2}
+                onChange={(e) => handleInputChange(e)}
                 style={{ padding: "8px" }}
               />
             </label>
@@ -498,8 +498,8 @@ export default function AllProducts() {
                 type="text"
                 name="image3"
                 placeholder="Optional Third Image URL"
-                value={editingProduct.images[2] || ""}
-                onChange={(e) => handleImageInputChange(2, e.target.value)}
+                value={editingProduct.image3}
+                onChange={(e) => handleInputChange(e)}
                 style={{ padding: "8px" }}
               />
             </label>
@@ -511,7 +511,7 @@ export default function AllProducts() {
                 placeholder="Category"
                 name="category"
                 value={editingProduct.category}
-                onChange={handleInputChange}
+                onChange={(e) => handleInputChange(e)}
               />
             </label>
           </div>
@@ -666,6 +666,7 @@ export default function AllProducts() {
                   color="primary"
                   onClick={() => {
                     handleOpen();
+                    // console.log(product)
                     setSelectedItem(product);
                   }}
                 >
@@ -674,25 +675,25 @@ export default function AllProducts() {
               </CardActions>
 
               <Modal open={open} onClose={handleClose}>
-                <div
-                  style={{
-                    color: "black",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    overflowY: "auto",
-                    maxHeight: "80vh",
-                    width: "60vw",
-                    position: "fixed",
-                    top: "10vh",
-                    left: "25vw",
-                    backgroundColor: "white",
-                    opacity: 0.95,
-                  }}
-                >
-                  <ProductDetail items={selectedItem} />
-                </div>
-              </Modal>
+          <div
+            style={{
+              color: "black",
+              display: "flex",
+              // alignItems: "center",
+              // justifyContent: "center",
+              overflowY: "auto",
+              maxHeight: "80vh",
+              width: "60vw",
+              position: "fixed",
+              top: "10vh",
+              left: "25vw",
+              backgroundColor: "white",
+              opacity: 0.95,
+            }}
+          >
+            <ProductDetail selectedItem={selectedItem} />
+          </div>
+        </Modal>
             </div>
           </li>
         ))}
