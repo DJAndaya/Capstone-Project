@@ -10,13 +10,14 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 const ImageCarousel = ({ item }) => {
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
-
+  console.log("items:", item)
   const images = item.images;
+  console.log(images)
   const maxSteps = images.length;
 
-  console.log(item);
+  // console.log(item);
   //   const images = item.images
-  console.log(images);
+  // console.log(images);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) =>

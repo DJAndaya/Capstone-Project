@@ -142,7 +142,13 @@ app.post("/sell", async (req, res, next) => {
       },
     });
 
-    res.send(newItem);
+    const newItemWithImages = await prisma.items.findUnique({
+      where: { id: newItem.id },
+      include: { images: true },
+    });
+
+    console.log(newItem)
+    res.send(newItemWithImages);
   } catch (error) {
     console.log(error);
   }

@@ -41,7 +41,7 @@ export default function Sell() {
         formData,
         id: isAuth.id,
       });
-
+      console.log("data from when item is sent:", response.data)
       const itemAddedToItemSelling = [...itemsSelling, response.data];
       setItemsSelling(itemAddedToItemSelling);
     } catch (error) {

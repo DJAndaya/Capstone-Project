@@ -370,6 +370,54 @@ export default function AllProducts() {
               />
             </label>
           </div>
+           <div>
+            <label>
+              <input
+                type="text"
+                name="image1"
+                placeholder="First Image URL"
+                value={newProduct.images[0] || ""}
+                onChange={(e) => handleImageInputChange(0, e.target.value)}
+                style={{ padding: "8px" }}
+                // required
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="text"
+                name="image2"
+                placeholder="Optional Second Image URL"
+                value={newProduct.images[1] || ""}
+                onChange={(e) => handleImageInputChange(1, e.target.value)}
+                style={{ padding: "8px" }}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="text"
+                name="image3"
+                placeholder="Optional Third Image URL"
+                value={newProduct.images[2] || ""}
+                onChange={(e) => handleImageInputChange(2, e.target.value)}
+                style={{ padding: "8px" }}
+              />
+            </label>
+          </div>
+          {/* <div>
+            <label>
+              <input
+                type="text"
+                placeholder="Category"
+                name="category"
+                value={editingProduct.category}
+                onChange={handleInputChange}
+              />
+            </label>
+          </div> */}
           <button type="submit">Add New Product</button>
         </form>
       )}
@@ -425,7 +473,7 @@ export default function AllProducts() {
                 type="text"
                 name="image1"
                 placeholder="First Image URL"
-                value={newProduct.images[0] || ""}
+                value={editingProduct.images[0] || ""}
                 onChange={(e) => handleImageInputChange(0, e.target.value)}
                 style={{ padding: "8px" }}
                 // required
@@ -438,7 +486,7 @@ export default function AllProducts() {
                 type="text"
                 name="image2"
                 placeholder="Optional Second Image URL"
-                value={newProduct.images[1] || ""}
+                value={editingProduct.images[1] || ""}
                 onChange={(e) => handleImageInputChange(1, e.target.value)}
                 style={{ padding: "8px" }}
               />
@@ -450,7 +498,7 @@ export default function AllProducts() {
                 type="text"
                 name="image3"
                 placeholder="Optional Third Image URL"
-                value={newProduct.images[2] || ""}
+                value={editingProduct.images[2] || ""}
                 onChange={(e) => handleImageInputChange(2, e.target.value)}
                 style={{ padding: "8px" }}
               />
