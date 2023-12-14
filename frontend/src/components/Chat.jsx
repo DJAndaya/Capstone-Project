@@ -66,6 +66,7 @@ export default function Chat() {
     const intervalId = setInterval(() => {
       fetchMessages();
     }, 1000);
+    console.log("hi")
 
     return () => clearInterval(intervalId)
   
