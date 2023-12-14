@@ -50,7 +50,7 @@ const ReviewButton = ({ itemId }) => {
           reviews.forEach((review) => {
             if (review.userId === userId) {
               // Match found
-              console.log("hi");
+              // console.log("hi");
               setHasReview(true);
               setReviewText(review.comment);
               setRating(review.rating);
@@ -67,7 +67,7 @@ const ReviewButton = ({ itemId }) => {
 
     if (itemId) {
       fetchItemReviews(itemId);
-      console.log(reviews);
+      // console.log(reviews);
     }
   }, []);
 
@@ -88,7 +88,7 @@ const ReviewButton = ({ itemId }) => {
       }
 
       const newReview = response.data;
-      console.log(newReview);
+      // console.log(newReview);
       setReviews((prevReviews) => [...prevReviews, newReview]);
       setHasReview(true)
       handleClose();
@@ -108,7 +108,7 @@ const ReviewButton = ({ itemId }) => {
       );
       handleClose();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -120,7 +120,7 @@ const ReviewButton = ({ itemId }) => {
       setHasReview(false)
       handleClose();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

@@ -29,7 +29,7 @@ const Register = () => {
       // check email for confirmation
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

@@ -38,7 +38,7 @@ export default function App() {
   const user = useSelector(selectIsAuth);
   const userId = useSelector((state) => state.isAuth?.value?.id);
   // useEffect(() => {
-  //   console.log("redux state after login:", user)
+  //   // console.log("redux state after login:", user)
   //   // console.log("store after login", user.shoppingCart)
   // }, [user])
 
@@ -146,7 +146,7 @@ export default function App() {
           const user = userResponse.data;
           dispatch(setIsAuth(user));
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
       }
     };
@@ -155,17 +155,17 @@ export default function App() {
     // if (user) {
     //   socket.emit("user_joined", user);
     //   socket.on("update_socket", (updatedUserData) => {
-    //     console.log("updatedUserData:", updatedUserData); // not showing up
+    //     // console.log("updatedUserData:", updatedUserData); // not showing up
     //     dispatch(setIsAuth(updatedUserData));
     //     // console.log(updatedUserData);
     //     // console.log(user, "App")
     //     // console.log("user info after dispatch:", user) // not showing up
     //     socket.emit("myId", {});
     //   });
-    //   console.log("user has joined with socket", user);
+    //   // console.log("user has joined with socket", user);
     //   socket.emit("myId", {});
     //   socket.on("disconnect", () => {
-    //     console.log("Disconnected from server");
+    //     // console.log("Disconnected from server");
     //   });
     // }
   }, [userId]);

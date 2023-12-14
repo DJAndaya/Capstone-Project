@@ -32,14 +32,14 @@ app.get("/", async (req, res, next) => {
       })
     );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 });
 
 // get searched items
 app.get("/search", async (req, res, next) => {
   const { searchQuery } = req.query;
-  console.log(searchQuery);
+  // console.log(searchQuery);
   try {
     const filteredItems = await prisma.items.findMany({
       where: {
@@ -68,7 +68,7 @@ app.get("/search", async (req, res, next) => {
     });
     res.send(filteredItems);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 });
 
@@ -89,14 +89,14 @@ app.get("/getItemsSelling", async (req, res, next) => {
     });
     res.send(response);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 });
 
 app.delete("/deleteItemSelling/:itemId", async (req, res, next) => {
   const { itemId } = req.params;
   const { userId } = req.query;
-  console.log(`itemID: ${itemId}, userID: ${userId}`)
+  // console.log(`itemID: ${itemId}, userID: ${userId}`)
   try {
 
     await prisma.images.deleteMany({
@@ -113,7 +113,7 @@ app.delete("/deleteItemSelling/:itemId", async (req, res, next) => {
     });
     res.send(removedItem);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 });
 
@@ -123,7 +123,7 @@ app.post("/sell", async (req, res, next) => {
     const { id } = req.body;
     const category = "category"
     
-    console.log(images)
+    // console.log(images)
 
     // Create a new item directly without checking for existence
     const newItem = await prisma.items.create({
@@ -147,10 +147,10 @@ app.post("/sell", async (req, res, next) => {
       include: { images: true },
     });
 
-    console.log(newItem)
+    // console.log(newItem)
     res.send(newItemWithImages);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 });
 
@@ -213,7 +213,7 @@ app.patch("/addOrRemoveFromShoppingCart", async (req, res, next) => {
     const token = jwt.sign(updatedUserShoppingCart, process.env.JWT_SECRET_KEY);
     res.send(token);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ error: "Error occured adding item" });
   }
 });
@@ -236,7 +236,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
     let updatedUserWishlist = "";
     // console.log(isItemInCart);
     if (isItemInWishlist) {
-      console.log("disconnecting item from wishlist")
+      // console.log("disconnecting item from wishlist")
       updatedUserWishlist = await prisma.users.update({
         where: { id: userId },
         data: {
@@ -264,7 +264,7 @@ app.patch("/addOrRemoveFromWishlist", async (req, res, next) => {
     const token = jwt.sign(updatedUserWishlist, process.env.JWT_SECRET_KEY);
     res.send(token);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ error: "Error occured adding item" });
   }
 });
@@ -275,7 +275,7 @@ app.patch("/clearShoppingCart", async (req, res, next) => {
     // console.log(req.body)
     let { userId } = req.query;
     userId = parseInt(userId);
-    console.log(userId);
+    // console.log(userId);
     const user = await prisma.users.findUnique({
       where: { id: userId },
       include: { shoppingCart: true },
@@ -298,7 +298,7 @@ app.patch("/clearShoppingCart", async (req, res, next) => {
     const token = jwt.sign(updatedUserShoppingCart, process.env.JWT_SECRET_KEY);
     res.send(token);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ error: "Error occured adding item" });
   }
 });
@@ -316,7 +316,7 @@ app.get("/shoppingCart", async (req, res, next) => {
     });
     res.send(userWithShoppingCart.shoppingCart);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ error: "Error occured displaying shopping cart" });
   }
 });
@@ -328,7 +328,7 @@ app.patch("/checkOut", async (req, res, next) => {
   // console.log(req.body)
   const itemIdAndAmount = req.body;
   // console.log("checkout request went through");
-  console.log(itemIdAndAmount);
+  // console.log(itemIdAndAmount);
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     line_items: itemIdAndAmount.map((item) => ({
@@ -408,7 +408,7 @@ app.get("/wishlist", async (req, res, next) => {
     });
     res.send(userWithWishlist.wishlist);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ error: "Error occured displaying shopping cart" });
   }
 });
@@ -445,14 +445,14 @@ app.get("/orderhistory", async (req, res, next) => {
 
     res.send(userWithOrderHistory.orderHistory);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ error: "Error occured displaying shopping cart" });
   }
 });
 
 app.delete("/deleteOrderHistoryItem/:itemId", async (req, res) => {
   const orderId = parseInt(req.params.itemId, 10);
-  console.log("endpoint called")
+  // console.log("endpoint called")
   try {
     // Delete the order history entry directly
     const deletedOrder = await prisma.orderHistory.delete({
@@ -465,7 +465,7 @@ app.delete("/deleteOrderHistoryItem/:itemId", async (req, res) => {
 
     res.status(200).json({ message: "Order history entry deleted successfully" });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

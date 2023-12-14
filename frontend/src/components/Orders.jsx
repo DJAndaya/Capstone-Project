@@ -81,7 +81,7 @@ const Orders = () => {
           );
           setItems(alphabeticalOrderData);
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
       };
 
@@ -119,12 +119,12 @@ const Orders = () => {
       setItems((prevItems) =>
         prevItems.filter((item) => item.item.id !== selectedItemToDelete)
       );
-      console.log("Item removed from order history successfully");
+      // console.log("Item removed from order history successfully");
 
       // Increment the key to trigger the useEffect hook
       setKeyForRemount((prevKey) => prevKey + 1);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       // Handle error, e.g., show a notification to the user
     } finally {
       // Reset the state variables

@@ -10,7 +10,7 @@ const clearDatabase = async () => {
     await prisma.orderHistory.deleteMany();
     await prisma.message.deleteMany();
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   } finally {
     await prisma.$disconnect();
   }
