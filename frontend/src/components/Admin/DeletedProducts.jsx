@@ -168,14 +168,16 @@ export default function DeletedProducts() {
 
             <div className="button-container">
               {/* <Link to={`/product/${product.id}`}> */}
-              <button
+              <Button
+                variant="contained"
+                color="primary"
                 onClick={() => {
                   handleOpen();
                   setSelectedItem(product);
                 }}
               >
                 View Details
-              </button>
+              </Button>
               {/* </Link> */}
               <Modal open={open} onClose={handleClose}>
                 <div
@@ -197,12 +199,21 @@ export default function DeletedProducts() {
                   <ProductDetail selectedItem={selectedItem} />
                 </div>
               </Modal>
-              <button onClick={() => handleUndoDelete(product.id)}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleUndoDelete(product.id)}
+              >
                 Undo Delete
-              </button>
-              <button onClick={() => handleDelete(product.id)}>
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleDelete(product.id)}
+                style={{ width: '115px' }}
+              >
                 Delete permanently
-              </button>
+              </Button>
             </div>
           </li>
         ))}

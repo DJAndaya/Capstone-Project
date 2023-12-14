@@ -167,7 +167,7 @@ function ProductDetail({ selectedItem }) {
             }}
             elevation={4}
           >
-            {// console.log("review:", review)}
+            {/* // console.log("review:", review) */}
             <div style={{ fontSize: "15px", fontWeight: "bold" }}>
               Rating: {review.rating}/5
             </div>
