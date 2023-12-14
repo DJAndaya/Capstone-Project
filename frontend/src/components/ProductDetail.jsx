@@ -139,7 +139,7 @@ function ProductDetail({ selectedItem }) {
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => startChat(selectedItem.seller[0].firstName)}
+          onClick={() => startChat(selectedItem.seller[0])}
         >
           Chat with Seller
         </Button>
@@ -177,7 +177,6 @@ function ProductDetail({ selectedItem }) {
       {selectedUserToChatWith && (
         <div
           style={{
-            border: "1px solid lightseagreen",
             position: "fixed",
             bottom: 16,
             right: 16,
@@ -190,8 +189,27 @@ function ProductDetail({ selectedItem }) {
             backgroundColor: "black",
           }}
         >
-          <h3 style={{ color: "white" }}>
-            You are chatting with {selectedUserToChatWith.socketId}
+          <h3
+            style={{
+              margin: "0",
+              padding: "8px",
+              backgroundColor: "black",
+              color: "white",
+            }}
+          >
+            Chatting with {selectedUserToChatWith.firstName}{" "}
+            {selectedUserToChatWith.lastName}
+            <button
+              onClick={() => setSelectedUserToChatWith(null)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                color: "white",
+                backgroundColor: "black",
+              }}
+            >
+              X
+            </button>{" "}
           </h3>
           <div
             ref={messageContainerRef}
@@ -226,8 +244,14 @@ function ProductDetail({ selectedItem }) {
                 )
             )}
           </div>
-
-          <div style={{ position: "absolute", bottom: 0, marginTop: "auto" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              padding: "8px",
+              alignItems: "flex-end",
+            }}
+          >
             <input
               value={message}
               onChange={(ev) => setMessage(ev.target.value)}
@@ -239,7 +263,19 @@ function ProductDetail({ selectedItem }) {
                 boxSizing: "border-box",
               }}
             />
-            <button onClick={sendMessage}>Send message</button>
+            <button
+              onClick={sendMessage}
+              style={{
+                width: "100%",
+                padding: "8px",
+                backgroundColor: "black",
+                color: "white",
+                cursor: "pointer",
+                marginTop: "8px",
+              }}
+            >
+              Send message
+            </button>
           </div>
         </div>
       )}
