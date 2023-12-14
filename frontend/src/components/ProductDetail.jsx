@@ -49,7 +49,7 @@ function ProductDetail({ selectedItem }) {
         socket.emit("myId", {});
       });
     }
-
+    console.log("test")
     socket.emit("myId", {});
     console.log(user, "mounting");
     socket.emit("myId", {});
@@ -58,7 +58,7 @@ function ProductDetail({ selectedItem }) {
         messageContainerRef.current.scrollHeight;
     }
   }, [allMessages, selectedUserToChatWith]);
-
+  
   useEffect(() => {
     const fetchReviews = async () => {
       const response = await fetch(
