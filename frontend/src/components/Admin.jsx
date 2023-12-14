@@ -6,6 +6,8 @@ import AllProducts from "./Admin/AllProducts";
 import AllUsers from "./Admin/AllUsers";
 import "./cssFiles/Admin.css";
 
+import { Button } from "@mui/material";
+
 export default function Admin() {
   const [showComponent, setShowComponent] = useState("AllProducts");
   const user = useSelector((state) => state.isAuth.value);
@@ -35,12 +37,20 @@ export default function Admin() {
           Here you can view, add, edit and delete products and users to and from
           the database.
         </div>
-        <button onClick={() => setShowComponent("AllProducts")}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setShowComponent("AllProducts")}
+        >
           Show All Products
-        </button>
-        <button onClick={() => setShowComponent("AllUsers")}>
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setShowComponent("AllUsers")}
+        >
           Show All Users
-        </button>
+        </Button>
       </div>
 
       <div className="scrollable-content">
