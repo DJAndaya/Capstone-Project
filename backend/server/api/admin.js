@@ -85,7 +85,7 @@ app.post("/addAdmin", async (req, res) => {
     });
     res.send(newUser);
   } catch (error) {
-    // console.log(error);
+    console.log(error);
   }
 });
 
@@ -104,7 +104,7 @@ app.delete("/deleteUser", async (req, res) => {
     });
     res.send(deletedUser);
   } catch (error) {
-    // console.log(error);
+    console.log(error);
   }
 });
 

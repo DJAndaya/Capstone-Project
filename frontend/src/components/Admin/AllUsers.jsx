@@ -96,13 +96,13 @@ export default function AllUsers() {
         "http://localhost:3000/admin/deleteUser",
         { data: { userId: userId } }
       );
-      // console.log(response);
+      console.log(response);
       const newUserList = users.filter((user) => {
         return user.id !== response.data.id;
       });
       setUsers(newUserList);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   };
 
@@ -118,12 +118,12 @@ export default function AllUsers() {
       });
 
       if (!response.ok) {
-        // console.log("did not work");
+        console.log("did not work");
         throw new Error("Failed to add user");
       }
 
       const addedUser = await response.json();
-      // console.log(addedUser);
+      console.log(addedUser);
       setUsers((prevUsers) => [...prevUsers, addedUser]);
       setNewUser({
         firstName: "",
