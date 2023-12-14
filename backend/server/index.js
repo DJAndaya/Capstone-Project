@@ -25,8 +25,12 @@ io.on("connection", (socket) => {
         socketId: socket.id,
       },
     });
-    console.log("backend:", updatedUserData);
+    console.log("updateduserData:", updatedUserData);
     io.to(socket.id).emit("update_socket", updatedUserData);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
   });
 
   socket.on("get_messages", async ({ fromUser }) => {
@@ -41,6 +45,13 @@ io.on("connection", (socket) => {
     } catch (error) {
       console.log(error);
     }
+  });
+
+  let emits = 0;
+  socket.on("myId", async () => {
+    emits++;
+    console.log(emits);
+    console.log(socket.id, "socketId");
   });
 
   socket.on(
@@ -71,7 +82,7 @@ io.on("connection", (socket) => {
         });
         console.log(toSocketId, "receiver");
         console.log(socket.id, "sender");
-        console.log(allMessages)
+        // console.log(allMessages)
         io.to(toSocketId).emit("receive_message", allMessages);
 
         io.to(socket.id).emit("receive_message", allMessages);
