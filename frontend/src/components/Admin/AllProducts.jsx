@@ -92,6 +92,7 @@ export default function AllProducts() {
     };
     fetchProducts();
   }, [sortOption]);
+
   useEffect(() => {
     calculateTotalPages(products.length);
   }, [products, itemsPerPage]);
@@ -126,6 +127,7 @@ export default function AllProducts() {
     price: "",
     amount: "",
     description: "",
+    images: ["", "", ""],
     category: "",
   });
   const handleInputChange = (e) => {
@@ -140,6 +142,24 @@ export default function AllProducts() {
         ...prevProduct,
         [name]: value,
       }));
+    }
+  };
+
+  const handleImageInputChange = (index, value) => {
+    if (isEditFormOpen) {
+      const updatedImages = [...editingProduct.images];
+      updatedImages[index] = value;
+      setEditingProduct({
+        ...editingProduct,
+        images: updatedImages,
+      });
+    } else {
+      const updatedImages = [...newProduct.images];
+      updatedImages[index] = value;
+      setNewProduct({
+        ...newProduct,
+        images: updatedImages,
+      });
     }
   };
 
@@ -174,6 +194,7 @@ export default function AllProducts() {
         price: "",
         amount: "",
         description: "",
+        images: ["", "", ""],
         category: "",
       }));
 
@@ -224,17 +245,22 @@ export default function AllProducts() {
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const handleEditClick = (productId) => {
     const productToEdit = products.find((product) => product.id === productId);
+    if (!Array.isArray(productToEdit.images)) {
+      productToEdit.images = ["", "", ""];
+    }
     setEditingProduct(productToEdit);
     setCurrentPage(currentPage);
     setCurrentProductId(productId);
     setIsEditFormOpen(true);
   };
+
   const handleEditProduct = async () => {
+    e.preventDefault();
     try {
       const response = await fetch(
         `http://localhost:3000/admin/editproduct/${editingProduct.id}`,
         {
-          method: "PUT",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -395,11 +421,13 @@ export default function AllProducts() {
           <div>
             <label>
               <input
-                type="integer"
-                placeholder="Amount"
-                name="amount"
-                value={editingProduct.amount}
-                onChange={handleInputChange}
+                type="text"
+                name="image1"
+                placeholder="First Image URL"
+                value={newProduct.images[0] || ""}
+                onChange={(e) => handleImageInputChange(0, e.target.value)}
+                style={{ padding: "8px" }}
+                // required
               />
             </label>
           </div>
@@ -407,10 +435,23 @@ export default function AllProducts() {
             <label>
               <input
                 type="text"
-                placeholder="Description"
-                name="description"
-                value={editingProduct.description}
-                onChange={handleInputChange}
+                name="image2"
+                placeholder="Optional Second Image URL"
+                value={newProduct.images[1] || ""}
+                onChange={(e) => handleImageInputChange(1, e.target.value)}
+                style={{ padding: "8px" }}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="text"
+                name="image3"
+                placeholder="Optional Third Image URL"
+                value={newProduct.images[2] || ""}
+                onChange={(e) => handleImageInputChange(2, e.target.value)}
+                style={{ padding: "8px" }}
               />
             </label>
           </div>
@@ -450,7 +491,6 @@ export default function AllProducts() {
             }
           }}
           style={{ color: currentPage === 1 ? "grey" : "white" }}
-          
         >
           Previous Page
         </Button>
@@ -477,7 +517,8 @@ export default function AllProducts() {
           </Button>
           <Button
             variant="contained"
-            color="primary"  onClick={() => {
+            color="primary"
+            onClick={() => {
               if (currentPage < totalPages) {
                 handlePageChange(currentPage + 1);
               }
