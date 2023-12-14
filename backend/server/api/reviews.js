@@ -47,6 +47,7 @@ app.get("/itemReviews/:itemId", async (req, res) => {
 app.post("/submitReview", async (req, res) => {
   try {
     const { rating, comment, userId, itemId } = req.body;
+    console.log(req.body)
 
     const parsedUserId = parseInt(userId);
     const parsedItemId = parseInt(itemId);
@@ -64,7 +65,7 @@ app.post("/submitReview", async (req, res) => {
         comment,
       },
     });
-
+    console.log(newReview)
     await updateItemAverageRating(parsedItemId)
 
     res.json(newReview);
@@ -74,7 +75,7 @@ app.post("/submitReview", async (req, res) => {
   }
 });
 
-app.put("/editReview/:reviewId", async (req, res) => {
+app.patch("/editReview/:reviewId", async (req, res) => {
   const reviewId = parseInt(req.params.reviewId);
   const { rating, comment } = req.body;
   try {

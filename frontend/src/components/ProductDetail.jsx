@@ -156,7 +156,7 @@ function ProductDetail({ selectedItem }) {
         <br />
         {reviews.map((review, index) => (
           <Paper sx={{width: "98%", margin: "auto", padding: "0.5%", marginBottom: "10px"}} elevation={4}>
-            {console.log(review)}
+            {console.log("review:", review)}
             <div style={{fontSize: "15px", fontWeight: "bold"}}>Rating: {review.rating}/5</div>
             <Paper sx={{width: "98%", margin: "auto", padding: "0.75%"}} elevation={3}>
             <div>{review.comment}</div>

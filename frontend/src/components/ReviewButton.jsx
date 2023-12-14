@@ -15,6 +15,8 @@ const ReviewButton = ({ itemId }) => {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
+  const [hasReview, setHasReview] = useState(false);
+  const [reviewId, setReviewId] = useState(null);
 
   const isAuth = useSelector((state) => state.isAuth?.value);
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -32,31 +34,42 @@ const ReviewButton = ({ itemId }) => {
   };
 
   useEffect(() => {
+    const fetchItemReviews = async (itemId) => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/reviews/itemReviews/${itemId}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch reviews: " + response.status);
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const reviews = await response.json();
+          setReviews(reviews);
+          reviews.forEach((review) => {
+            if (review.userId === userId) {
+              // Match found
+              console.log("hi");
+              setHasReview(true);
+              setReviewText(review.comment);
+              setRating(review.rating);
+              setReviewId(review.id);
+            }
+          });
+        } else {
+          throw new Error("Invalid response format: " + contentType);
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
     if (itemId) {
       fetchItemReviews(itemId);
+      console.log(reviews);
     }
-  }, [itemId]);
-
-  const fetchItemReviews = async (itemId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/reviews/itemReviews/${itemId}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch reviews: " + response.status);
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        const reviews = await response.json();
-        setReviews(reviews);
-      } else {
-        throw new Error("Invalid response format: " + contentType);
-      }
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-    }
-  };
+  }, []);
 
   const handleReviewSubmit = async () => {
     try {
@@ -75,21 +88,59 @@ const ReviewButton = ({ itemId }) => {
       }
 
       const newReview = response.data;
+      console.log(newReview);
       setReviews((prevReviews) => [...prevReviews, newReview]);
+      setHasReview(true)
       handleClose();
     } catch (error) {
       console.error("Error submitting review:", error);
     }
   };
 
+  const handleReviewUpdate = async () => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:3000/reviews/editReview/${reviewId}`,
+        {
+          rating,
+          comment: reviewText,
+        }
+      );
+      handleClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleReviewDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/reviews/deleteReview/${reviewId}`
+      );
+      setHasReview(false)
+      handleClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <Button variant="contained" onClick={handleOpen}>
-        Add a review
-      </Button>
-
+      {!hasReview ? (
+        <>
+          <Button variant="contained" onClick={handleOpen}>
+            Add Review
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button variant="contained" onClick={handleOpen}>
+            Update Review
+          </Button>
+        </>
+      )}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Write a Review</DialogTitle>
+        <DialogTitle>{!hasReview ? "Add Review" : "Update Review"}</DialogTitle>
         <DialogContent>
           <TextField
             label="Your Review"
@@ -113,9 +164,17 @@ const ReviewButton = ({ itemId }) => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleReviewSubmit} color="primary">
-            Submit
+          <Button
+            onClick={!hasReview ? handleReviewSubmit : handleReviewUpdate}
+            color="primary"
+          >
+            {!hasReview ? "Submit" : "Update"}
           </Button>
+          {!hasReview ? null : (
+            <Button onClick={handleReviewDelete} color="primary">
+              Delete
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </>
