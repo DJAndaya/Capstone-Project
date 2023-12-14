@@ -22,9 +22,11 @@ import Confirmation from "./components/Confirmation";
 import CheckoutSuccess from "./components/CheckoutSuccess";
 import CheckoutCancel from "./components/CheckoutCancel";
 import ProductDetail from "./components/ProductDetail";
+
 import DeletedProducts from './components/Admin/DeletedProducts';
 import Wishlist
  from "./components/Wishlist";
+
 import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "./redux/isAuthSlice";
 import socketio from "socket.io-client";
@@ -127,6 +129,29 @@ export default function App() {
   ]);
 
   useEffect(() => {
+    const possiblyLogin = async () => {
+      const token = window.localStorage?.getItem("token");
+      // console.log(token)
+      if (token) {
+        try {
+          const userResponse = await axios.get(
+            "http://localhost:3000/auth/loggedin",
+            {
+              headers: {
+                authorization: token,
+              },
+            }
+          );
+
+          const user = userResponse.data;
+          dispatch(setIsAuth(user));
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+
+    possiblyLogin();
     if (user) {
       socket.emit("user_joined", user);
       socket.on("update_socket", (updatedUserData) => {
@@ -138,34 +163,6 @@ export default function App() {
       });
       // console.log("user has joined with socket")
     }
-
-    socket.on("update_socket", (updatedUserData) => {
-      // console.log("updatedUserData:", updatedUserData) // not showing up
-      dispatch(setIsAuth(updatedUserData));
-      // console.log("user info after dispatch:", user) // not showing up
-    });
-    const possiblyLogin = async () => {
-      const token = window.localStorage?.getItem("token");
-      // console.log(token)
-      if (token) {
-        try {
-          const userResponse = await axios.get("http://localhost:3000/auth/loggedin", {
-          headers: {
-            authorization: token,
-          },
-        });
-
-
-        const user = userResponse.data;
-        dispatch(setIsAuth(user));
-      } catch (error) {
-        console.log(error)
-      }
-        }
-        
-    };
-
-    possiblyLogin();
   }, [userId]);
 
   return <RouterProvider router={router} />;
