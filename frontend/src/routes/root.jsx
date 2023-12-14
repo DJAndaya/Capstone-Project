@@ -1,5 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   Box,
@@ -71,6 +71,23 @@ export default function Root() {
     wishlist: [],
   });
   const [anchorEl, setAnchorEl] = useState(null);
+
+  // Add state to track the scroll position
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  // Update the scroll position on scroll events
+  const handleScroll = () => {
+    setScrollPosition(window.scrollY);
+  };
+
+  // Attach and remove scroll event listeners on mount/unmount
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -139,6 +156,10 @@ export default function Root() {
                   }}
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
+                  style={{
+                    position: "fixed",
+                    top: `${Math.min(Math.max(scrollPosition, 0), 60)}px`, // Dynamic top value
+                  }}
                 >
                   <MenuItem
                     onClick={() => {
@@ -225,6 +246,10 @@ export default function Root() {
                   }}
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
+                  style={{
+                    position: "fixed",
+                    top: `${Math.min(Math.max(scrollPosition, 0), 60)}px`, // Dynamic top value
+                  }}
                 >
                   <MenuItem
                     onClick={() => {

@@ -136,6 +136,7 @@ export default function DeletedProducts() {
           <li key={product.id} className="listOfProducts product-item">
             <p className="productName">{product.name}</p>
             <p>Price: ${parseFloat(product.price).toFixed(2)}</p>
+
             <p>
               Amount:{" "}
               <span

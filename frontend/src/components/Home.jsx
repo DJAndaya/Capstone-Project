@@ -91,37 +91,43 @@ const Home = () => {
         const alphabeticalOrderData = response.data.sort((a, b) =>
           a.name > b.name ? 1 : -1
         );
-        console.log(alphabeticalOrderData);
+        // console.log(alphabeticalOrderData);
         setItems(alphabeticalOrderData);
 
         let sortedItems;
         switch (sortOption) {
           case "alphabeticalAsc":
+            // console.log("alphabeticalAsc")
             sortedItems = response.data.sort((a, b) =>
               a.name > b.name ? 1 : -1
             );
             break;
           case "alphabeticalDesc":
+            // console.log("alphabeticalDesc")
             sortedItems = response.data.sort((a, b) =>
               a.name < b.name ? 1 : -1
             );
             break;
           case "ratingDesc":
+            // console.log("ratingDesc")
             sortedItems = response.data.sort((a, b) =>
               a.averageRating < b.averageRating ? 1 : -1
             );
             break;
           case "ratingAsc":
+            // console.log("ratingAsc")
             sortedItems = response.data.sort((a, b) =>
               a.averageRating > b.averageRating ? 1 : -1
             );
             break;
           case "priceDesc":
+            // console.log("priceDesc")
             sortedItems = response.data.sort((a, b) =>
               a.price < b.price ? 1 : -1
             );
             break;
           case "priceAsc":
+            // console.log("priceAsc")
             sortedItems = response.data.sort((a, b) =>
               a.price > b.price ? 1 : -1
             );
@@ -138,49 +144,7 @@ const Home = () => {
     };
 
     getItems();
-  }, [pathname, userId]);
-
-  // Update items state when pathname is "/logout"
-  // useEffect(() => {
-  //   if (pathname === "/logout") {
-  //     setItems(wishlist);
-  //   }
-  // }, [pathname, wishlist]);
-
-  const startChat = async (toUser) => {
-    // console.log(toUser);
-    // console.log(toUser.id);
-    // console.log(allMessages);
-    if (toUser.id === user.id) {
-      return;
-    }
-    console.log(toUser);
-    setSelectedUserToChatWith(toUser);
-    socket.emit("get_messages", {
-      fromUser: user.id,
-    });
-    console.log(user.socketId);
-  };
-
-  const sendMessage = () => {
-    console.log(selectedUserToChatWith.socketId, "to");
-    console.log(user.socketId, "sender");
-    socket.emit("send_message", {
-      fromUser: user.id,
-      toUser: selectedUserToChatWith.id,
-      toFirstName: selectedUserToChatWith.firstName,
-      toLastName: selectedUserToChatWith.lastName,
-      toSocketId: selectedUserToChatWith.socketId,
-      message,
-    });
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendMessage();
-    }
-  };
+  }, [pathname, userId, sortOption]);
 
   if (!items) {
     return <h1>loading</h1>;
@@ -265,15 +229,24 @@ const Home = () => {
                               : ""}
                           </span>
                           <span>
-                            {item.averageRating} ? (Avg. Rating:{" "}
-                            {item.averageRating?.toFixed(2)}/5 : (No reviews)
+
+                            {item.averageRating
+                              ? `Avg. Rating: ${item.averageRating.toFixed(
+                                  2
+                                )}/5`
+                              : "No reviews"}
                           </span>
                         </Typography>
                         <CardMedia
                           component="img"
-                          image={item.images[0] ? item.images[0].imageUrl : ""}
+                          image={
+                            item.images && item.images[0]
+                              ? item.images[0].imageUrl
+                              : "defaultImage.jpg"
+                          }
                           alt="item image"
                           height="200px"
+                          style={{objectFit: "contain"}}
                         />
                         <CardActions sx={{ alignItems: "left" }}>
                           <Button
@@ -312,8 +285,8 @@ const Home = () => {
             style={{
               color: "black",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              // alignItems: "center",
+              // justifyContent: "center",
               overflowY: "auto",
               maxHeight: "80vh",
               width: "60vw",
