@@ -125,8 +125,8 @@ const Wishlist = () => {
     }
   }, [])
 
-  if (wishlist.length === 0) {
-    return <h1>wishlist is empty</h1>;
+  if (wishlist.length === 0 || !wishlist) {
+    return <h1>Wishlist is empty</h1>;
   } else {
     // console.log(outletContext);
     return (

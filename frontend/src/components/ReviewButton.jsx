@@ -17,7 +17,7 @@ const ReviewButton = ({ itemId }) => {
   const [reviews, setReviews] = useState([]);
   const [hasReview, setHasReview] = useState(false);
   const [reviewId, setReviewId] = useState(null);
-  const [keyForRemount, setKeyForRemount] = useState(0)
+  const [keyForRemount, setKeyForRemount] = useState(0);
 
   const isAuth = useSelector((state) => state.isAuth?.value);
   const userId = useSelector((state) => state.isAuth?.value?.id);
@@ -48,20 +48,22 @@ const ReviewButton = ({ itemId }) => {
         if (contentType && contentType.includes("application/json")) {
           const dataReviews = await response.json();
           setReviews(dataReviews);
-          // console.log("reviews:", reviews)
-          console.log("userid:", userId)
-          reviews.forEach((review) => {
-            if (review.userId === userId) {
-              setReviewId(review.id);
-              console.log("reviewid:", reviewId)
-              // Match found
-              // console.log("hi");
-              setHasReview(true);
-              setReviewText(review.comment);
-              setRating(review.rating);
-              setReviewId(review.id);
-            }
-          });
+          console.log("reviews:", reviews);
+          console.log("userid:", userId);
+          // reviews.forEach((review) => {
+          //   if (review.userId === userId) {
+          //     console.log("eachreviewid", review.userId)
+          //     setReviewId(review.id);
+          //     // console.log("reviewid in fetch:", reviewId)
+          //     // Match found
+          //     // console.log("hi");
+          //     setHasReview(true);
+          //     setReviewText(review.comment);
+          //     setRating(review.rating);
+          //     setReviewId(review.id);
+          //     console.log("reviewid in fetch:", reviewId)
+          //   }
+          // });
         } else {
           throw new Error("Invalid response format: " + contentType);
         }
@@ -74,10 +76,25 @@ const ReviewButton = ({ itemId }) => {
       fetchItemReviews(itemId);
       // console.log(reviews);
     }
-  }, [keyForRemount]);
+  }, [keyForRemount, userId]);
+
+  useEffect(() => {
+    // This effect runs whenever reviews or userId changes
+    reviews.forEach((review) => {
+      if (review.userId === userId) {
+        setReviewId(review.id);
+        setHasReview(true);
+        setReviewText(review.comment);
+        setRating(review.rating);
+        setReviewId(review.id);
+        console.log("reviewid in fetch:", reviewId);
+      }
+    });
+  }, [userId, reviews, keyForRemount]); // Inclu
 
   const handleReviewSubmit = async () => {
-    
+    setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++);
+
     try {
       const response = await axios.post(
         "http://localhost:3000/reviews/submitReview",
@@ -96,8 +113,8 @@ const ReviewButton = ({ itemId }) => {
       const newReview = response.data;
       // console.log(newReview);
       setReviews((prevReviews) => [...prevReviews, newReview]);
-      setHasReview(true)
-      setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
+      setHasReview(true);
+      // setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
       handleClose();
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -105,17 +122,18 @@ const ReviewButton = ({ itemId }) => {
   };
 
   const handleReviewUpdate = async () => {
-    reviews.forEach((review) => {
-      if (review.userId === userId) {
-        // Match found
-        // console.log("hi");
-        setHasReview(true);
-        setReviewText(review.comment);
-        setRating(review.rating);
-        setReviewId(review.id);
-      }
-    });
-    console.log(reviewId)
+    setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++);
+    // reviews.forEach((review) => {
+    //   if (review.userId === userId) {
+    //     // Match found
+    //     // console.log("hi");
+    //     setHasReview(true);
+    //     setReviewText(review.comment);
+    //     setRating(review.rating);
+    //     setReviewId(review.id);
+    //   }
+    // });
+    console.log(reviewId);
     try {
       const response = await axios.patch(
         `http://localhost:3000/reviews/editReview/${reviewId}`,
@@ -124,7 +142,9 @@ const ReviewButton = ({ itemId }) => {
           comment: reviewText,
         }
       );
-      setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
+      // setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
+      setReviewText(reviewText);
+      setRating(rating);
       handleClose();
     } catch (error) {
       // console.log(error);
@@ -132,22 +152,25 @@ const ReviewButton = ({ itemId }) => {
   };
 
   const handleReviewDelete = async () => {
-    reviews.forEach((review) => {
-      if (review.userId === userId) {
-        // Match found
-        // console.log("hi");
-        setHasReview(true);
-        setReviewText(review.comment);
-        setRating(review.rating);
-        setReviewId(review.id);
-      }
-    });
+    setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++);
+    // reviews.forEach((review) => {
+    //   if (review.userId === userId) {
+    //     // Match found
+    //     // console.log("hi");
+    //     setHasReview(true);
+    //     setReviewText(review.comment);
+    //     setRating(review.rating);
+    //     setReviewId(review.id);
+    //   }
+    // });
     try {
       const response = await axios.delete(
         `http://localhost:3000/reviews/deleteReview/${reviewId}`
       );
-      setHasReview(false)
-      setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
+      setHasReview(false);
+      setReviewText("");
+      setRating("");
+      // setKeyForRemount((prevKeyForRemount) => prevKeyForRemount++)
       handleClose();
     } catch (error) {
       // console.log(error);
