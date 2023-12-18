@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import socketio from "socket.io-client";
 
-const socket = socketio("http://localhost:3000");
+const socket = socketio(`${import.meta.env.VITE_BACKEND_URL}`);
 
 export default function Chat() {
   const messageContainerRef = useRef(null);

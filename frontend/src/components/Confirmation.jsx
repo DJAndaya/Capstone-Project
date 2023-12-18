@@ -16,7 +16,7 @@ export default function Confirmation() {
     const confirmEmail = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/auth/confirm/${confirmationToken}`
+          `${import.meta.env.VITE_BACKEND_URL}/auth/confirm/${confirmationToken}`
         );
 
         if ((response.status === 200)) {
@@ -26,7 +26,7 @@ export default function Confirmation() {
           setConfirmation("Email confirmed successfully.");
 
           const userResponse = await axios.get(
-            "http://localhost:3000/auth/loggedin",
+            `${import.meta.env.VITE_BACKEND_URL}/auth/loggedin`,
             {
               headers: {
                 authorization: token,

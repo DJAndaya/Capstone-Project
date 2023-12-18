@@ -28,7 +28,7 @@ import ProductDetail from "./ProductDetail";
 
 // import socketio from "socket.io-client";
 
-// const socket = socketio("http://localhost:3000");
+// const socket = socketio(`${import.meta.env.VITE_BACKEND_URL}`);
 // redux
 // router
 import { useLocation, useOutletContext } from "react-router-dom";
@@ -109,7 +109,7 @@ const Wishlist = () => {
     if (userId && wishlist.length === 0) {
       const getUserWishlistData = async () => {
         const response = await axios.get(
-          "http://localhost:3000/items/wishlist",
+          `${import.meta.env.VITE_BACKEND_URL}/items/wishlist`,
           {
             params: { userId },
           }

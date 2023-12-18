@@ -25,7 +25,7 @@ export default function ItemsSelling() {
     const getItemsSelling = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/items/getItemsSelling",
+          `${import.meta.env.VITE_BACKEND_URL}/items/getItemsSelling`,
           {
             params: {
               userId: isAuth.id,
@@ -44,7 +44,7 @@ export default function ItemsSelling() {
   const removeItem = async (itemId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/items/deleteItemSelling/${itemId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/items/deleteItemSelling/${itemId}`,
         {
           params: {
             userId: isAuth.id

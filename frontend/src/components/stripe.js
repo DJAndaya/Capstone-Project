@@ -3,7 +3,7 @@ import axios from "axios";
 
 const getStripePublicKey = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/items/stripeKey');
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/items/stripeKey`);
     return response.data.publicKey;
   } catch (error) {
     // console.log(error);

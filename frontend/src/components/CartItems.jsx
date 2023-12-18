@@ -60,7 +60,7 @@ const CartItems = ({ item }) => {
       try {
         const item = currentItem;
         await axios.patch(
-          "http://localhost:3000/items/addOrRemoveFromShoppingCart",
+          `${import.meta.env.VITE_BACKEND_URL}/items/addOrRemoveFromShoppingCart`,
           { item, userId }
         );
       } catch (error) {

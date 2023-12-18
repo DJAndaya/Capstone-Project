@@ -37,7 +37,7 @@ export default function Sell() {
 
   const addItemToSell = async (formData) => {
     try {
-      const response = await axios.post("http://localhost:3000/items/sell", {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/items/sell`, {
         formData,
         id: isAuth.id,
       });
@@ -90,7 +90,7 @@ export default function Sell() {
     const getItemsSelling = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/items/getItemsSelling",
+          `${import.meta.env.VITE_BACKEND_URL}/items/getItemsSelling`,
           {
             params: {
               userId: isAuth.id,
@@ -110,7 +110,7 @@ export default function Sell() {
     // console.log(`itemId: ${itemId}, userID, ${isAuth.id}`);
     try {
       const response = await axios.delete(
-        `http://localhost:3000/items/deleteItemSelling/${itemId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/items/deleteItemSelling/${itemId}`,
         {
           params: {
             userId: isAuth.id,

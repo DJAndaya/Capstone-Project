@@ -38,7 +38,7 @@ const ReviewButton = ({ itemId }) => {
     const fetchItemReviews = async (itemId) => {
       try {
         const response = await fetch(
-          `http://localhost:3000/reviews/itemReviews/${itemId}`
+          `${import.meta.env.VITE_BACKEND_URL}/reviews/itemReviews/${itemId}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch reviews: " + response.status);
@@ -97,7 +97,7 @@ const ReviewButton = ({ itemId }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/reviews/submitReview",
+        `${import.meta.env.VITE_BACKEND_URL}/reviews/submitReview`,
         {
           rating,
           userId,
@@ -136,7 +136,7 @@ const ReviewButton = ({ itemId }) => {
     console.log(reviewId);
     try {
       const response = await axios.patch(
-        `http://localhost:3000/reviews/editReview/${reviewId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/reviews/editReview/${reviewId}`,
         {
           rating,
           comment: reviewText,
@@ -165,7 +165,7 @@ const ReviewButton = ({ itemId }) => {
     // });
     try {
       const response = await axios.delete(
-        `http://localhost:3000/reviews/deleteReview/${reviewId}`
+        `${import.meta.env.VITE_BACKEND_URL}/reviews/deleteReview/${reviewId}`
       );
       setHasReview(false);
       setReviewText("");

@@ -31,7 +31,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setIsAuth, selectIsAuth } from "./redux/isAuthSlice";
 import socketio from "socket.io-client";
 
-const socket = socketio("http://localhost:3000");
+const socket = socketio(`${import.meta.env.VITE_BACKEND_URL}`);
 
 export default function App() {
   const dispatch = useDispatch();
@@ -135,7 +135,7 @@ export default function App() {
       if (token) {
         try {
           const userResponse = await axios.get(
-            "http://localhost:3000/auth/loggedin",
+            `${import.meta.env.VITE_BACKEND_URL}/auth/loggedin`,
             {
               headers: {
                 authorization: token,

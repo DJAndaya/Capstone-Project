@@ -9,7 +9,7 @@ import { Button, Divider, Paper } from "@mui/material";
 
 import socketio from "socket.io-client";
 
-const socket = socketio("http://localhost:3000");
+const socket = socketio(`${import.meta.env.VITE_BACKEND_URL}`);
 
 function ProductDetail({ selectedItem }) {
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ function ProductDetail({ selectedItem }) {
   // useEffect(() => {
   //   const fetchProduct = async () => {
   //     const response = await fetch(
-  //       `http://localhost:3000/admin/allproducts/${id}`
+  //       `${import.meta.env.VITE_BACKEND_URL}/admin/allproducts/${id}`
   //     );
   //     const data = await response.json();
   //     setProduct(data);
@@ -66,7 +66,7 @@ function ProductDetail({ selectedItem }) {
     const fetchReviews = async () => {
       if (selectedItem) {
         const response = await fetch(
-          `http://localhost:3000/reviews/itemReviews/${selectedItem.id}`
+          `${import.meta.env.VITE_BACKEND_URL}/reviews/itemReviews/${selectedItem.id}`
         );
         const data = await response.json();
         setReviews(data);

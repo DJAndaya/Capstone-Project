@@ -40,7 +40,7 @@ const Cart = () => {
     if (userId && shoppingCart.length === 0) {
       const getUserShoppingCartData = async () => {
         const response = await axios.get(
-          "http://localhost:3000/items/shoppingCart",
+          `${import.meta.env.VITE_BACKEND_URL}/items/shoppingCart`,
           {
             params: { userId },
           }
@@ -80,7 +80,7 @@ const Cart = () => {
       // const stripePublicKey = stripe._apiKey
       // console.log("formData for checkout:",formData)
       const response = await axios.patch(
-        "http://localhost:3000/items/checkOut",
+        `${import.meta.env.VITE_BACKEND_URL}/items/checkOut`,
         shoppingCart,
         {
           params: { userId: userId },
@@ -117,7 +117,7 @@ const Cart = () => {
     // console.log(userId)
     try {
       const response = await axios.patch(
-        `http://localhost:3000/items/clearShoppingCart/`,
+        `${import.meta.env.VITE_BACKEND_URL}/items/clearShoppingCart/`,
         {},
         {
           params: { userId: userId },

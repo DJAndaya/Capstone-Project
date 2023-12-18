@@ -28,7 +28,7 @@ import ProductDetail from "./ProductDetail";
 
 import socketio from "socket.io-client";
 
-const socket = socketio("http://localhost:3000");
+const socket = socketio(`${import.meta.env.VITE_BACKEND_URL}`);
 // redux
 // router
 import { useLocation, useOutletContext } from "react-router-dom";
@@ -71,7 +71,7 @@ const Orders = () => {
         // console.log("Current pathname:", pathname);
         try {
           const response = await axios.get(
-            "http://localhost:3000/items/orderhistory",
+            `${import.meta.env.VITE_BACKEND_URL}/items/orderhistory`,
             {
               params: { userId: userId },
             }
@@ -113,7 +113,7 @@ const Orders = () => {
     try {
       // Proceed with deletion
       await axios.delete(
-        `http://localhost:3000/items/deleteOrderHistoryItem/${selectedItemToDelete}`
+        `${import.meta.env.VITE_BACKEND_URL}/items/deleteOrderHistoryItem/${selectedItemToDelete}`
       );
       // After successful deletion, update the state to remove the item
       setItems((prevItems) =>

@@ -35,7 +35,7 @@ export default function AllProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:3000/admin/allproducts");
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/allproducts`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -168,7 +168,7 @@ export default function AllProducts() {
       const amountAsInt = parseInt(newProduct.amount, 10);
       const sellerId = user?.id;
 
-      const response = await fetch("http://localhost:3000/admin/addproduct", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/addproduct`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -222,7 +222,7 @@ export default function AllProducts() {
   const handleDeleteProduct = async (productId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/admin/deleteproduct/${productId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/admin/deleteproduct/${productId}`,
         {
           method: "DELETE",
         }
@@ -258,7 +258,7 @@ export default function AllProducts() {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:3000/admin/editproduct/${editingProduct.id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/admin/editproduct/${editingProduct.id}`,
         {
           method: "PATCH",
           headers: {

@@ -19,7 +19,7 @@ export default function DeletedProducts() {
     const fetchDeletedProducts = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/admin/deletedproducts?days=5"
+          `${import.meta.env.VITE_BACKEND_URL}/admin/deletedproducts?days=5`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch deleted products");
@@ -77,7 +77,7 @@ export default function DeletedProducts() {
   const handleUndoDelete = async (productId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/admin/restoreproduct/${productId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/admin/restoreproduct/${productId}`,
         {
           method: "PATCH",
         }
@@ -97,7 +97,7 @@ export default function DeletedProducts() {
   const handleDelete = async (productId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/admin/deleteproducthard/${productId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/admin/deleteproducthard/${productId}`,
         {
           method: "DELETE",
         }

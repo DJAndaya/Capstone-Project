@@ -20,7 +20,7 @@ export default function AllUsers() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:3000/admin/allusers");
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/allusers`);
         if (!response.ok) {
           throw new Error("Failed to fetch users");
         }
@@ -93,7 +93,7 @@ export default function AllUsers() {
   const deleteUser = async (userId) => {
     try {
       const response = await axios.delete(
-        "http://localhost:3000/admin/deleteUser",
+        `${import.meta.env.VITE_BACKEND_URL}/admin/deleteUser`,
         { data: { userId: userId } }
       );
       console.log(response);
@@ -109,7 +109,7 @@ export default function AllUsers() {
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/admin/addAdmin", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/addAdmin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

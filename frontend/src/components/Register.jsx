@@ -22,7 +22,7 @@ const Register = () => {
     // console.log(formData);
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/register",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
         formData
       );
 

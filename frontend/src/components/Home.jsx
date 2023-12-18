@@ -30,7 +30,7 @@ import ProductDetail from "./ProductDetail";
 
 import socketio from "socket.io-client";
 
-const socket = socketio("http://localhost:3000");
+const socket = socketio(`${import.meta.env.VITE_BACKEND_URL}`);
 // redux
 // router
 import { useLocation, useOutletContext } from "react-router-dom";
@@ -70,7 +70,7 @@ const Home = () => {
 
         if (pathname === "/user/orders") {
           response = await axios.get(
-            "http://localhost:3000/items/orderhistory",
+            `${import.meta.env.VITE_BACKEND_URL}/items/orderhistory`,
             {
               params: { userId: userId },
             }
@@ -84,7 +84,7 @@ const Home = () => {
         } else if (pathname.startsWith("/results")) {
           const searchQuery = pathname.split("/").pop();
           // console.log("Query working; searchQuery:", searchQuery)
-          response = await axios.get("http://localhost:3000/items/search", {
+          response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/items/search`, {
             params: { searchQuery },
           });
           const alphabeticalOrderData = response.data.sort((a, b) =>
@@ -92,7 +92,7 @@ const Home = () => {
           );
           setItems(alphabeticalOrderData);
         } else {
-          response = await axios.get("http://localhost:3000/items/");
+          response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/items/`);
         }
         const alphabeticalOrderData = response.data.sort((a, b) =>
           a.name > b.name ? 1 : -1

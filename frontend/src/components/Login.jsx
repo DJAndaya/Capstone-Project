@@ -24,7 +24,7 @@ const Login = () => {
   const loginUser = async (formData) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/login",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
         formData
       );
 
@@ -33,7 +33,7 @@ const Login = () => {
       window.localStorage.setItem("token", token);
 
       const userResponse = await axios.get(
-        "http://localhost:3000/auth/loggedin",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/loggedin`,
         {
           headers: {
             authorization: token,
@@ -63,7 +63,7 @@ const Login = () => {
 
       // updating user with new wishlist and shopping cart
       const updateUserResponse = await axios.patch(
-        "http://localhost:3000/auth/login/update",
+        `${import.meta.env.VITE_BACKEND_URL}/auth/login/update`,
         {
           wishlist: combinedWishlist,
           shoppingCart: combineShoppingCart,
