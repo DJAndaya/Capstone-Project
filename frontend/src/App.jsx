@@ -130,7 +130,7 @@ export default function App() {
 
   useEffect(() => {
     const possiblyLogin = async () => {
-      const token = window.localStorage?.getItem("token");
+      const token = window.localStorage.getItem("token");
       // console.log(token)
       if (token) {
         try {

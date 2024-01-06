@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 
 // get all items data
 app.get("/", async (req, res, next) => {
+  console.log("get items endpoint occured")
   try {
     res.send(
       await prisma.items.findMany({
@@ -17,7 +18,7 @@ app.get("/", async (req, res, next) => {
           seller: {
             select: {
               id: true,
-              socketId: true,
+              // socketId: true,
               firstName: true,
               lastName: true,
             },
@@ -31,6 +32,7 @@ app.get("/", async (req, res, next) => {
         },
       })
     );
+    console.log("res.send complete")
   } catch (error) {
     // console.log(error);
   }

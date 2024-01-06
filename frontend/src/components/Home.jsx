@@ -67,7 +67,7 @@ const Home = () => {
       // console.log("Current pathname:", pathname);
       try {
         let response;
-
+        console.log("pre endpoint call pt1")
         if (pathname === "/user/orders") {
           response = await axios.get(
             "http://localhost:3000/items/orderhistory",
@@ -92,11 +92,14 @@ const Home = () => {
           );
           setItems(alphabeticalOrderData);
         } else {
+          console.log("pre endpoint call pt2")
           response = await axios.get("http://localhost:3000/items/");
+          console.log("get items pt2")
         }
         const alphabeticalOrderData = response.data.sort((a, b) =>
           a.name > b.name ? 1 : -1
         );
+        console.log("get items pt2")
         // console.log(alphabeticalOrderData);
         setItems(alphabeticalOrderData);
 
