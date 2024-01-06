@@ -128,47 +128,47 @@ export default function App() {
     },
   ]);
 
-  useEffect(() => {
-    const possiblyLogin = async () => {
-      const token = window.localStorage?.getItem("token");
-      // console.log(token)
-      if (token) {
-        try {
-          const userResponse = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/auth/loggedin`,
-            {
-              headers: {
-                authorization: token,
-              },
-            }
-          );
+  // useEffect(() => {
+  //   const possiblyLogin = async () => {
+  //     const token = window.localStorage?.getItem("token");
+  //     // console.log(token)
+  //     if (token) {
+  //       try {
+  //         const userResponse = await axios.get(
+  //           `${import.meta.env.VITE_BACKEND_URL}/auth/loggedin`,
+  //           {
+  //             headers: {
+  //               authorization: token,
+  //             },
+  //           }
+  //         );
 
-          const user = userResponse.data;
-          dispatch(setIsAuth(user));
-        } catch (error) {
-          // console.log(error);
-        }
-      }
-    };
+  //         const user = userResponse.data;
+  //         dispatch(setIsAuth(user));
+  //       } catch (error) {
+  //         // console.log(error);
+  //       }
+  //     }
+  //   };
 
-    possiblyLogin();
-    // if (user) {
-    //   socket.emit("user_joined", user);
-    //   socket.on("update_socket", (updatedUserData) => {
-    //     // console.log("updatedUserData:", updatedUserData); // not showing up
-    //     dispatch(setIsAuth(updatedUserData));
-    //     // console.log(updatedUserData);
-    //     // console.log(user, "App")
-    //     // console.log("user info after dispatch:", user) // not showing up
-    //     socket.emit("myId", {});
-    //   });
-    //   // console.log("user has joined with socket", user);
-    //   socket.emit("myId", {});
-    //   socket.on("disconnect", () => {
-    //     // console.log("Disconnected from server");
-    //   });
-    // }
-  }, [userId]);
+  //   possiblyLogin();
+  //   // if (user) {
+  //   //   socket.emit("user_joined", user);
+  //   //   socket.on("update_socket", (updatedUserData) => {
+  //   //     // console.log("updatedUserData:", updatedUserData); // not showing up
+  //   //     dispatch(setIsAuth(updatedUserData));
+  //   //     // console.log(updatedUserData);
+  //   //     // console.log(user, "App")
+  //   //     // console.log("user info after dispatch:", user) // not showing up
+  //   //     socket.emit("myId", {});
+  //   //   });
+  //   //   // console.log("user has joined with socket", user);
+  //   //   socket.emit("myId", {});
+  //   //   socket.on("disconnect", () => {
+  //   //     // console.log("Disconnected from server");
+  //   //   });
+  //   // }
+  // }, [userId]);
 
   return <RouterProvider router={router} />;
 }
