@@ -11,7 +11,7 @@ const server = app.listen(3000, () => {
 
 const io = new socketio.Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://capstone-frontend-cpob.onrender.com/",
   },
 });
 

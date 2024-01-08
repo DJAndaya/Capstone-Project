@@ -7,7 +7,9 @@ const app = express();
 // Logging middleware
 app.use(morgan("dev"));
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://capstone-frontend-cpob.onrender.com',
+}));
 
 // Body parsing middleware
 app.use(express.json());

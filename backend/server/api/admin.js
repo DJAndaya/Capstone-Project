@@ -7,7 +7,9 @@ const jwt = require("jsonwebtoken");
 
 const prisma = new PrismaClient();
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://capstone-frontend-cpob.onrender.com',
+}));
 
 app.use(express.json());
 
