@@ -342,8 +342,8 @@ app.patch("/checkOut", async (req, res, next) => {
       quantity: item.purchaseAmount,
     })),
     mode: "payment",
-    success_url: "http://localhost:5173/checkout/success",
-    cancel_url: "http://localhost:5173/checkout/cancel",
+    success_url: "https://capstone-frontend-cpob.onrender.com//checkout/success",
+    cancel_url: "https://capstone-frontend-cpob.onrender.com//checkout/cancel",
   });
 
   for (const { item, purchaseAmount } of itemIdAndAmount) {

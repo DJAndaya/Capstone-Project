@@ -47,7 +47,7 @@ app.post("/register", async (req, res, next) => {
       },
     });
 
-    const confirmationLink = `http://localhost:5173/confirm/${newUser.confirmationToken}`;
+    const confirmationLink = `https://capstone-frontend-cpob.onrender.com/confirm/${newUser.confirmationToken}`;
     const mailOptions = {
       from: process.env.MAIL_SENDER_EMAIL,
       to: email,
